@@ -82,6 +82,7 @@ set encoding=utf-8
 set textwidth=0
 set hidden
 set title
+set matchpairs+=<:>
 
 """ Filetype-Specific Configurations
 
