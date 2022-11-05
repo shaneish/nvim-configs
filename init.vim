@@ -1,5 +1,3 @@
-""" Optixal's Neovim Init.vim
-
 """ Vim-Plug
 call plug#begin()
 
@@ -38,6 +36,7 @@ Plug 'KabbAmine/vCoolor.vim'
 Plug 'dkarter/bullets.vim'
 Plug 'wellle/context.vim'
 Plug 'antoinemadec/FixCursorHold.nvim'
+Plug 'xiyaowong/nvim-transparent'
 
 " Functionalities - Python
 Plug 'psf/black', { 'branch': 'stable' }
@@ -55,8 +54,23 @@ Plug 'junegunn/vim-journal'
 
 call plug#end()
 
-""" Main Configurations
-filetype plugin indent on
+" Personal settings
+set mouse=a
+set nocompatible            " disable compatibility to old-time vi
+set showmatch               " show matching 
+set expandtab               " converts tabs to white space
+set autoindent              " indent a new line the same amount as the line just typed
+set number                  " add line numbers
+set cc=120                  " set an 120 column border for good coding style
+filetype plugin indent on   "allow auto-indenting depending on file type
+syntax on                   " syntax highlighting
+set clipboard=unnamedplus   " using system clipboard
+filetype plugin on
+set cursorline              " highlight current cursorline
+set ttyfast                 " Speed up scrolling in Vim
+set spell                 " enable spell check (may need to download language package)
+set backupdir=~/.cache/vim " Directory to store backup files.
+set relativenumber
 set tabstop=4 softtabstop=4 shiftwidth=4 expandtab smarttab autoindent
 set incsearch ignorecase smartcase hlsearch
 set wildmode=longest,list,full wildmenu
@@ -67,7 +81,6 @@ set wrap breakindent
 set encoding=utf-8
 set textwidth=0
 set hidden
-set number
 set title
 
 """ Filetype-Specific Configurations
@@ -87,43 +100,14 @@ autocmd FileType journal setlocal shiftwidth=2 tabstop=2 softtabstop=2
 """ Coloring
 
 " Functions and autocmds to run whenever changing colorschemes
-function! TransparentBackground()
-    highlight Normal guibg=NONE ctermbg=NONE
-    highlight LineNr guibg=NONE ctermbg=NONE
-    set fillchars+=vert:\│
-    highlight WinSeparator gui=NONE guibg=NONE guifg=#444444 cterm=NONE ctermbg=NONE ctermfg=gray
-    highlight VertSplit gui=NONE guibg=NONE guifg=#444444 cterm=NONE ctermbg=NONE ctermfg=gray
-endfunction
+highlight Normal guibg=NONE ctermbg=NONE
+highlight LineNr guibg=NONE ctermbg=NONE
+set fillchars+=vert:\│
+highlight WinSeparator gui=NONE guibg=NONE guifg=#444444 cterm=NONE ctermbg=NONE ctermfg=gray
+highlight VertSplit gui=NONE guibg=NONE guifg=#444444 cterm=NONE ctermbg=NONE ctermfg=gray
 
-" Use these colors for Pmenu, CmpPmenusBorder and TelescopeBorder when using dracula colorscheme
-"function! DraculaTweaks()
-"    " Pmenu colors when not using bordered windows
-"    highlight Pmenu guibg=#363948
-"    highlight PmenuSbar guibg=#363948
-"    " Completion/documentation Pmenu border color when using bordered windows
-"    highlight link CmpPmenuBorder NonText
-"    " Telescope borders
-"    highlight link TelescopeBorder Constant
-"endfunction
-"
-"augroup MyColors
-"    autocmd!
-"    autocmd ColorScheme dracula call DraculaTweaks()
-"    "autocmd ColorScheme * call TransparentBackground() " uncomment if you are using a translucent terminal and you want nvim to use that
-"augroup END
-"
-"color dracula
 colorscheme gruvbox-baby
 set termguicolors
-
-""" Core plugin configuration (vim)
-
-" Treesitter
-augroup DraculaTreesitterSourcingFix
-    autocmd!
-    autocmd ColorScheme dracula runtime after/plugin/dracula.vim
-    syntax on
-augroup end
 
 " nvim-cmp
 set completeopt=menu,menuone,noselect
@@ -172,6 +156,14 @@ require('telescope-config')
 require('lualine-config')
 require('nvim-tree-config')
 require('diagnostics')
+require('transparent').setup({
+    enable = true
+})
+vim.lsp.handlers["textDocument/publishDiagnostics"] =
+    vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, {
+        -- Disable underline, it's very annoying
+        underline = false
+        })
 
 local opts = { noremap=true, silent=true }
 vim.keymap.set('n', '<space>e', vim.diagnostic.open_float, opts)
@@ -261,29 +253,5 @@ nnoremap <leader>fc <cmd>Telescope colorscheme<cr>
 nnoremap <leader>f/ <cmd>Telescope current_buffer_fuzzy_find<cr>
 nnoremap <silent> <Esc><Esc> <Esc>:nohlsearch<CR><Esc>
 
-" Personal settings
-set mouse=a
-set nocompatible            " disable compatibility to old-time vi
-set showmatch               " show matching 
-set ignorecase              " case insensitive 
-set mouse=v                 " middle-click paste with 
-set hlsearch                " highlight search 
-set incsearch               " incremental search
-set tabstop=4               " number of columns occupied by a tab 
-set softtabstop=4           " see multiple spaces as tabstops so <BS> does the right thing
-set expandtab               " converts tabs to white space
-set shiftwidth=4            " width for autoindents
-set autoindent              " indent a new line the same amount as the line just typed
-set number                  " add line numbers
-set wildmode=longest,list   " get bash-like tab completions
-set cc=120                  " set an 120 column border for good coding style
-filetype plugin indent on   "allow auto-indenting depending on file type
-syntax on                   " syntax highlighting
-set clipboard=unnamedplus   " using system clipboard
-filetype plugin on
-set cursorline              " highlight current cursorline
-set ttyfast                 " Speed up scrolling in Vim
-set spell                 " enable spell check (may need to download language package)
-set noswapfile            " disable creating swap file
-set backupdir=~/.cache/vim " Directory to store backup files.
-set relativenumber
+" Insert remaps
+inoremap jj <ESC>
