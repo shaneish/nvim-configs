@@ -3,7 +3,8 @@ apt install nodejs
 apt install npm
 rustup component add rust-src
 mkdir -p ~/.local/bin
-curl -L https://github.com/rust-lang/rust-analyzer/releases/latest/download/rust-analyzer-x86_64-unknown-linux-gnu.gz | gunzip -c - > ~/.local/bin/rust-analyzer
+rustup component add rust-analyzer
+ln -s "$(rustup which --toolchain stable rust-analyzer)" ~/.cargo/bin/rust-analyzer
 python3 -m venv venv
 . ./venv/bin/activate
 pip install -r requirements.txt

@@ -37,6 +37,8 @@ Plug 'dkarter/bullets.vim'
 Plug 'wellle/context.vim'
 Plug 'antoinemadec/FixCursorHold.nvim'
 Plug 'xiyaowong/nvim-transparent'
+Plug 'simrat39/rust-tools.nvim'
+Plug 'mfussenegger/nvim-dap'
 
 " Functionalities - Python
 Plug 'psf/black', { 'branch': 'stable' }
@@ -99,8 +101,6 @@ autocmd FileType markdown setlocal shiftwidth=2 tabstop=2 softtabstop=2
 autocmd FileType journal setlocal shiftwidth=2 tabstop=2 softtabstop=2
 
 """ Coloring
-
-" Functions and autocmds to run whenever changing colorschemes
 highlight Normal guibg=NONE ctermbg=NONE
 highlight LineNr guibg=NONE ctermbg=NONE
 set fillchars+=vert:\│
@@ -109,6 +109,8 @@ highlight VertSplit gui=NONE guibg=NONE guifg=#444444 cterm=NONE ctermbg=NONE ct
 
 colorscheme gruvbox-baby
 set termguicolors
+
+highlight Comment guifg=#5291ad
 
 " nvim-cmp
 set completeopt=menu,menuone,noselect
@@ -165,6 +167,17 @@ vim.lsp.handlers["textDocument/publishDiagnostics"] =
         -- Disable underline, it's very annoying
         underline = false
         })
+local rt = require("rust-tools")
+rt.setup({
+  server = {
+    on_attach = function(_, bufnr)
+      -- Hover actions
+      vim.keymap.set("n", "<C-space>", rt.hover_actions.hover_actions, { buffer = bufnr })
+      -- Code action groups
+      vim.keymap.set("n", "<Leader>a", rt.code_action_group.code_action_group, { buffer = bufnr })
+    end,
+  },
+})
 
 local opts = { noremap=true, silent=true }
 vim.keymap.set('n', '<space>e', vim.diagnostic.open_float, opts)
@@ -198,14 +211,14 @@ local on_attach = function(client, bufnr)
   vim.keymap.set('n', '<space>f', function() vim.lsp.buf.format { async = true } end, bufopts)
 end
 
-require('lspconfig')['rust_analyzer'].setup{
-    on_attach = on_attach,
-    flags = lsp_flags,
-    -- Server-specific settings...
-    settings = {
-      ["rust-analyzer"] = {}
-    }
-}
+-- require('lspconfig')['rust_analyzer'].setup{
+--     on_attach = on_attach,
+--     flags = lsp_flags,
+--     -- Server-specific settings...
+--     settings = {
+--       ["rust-analyzer"] = {}
+--     }
+-- }
 EOF
 
 """ Custom Functions
@@ -237,6 +250,7 @@ nmap <Tab> :bnext<CR>
 nmap <S-Tab> :bprevious<CR>
 nmap <leader>$s <C-w>s<C-w>j:terminal<CR>:set nonumber<CR><S-a>
 nmap <leader>$v <C-w>v<C-w>l:terminal<CR>:set nonumber<CR><S-a>
+nmap <leader>d :bd<CR>
 
 " Python
 autocmd Filetype python nmap <leader>d <Plug>(pydocstring)
