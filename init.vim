@@ -271,4 +271,4 @@ nnoremap ; :
 
 " Insert remaps
 inoremap jj <ESC>
-inoremap <leader><space> <Esc>la
+inoremap <leader><leader><space> <Esc>la
