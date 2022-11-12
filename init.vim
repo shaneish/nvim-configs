@@ -54,6 +54,9 @@ Plug 'junegunn/rainbow_parentheses.vim'
 Plug 'junegunn/limelight.vim'
 Plug 'junegunn/vim-journal'
 
+" Better tabs + buffers
+Plug 'kyazdani42/nvim-web-devicons'
+Plug 'romgrk/barbar.nvim'
 call plug#end()
 
 " Personal settings
@@ -251,6 +254,7 @@ nmap <S-Tab> :bprevious<CR>
 nmap <leader>$s <C-w>s<C-w>j:terminal<CR>:set nonumber<CR><S-a>
 nmap <leader>$v <C-w>v<C-w>l:terminal<CR>:set nonumber<CR><S-a>
 nmap <leader>d :bd<CR>
+nmap <leader>n :cnext<CR>
 
 " Python
 autocmd Filetype python nmap <leader>d <Plug>(pydocstring)
