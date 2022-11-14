@@ -272,7 +272,10 @@ nnoremap <leader>fc <cmd>Telescope colorscheme<cr>
 nnoremap <leader>f/ <cmd>Telescope current_buffer_fuzzy_find<cr>
 nnoremap <silent> <Esc><Esc> <Esc>:nohlsearch<CR><Esc>
 nnoremap ; :
+nnoremap <C-u> <C-u>zz
+nnoremap <C-d> <C-d>zz
+nnoremap n nzz
 
 " Insert remaps
-inoremap jj <ESC>
-inoremap <leader><leader><space> <Esc>la
+inoremap jj <Esc>
+inoremap ii <Esc>la
