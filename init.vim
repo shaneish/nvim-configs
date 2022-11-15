@@ -237,7 +237,7 @@ endfunction
 
 " Core
 let mapleader=","
-nmap <leader>q :NvimTreeFindFileToggle<CR>
+nmap <leader>q :NvimTreeFindFileToggle<CR>:set relativenumber<CR>
 nmap \ <leader>q
 nmap <leader>r :so ~/.config/nvim/init.vim<CR>
 nmap <leader>t :call TrimWhitespace()<CR>
@@ -279,5 +279,5 @@ nnoremap n nzz
 " Insert remaps
 inoremap jj <Esc>
 inoremap ii <Esc>la
-inoremap dd <Esc>la<BS>
+inoremap hh <Esc>la<BS>
 inoremap ff <C-e>
