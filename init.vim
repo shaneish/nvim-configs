@@ -114,6 +114,7 @@ colorscheme gruvbox-baby
 set termguicolors
 
 highlight Comment guifg=#5291ad
+highlight LineNr guifg=#5291ad
 
 " nvim-cmp
 set completeopt=menu,menuone,noselect
@@ -151,10 +152,18 @@ let g:pydocstring_doq_path = '~/.config/nvim/venv/bin/doq'
 
 
 """ Core plugin configuration (lua)
+lua <<EOF
+  require'lspconfig'.terraformls.setup{}
+EOF
+autocmd BufWritePre *.tfvars lua vim.lsp.buf.formatting_sync()
+autocmd BufWritePre *.tf lua vim.lsp.buf.formatting_sync()
+
+" Python support
 lua << EOF
 servers = {
     'pyright'
     }
+
 require('treesitter-config')
 require('nvim-cmp-config')
 require('lspconfig-config')
@@ -258,10 +267,7 @@ nmap <leader>n :cnext<CR>
 
 " Python
 autocmd Filetype python nmap <leader>d <Plug>(pydocstring)
-autocmd FileType python nmap <leader>p :Black<CR>
-
-" Solidity (requires: npm install --save-dev prettier prettier-plugin-solidity)
-autocmd Filetype solidity nmap <leader>p :0,$!npx prettier %<CR>
+autocmd FileType python nmap <leader>fmt :Black<CR>
 
 " Telescope mappings
 nnoremap <leader>ff <cmd>Telescope find_files<cr>
@@ -275,6 +281,8 @@ nnoremap ; :
 nnoremap <C-u> <C-u>zz
 nnoremap <C-d> <C-d>zz
 nnoremap n nzz
+nnoremap p "0p
+nnoremap <leader>p :pu 0<CR>
 
 " Insert remaps
 inoremap jj <Esc>
