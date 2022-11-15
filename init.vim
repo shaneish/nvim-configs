@@ -279,3 +279,5 @@ nnoremap n nzz
 " Insert remaps
 inoremap jj <Esc>
 inoremap ii <Esc>la
+inoremap dd <Esc>la<BS>
+inoremap ff <C-e>
