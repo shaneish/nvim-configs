@@ -39,6 +39,7 @@ Plug 'antoinemadec/FixCursorHold.nvim'
 Plug 'xiyaowong/nvim-transparent'
 Plug 'simrat39/rust-tools.nvim'
 Plug 'mfussenegger/nvim-dap'
+Plug 'hashivim/vim-terraform'
 
 " Functionalities - Python
 Plug 'psf/black', { 'branch': 'stable' }
@@ -149,14 +150,26 @@ autocmd BufWinEnter,WinEnter term://* startinsert
 autocmd BufLeave term://* stopinsert
 
 " Python
-let g:python3_host_prog = '~/.config/nvim/venv/bin/python3'
-let g:pydocstring_doq_path = '~/.config/nvim/venv/bin/doq'
+let g:python3_host_prog = '~/.config/nvim/env/bin/python3'
+let g:pydocstring_doq_path = '~/.config/nvim/env/bin/doq'
 
 
 """ Core plugin configuration (lua)
-lua <<EOF
+
+" terraform stuff
+lua << EOF
   require'lspconfig'.terraformls.setup{}
+  require'lspconfig'.tflint.setup{}
+
+  vim.cmd([[silent! autocmd! filetypedetect BufRead,BufNewFile *.tf]])
+  vim.cmd([[autocmd BufRead,BufNewFile *.hcl set filetype=hcl]])
+  vim.cmd([[autocmd BufRead,BufNewFile .terraformrc,terraform.rc set filetype=hcl]])
+  vim.cmd([[autocmd BufRead,BufNewFile *.tf,*.tfvars set filetype=terraform]])
+  vim.cmd([[autocmd BufRead,BufNewFile *.tfstate,*.tfstate.backup set filetype=json]])
+  vim.cmd([[let g:terraform_fmt_on_save=1]])
+  vim.cmd([[let g:terraform_align=1]])
 EOF
+
 autocmd BufWritePre *.tfvars lua vim.lsp.buf.formatting_sync()
 autocmd BufWritePre *.tf lua vim.lsp.buf.formatting_sync()
 
@@ -165,6 +178,7 @@ lua << EOF
 servers = {
     'pyright'
     }
+EOF
 
 require('treesitter-config')
 require('nvim-cmp-config')
@@ -173,6 +187,13 @@ require('telescope-config')
 require('lualine-config')
 require('nvim-tree-config')
 require('diagnostics')
+require('nvim-treesitting.config').setup({
+    ensure_installed = {'python', 'rust', 'scala', 'hcl', 'go', 'bash', 'elixir', 'dockerfile'},
+    auto_install = true,
+    highlight = {
+        enable = true,
+        }
+})
 require('transparent').setup({
     enable = true
 })
@@ -181,8 +202,7 @@ vim.lsp.handlers["textDocument/publishDiagnostics"] =
         -- Disable underline, it's very annoying
         underline = false
         })
-local rt = require("rust-tools")
-rt.setup({
+require("rust-tools").setup({
   server = {
     on_attach = function(_, bufnr)
       -- Hover actions
@@ -224,16 +244,6 @@ local on_attach = function(client, bufnr)
   vim.keymap.set('n', 'gr', vim.lsp.buf.references, bufopts)
   vim.keymap.set('n', '<space>f', function() vim.lsp.buf.format { async = true } end, bufopts)
 end
-
--- require('lspconfig')['rust_analyzer'].setup{
---     on_attach = on_attach,
---     flags = lsp_flags,
---     -- Server-specific settings...
---     settings = {
---       ["rust-analyzer"] = {}
---     }
--- }
-EOF
 
 """ Custom Functions
 
