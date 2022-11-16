@@ -246,7 +246,7 @@ endfunction
 
 " Core
 let mapleader=","
-nmap <leader>q :NvimTreeFindFileToggle<CR>:set relativenumber<CR>
+nmap <leader>q :NvimTreeFindFileToggle<CR>:set relativenumber<CR>:set nowrap<CR>
 nmap \ <leader>q
 nmap <leader>r :so ~/.config/nvim/init.vim<CR>
 nmap <leader>t :call TrimWhitespace()<CR>
