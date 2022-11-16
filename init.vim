@@ -75,7 +75,6 @@ set clipboard=unnamedplus   " using system clipboard
 filetype plugin on
 set cursorline              " highlight current cursorline
 set ttyfast                 " Speed up scrolling in Vim
-set spell                 " enable spell check (may need to download language package)
 set backupdir=~/.cache/vim " Directory to store backup files.
 set relativenumber
 set tabstop=4 softtabstop=4 shiftwidth=4 expandtab smarttab autoindent
