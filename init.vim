@@ -287,4 +287,4 @@ nnoremap <leader>p :pu 0<CR>
 inoremap jj <Esc>
 inoremap ii <Esc>la
 inoremap hh <Esc>la<BS>
-inoremap ff <C-e>
+inoremap uu <C-e>
