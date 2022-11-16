@@ -172,13 +172,7 @@ servers = {
     'pyright'
     }
 
-require('treesitter-config').setup({
-    ensure_installed = {'python', 'rust', 'scala', 'hcl', 'go', 'bash', 'elixir', 'dockerfile'},
-    auto_install = true,
-    highlight = {
-        enable = true,
-        }
-})
+require('treesitter-config')
 require('nvim-cmp-config')
 require('lspconfig-config')
 require('telescope-config')
@@ -193,7 +187,8 @@ vim.lsp.handlers["textDocument/publishDiagnostics"] =
         -- Disable underline, it's very annoying
         underline = false
         })
-require("rust-tools").setup({
+local rt = require("rust-tools")
+rt.setup({
   server = {
     on_attach = function(_, bufnr)
       -- Hover actions
