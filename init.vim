@@ -168,32 +168,23 @@ lua << EOF
   vim.cmd([[autocmd BufRead,BufNewFile *.tfstate,*.tfstate.backup set filetype=json]])
   vim.cmd([[let g:terraform_fmt_on_save=1]])
   vim.cmd([[let g:terraform_align=1]])
-EOF
-
-autocmd BufWritePre *.tfvars lua vim.lsp.buf.formatting_sync()
-autocmd BufWritePre *.tf lua vim.lsp.buf.formatting_sync()
-
-" Python support
-lua << EOF
 servers = {
     'pyright'
     }
-EOF
 
-require('treesitter-config')
-require('nvim-cmp-config')
-require('lspconfig-config')
-require('telescope-config')
-require('lualine-config')
-require('nvim-tree-config')
-require('diagnostics')
-require('nvim-treesitting.config').setup({
+require('treesitter-config').setup({
     ensure_installed = {'python', 'rust', 'scala', 'hcl', 'go', 'bash', 'elixir', 'dockerfile'},
     auto_install = true,
     highlight = {
         enable = true,
         }
 })
+require('nvim-cmp-config')
+require('lspconfig-config')
+require('telescope-config')
+require('lualine-config')
+require('nvim-tree-config')
+require('diagnostics')
 require('transparent').setup({
     enable = true
 })
@@ -244,7 +235,9 @@ local on_attach = function(client, bufnr)
   vim.keymap.set('n', 'gr', vim.lsp.buf.references, bufopts)
   vim.keymap.set('n', '<space>f', function() vim.lsp.buf.format { async = true } end, bufopts)
 end
-
+EOF
+autocmd BufWritePre *.tfvars lua vim.lsp.buf.formatting_sync()
+autocmd BufWritePre *.tf lua vim.lsp.buf.formatting_sync()
 """ Custom Functions
 
 " Trim Whitespaces
