@@ -48,6 +48,7 @@ Plug 'heavenshell/vim-pydocstring'
 Plug 'luisiacc/gruvbox-baby', {'branch': 'main'}
 Plug 'zaki/zazen'
 Plug 'yuttie/hydrangea-vim'
+Plug 'folke/tokyonight.nvim', { 'branch': 'main' }
 
 " Aesthetics - Others
 Plug 'junegunn/rainbow_parentheses.vim'
@@ -110,7 +111,8 @@ set fillchars+=vert:\│
 highlight WinSeparator gui=NONE guibg=NONE guifg=#444444 cterm=NONE ctermbg=NONE ctermfg=gray
 highlight VertSplit gui=NONE guibg=NONE guifg=#444444 cterm=NONE ctermbg=NONE ctermfg=gray
 
-colorscheme gruvbox-baby
+" colorscheme gruvbox-baby
+colorscheme tokyonight
 set termguicolors
 
 highlight Comment guifg=#5291ad
