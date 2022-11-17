@@ -270,7 +270,7 @@ autocmd FileType python nmap <leader>fmt :Black<CR>
 
 " Telescope mappings
 nnoremap <leader>ff <cmd>Telescope find_files<cr>
-nnoremap <leader>fg <cmd>Telescope live_grep<cr>
+noremap <leader>fg <cmd>Telescope live_grep<cr>
 nnoremap <leader>fb <cmd>Telescope buffers<cr>
 nnoremap <leader>fh <cmd>Telescope help_tags<cr>
 nnoremap <leader>fc <cmd>Telescope colorscheme<cr>
@@ -279,9 +279,8 @@ nnoremap <silent> <Esc><Esc> <Esc>:nohlsearch<CR><Esc>
 nnoremap ; :
 nnoremap <C-u> <C-u>zz
 nnoremap <C-d> <C-d>zz
-nnoremap n nzz
-nnoremap p "0p
 nnoremap <leader>p :pu 0<CR>
+nnoremap <C-p> p
 
 " Insert remaps
 inoremap jj <Esc>
