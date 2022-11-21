@@ -282,16 +282,16 @@ nnoremap <leader>fh <cmd>Telescope help_tags<cr>
 nnoremap <leader>fc <cmd>Telescope colorscheme<cr>
 nnoremap <leader>f/ <cmd>Telescope current_buffer_fuzzy_find<cr>
 nnoremap <silent> <Esc><Esc> <Esc>:nohlsearch<CR><Esc>
-nnoremap <leader>hm :lua require("harpoon.mark").add_file()<CR>
-nnoremap <leader>hh :lua require("harpoon.ui").toggle_quick_menu()<CR>
-nnoremap <leader>hu :lua require("harpoon.ui").nav_next()<CR>
-nnoremap <leader>hd :lua require("harpoon.ui").nav_prev()<CR>
-nnoremap <leader>h1 :lua require("harpoon.ui").nav_file(1)<CR>
-nnoremap <leader>h2 :lua require("harpoon.ui").nav_file(2)<CR>
-nnoremap <leader>h3 :lua require("harpoon.ui").nav_file(3)<CR>
-nnoremap <leader>h4 :lua require("harpoon.ui").nav_file(4)<CR>
-nnoremap <leader>h5 :lua require("harpoon.ui").nav_file(5)<CR>
-nnoremap <leader>fm :Telescope harpoon marks<CR>
+nnoremap <leader><leader>m :lua require("harpoon.mark").add_file()<CR>
+nnoremap <leader><leader>h :lua require("harpoon.ui").toggle_quick_menu()<CR>
+nnoremap <leader><leader>u :lua require("harpoon.ui").nav_next()<CR>
+nnoremap <leader><leader>d :lua require("harpoon.ui").nav_prev()<CR>
+nnoremap <leader><leader>1 :lua require("harpoon.ui").nav_file(1)<CR>
+nnoremap <leader><leader>2 :lua require("harpoon.ui").nav_file(2)<CR>
+nnoremap <leader><leader>3 :lua require("harpoon.ui").nav_file(3)<CR>
+nnoremap <leader><leader>4 :lua require("harpoon.ui").nav_file(4)<CR>
+nnoremap <leader><leader>5 :lua require("harpoon.ui").nav_file(5)<CR>
+nnoremap <leader><leader>f :Telescope harpoon marks<CR>
 nnoremap ; :
 nnoremap <C-u> <C-u>zz
 nnoremap <C-d> <C-d>zz
