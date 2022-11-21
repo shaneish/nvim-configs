@@ -51,6 +51,7 @@ Plug 'luisiacc/gruvbox-baby', {'branch': 'main'}
 Plug 'zaki/zazen'
 Plug 'yuttie/hydrangea-vim'
 Plug 'folke/tokyonight.nvim', { 'branch': 'main' }
+Plug 'danilo-augusto/vim-afterglow'
 
 " Aesthetics - Others
 Plug 'junegunn/rainbow_parentheses.vim'
@@ -113,7 +114,10 @@ highlight WinSeparator gui=NONE guibg=NONE guifg=#444444 cterm=NONE ctermbg=NONE
 highlight VertSplit gui=NONE guibg=NONE guifg=#444444 cterm=NONE ctermbg=NONE ctermfg=gray
 
 " colorscheme gruvbox-baby
-colorscheme tokyonight
+" colorscheme tokyonight
+colorscheme afterglow
+let g:afterglow_blackout=1
+
 set termguicolors
 
 highlight Comment guifg=#5291ad
