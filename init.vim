@@ -40,6 +40,7 @@ Plug 'xiyaowong/nvim-transparent'
 Plug 'simrat39/rust-tools.nvim'
 Plug 'mfussenegger/nvim-dap'
 Plug 'hashivim/vim-terraform'
+Plug 'ThePrimeagen/harpoon'
 
 " Functionalities - Python
 Plug 'psf/black', { 'branch': 'stable' }
@@ -144,7 +145,7 @@ let g:context_nvim_no_redraw = 1
 " Neovim :Terminal
 tmap <Esc> <C-\><C-n>
 tmap <C-w> <Esc><C-w>
-"tmap <C-d> <Esc>:q<CR>
+tmap <C-d> <Esc>:q<CR>
 autocmd BufWinEnter,WinEnter term://* startinsert
 autocmd BufLeave term://* stopinsert
 
@@ -178,6 +179,7 @@ require('telescope-config')
 require('lualine-config')
 require('nvim-tree-config')
 require('diagnostics')
+require('telescope').load_extension('harpoon')
 require('transparent').setup({
     enable = true
 })
@@ -251,7 +253,7 @@ nmap <leader>r :so ~/.config/nvim/init.vim<CR>
 nmap <leader>t :call TrimWhitespace()<CR>
 xmap <leader>a gaip*
 nmap <leader>a gaip*
-nmap <leader>h :RainbowParentheses!!<CR>
+nmap <leader><leader>r :RainbowParentheses!!<CR>
 nmap <leader>j :set filetype=journal<CR>
 nmap <leader>k :ColorToggle<CR>
 nmap <leader>l :Limelight!!<CR>
@@ -276,10 +278,21 @@ nnoremap <leader>fh <cmd>Telescope help_tags<cr>
 nnoremap <leader>fc <cmd>Telescope colorscheme<cr>
 nnoremap <leader>f/ <cmd>Telescope current_buffer_fuzzy_find<cr>
 nnoremap <silent> <Esc><Esc> <Esc>:nohlsearch<CR><Esc>
+nnoremap <leader>hm :lua require("harpoon.mark").add_file()<CR>
+nnoremap <leader>hh :lua require("harpoon.ui").toggle_quick_menu()<CR>
+nnoremap <leader>hu :lua require("harpoon.ui").nav_next()<CR>
+nnoremap <leader>hd :lua require("harpoon.ui").nav_prev()<CR>
+nnoremap <leader>h1 :lua require("harpoon.ui").nav_file(1)<CR>
+nnoremap <leader>h2 :lua require("harpoon.ui").nav_file(2)<CR>
+nnoremap <leader>h3 :lua require("harpoon.ui").nav_file(3)<CR>
+nnoremap <leader>h4 :lua require("harpoon.ui").nav_file(4)<CR>
+nnoremap <leader>h5 :lua require("harpoon.ui").nav_file(5)<CR>
+nnoremap <leader>fm :Telescope harpoon marks<CR>
 nnoremap ; :
 nnoremap <C-u> <C-u>zz
 nnoremap <C-d> <C-d>zz
 nnoremap <leader>p :pu 0<CR>
+nnoremap p "0p
 nnoremap <C-p> p
 
 " Insert remaps
