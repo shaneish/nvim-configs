@@ -91,8 +91,9 @@ set textwidth=0
 set hidden
 set title
 set matchpairs+=<:>
+set iskeyword-=_
 
-""" Filetype-Specific Configurations
+"" Filetype-Specific Configurations
 
 " HTML, XML, Jinja
 autocmd FileType html setlocal shiftwidth=2 tabstop=2 softtabstop=2
@@ -292,7 +293,7 @@ nnoremap <leader><leader>3 :lua require("harpoon.ui").nav_file(3)<CR>
 nnoremap <leader><leader>4 :lua require("harpoon.ui").nav_file(4)<CR>
 nnoremap <leader><leader>5 :lua require("harpoon.ui").nav_file(5)<CR>
 nnoremap <leader><leader>f :Telescope harpoon marks<CR>
-nnoremap ; $
+nnoremap qq $
 nnoremap <C-u> <C-u>zz
 nnoremap <C-d> <C-d>zz
 nnoremap <leader>p :pu 0<CR>
@@ -304,4 +305,4 @@ inoremap jj <Esc>
 inoremap ii <Esc>la
 inoremap hh <Esc>la<BS>
 inoremap uu <C-e>
-inoremap ;; <Esc>A
+inoremap qq <Esc>A
