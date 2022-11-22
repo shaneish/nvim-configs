@@ -66,7 +66,7 @@ call plug#end()
 " Personal settings
 set mouse=a
 set nocompatible            " disable compatibility to old-time vi
-set showmatch               " show matching 
+set showmatch               " show matching
 set expandtab               " converts tabs to white space
 set autoindent              " indent a new line the same amount as the line just typed
 set number                  " add line numbers
@@ -292,7 +292,7 @@ nnoremap <leader><leader>3 :lua require("harpoon.ui").nav_file(3)<CR>
 nnoremap <leader><leader>4 :lua require("harpoon.ui").nav_file(4)<CR>
 nnoremap <leader><leader>5 :lua require("harpoon.ui").nav_file(5)<CR>
 nnoremap <leader><leader>f :Telescope harpoon marks<CR>
-nnoremap ; :
+nnoremap ; $
 nnoremap <C-u> <C-u>zz
 nnoremap <C-d> <C-d>zz
 nnoremap <leader>p :pu 0<CR>
@@ -304,3 +304,4 @@ inoremap jj <Esc>
 inoremap ii <Esc>la
 inoremap hh <Esc>la<BS>
 inoremap uu <C-e>
+inoremap ;; <Esc>A
