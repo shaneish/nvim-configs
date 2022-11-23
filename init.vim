@@ -293,6 +293,8 @@ nnoremap <leader><leader>3 :lua require("harpoon.ui").nav_file(3)<CR>
 nnoremap <leader><leader>4 :lua require("harpoon.ui").nav_file(4)<CR>
 nnoremap <leader><leader>5 :lua require("harpoon.ui").nav_file(5)<CR>
 nnoremap <leader><leader>f :Telescope harpoon marks<CR>
+
+" Normal remaps
 nnoremap qq $
 nnoremap <C-u> <C-u>zz
 nnoremap <C-d> <C-d>zz
@@ -306,3 +308,10 @@ inoremap ii <Esc>la
 inoremap hh <Esc>la<BS>
 inoremap uu <C-e>
 inoremap qq <Esc>A
+
+" visual remaps
+xnoremap qq $
+xnoremap <leader>{ f{%
+xnoremap <leader>( f(%
+xnoremap <leader>[ f[%
+xnoremap <leader>< f<%
