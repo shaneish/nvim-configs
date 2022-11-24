@@ -2,7 +2,7 @@
 call plug#begin()
 
 " Core (treesitter, nvim-lspconfig, nvim-cmp, nvim-telescope, nvim-lualine)
-Plug 'nvim-treesitter/nvim-treesitter', { 'do': ':TSUpdate' }
+Plug 'nvim-treesitter/nvim-treesitter', { 'commit': 'fd4525fd9e61950520cea4737abc1800ad4aabb' }
 Plug 'nvim-treesitter/playground'
 Plug 'neovim/nvim-lspconfig'
 Plug 'hrsh7th/cmp-nvim-lsp'
@@ -109,7 +109,8 @@ autocmd FileType journal setlocal shiftwidth=2 tabstop=2 softtabstop=2
 
 """ Coloring
 highlight Normal guibg=NONE ctermbg=NONE
-highlight LineNr guibg=NONE ctermbg=NONE
+highlight Error guibg=NONE ctermbg=NONE
+highlight link TSError Normal
 set fillchars+=vert:\│
 highlight WinSeparator gui=NONE guibg=NONE guifg=#444444 cterm=NONE ctermbg=NONE ctermfg=gray
 highlight VertSplit gui=NONE guibg=NONE guifg=#444444 cterm=NONE ctermbg=NONE ctermfg=gray
@@ -165,6 +166,7 @@ let g:pydocstring_doq_path = '~/.config/nvim/env/bin/doq'
 lua << EOF
   require'lspconfig'.terraformls.setup{}
   require'lspconfig'.tflint.setup{}
+  require'lspconfig'.pyright.setup{}
 
   vim.cmd([[silent! autocmd! filetypedetect BufRead,BufNewFile *.tf]])
   vim.cmd([[autocmd BufRead,BufNewFile *.hcl set filetype=hcl]])
@@ -176,7 +178,6 @@ lua << EOF
 servers = {
     'pyright'
     }
-
 require('treesitter-config')
 require('nvim-cmp-config')
 require('lspconfig-config')
@@ -237,8 +238,7 @@ local on_attach = function(client, bufnr)
   vim.keymap.set('n', '<space>f', function() vim.lsp.buf.format { async = true } end, bufopts)
 end
 EOF
-autocmd BufWritePre *.tfvars lua vim.lsp.buf.formatting_sync()
-autocmd BufWritePre *.tf lua vim.lsp.buf.formatting_sync()
+
 """ Custom Functions
 
 " Trim Whitespaces
@@ -268,7 +268,7 @@ nmap <Tab> :bnext<CR>
 nmap <S-Tab> :bprevious<CR>
 nmap <leader>$s <C-w>s<C-w>j:terminal<CR>:set nonumber<CR><S-a>
 nmap <leader>$v <C-w>v<C-w>l:terminal<CR>:set nonumber<CR><S-a>
-nmap <leader>d :bd<CR>
+nmap <leader>dd :bd<CR>
 nmap <leader>n :cnext<CR>
 
 " Python
