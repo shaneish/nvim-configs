@@ -41,7 +41,7 @@ Plug 'simrat39/rust-tools.nvim'
 Plug 'mfussenegger/nvim-dap'
 Plug 'hashivim/vim-terraform'
 Plug 'ThePrimeagen/harpoon'
-Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
+Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install' }
 
 " Functionalities - Python
 Plug 'psf/black', { 'branch': 'stable' }
