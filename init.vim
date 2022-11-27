@@ -41,6 +41,7 @@ Plug 'simrat39/rust-tools.nvim'
 Plug 'mfussenegger/nvim-dap'
 Plug 'hashivim/vim-terraform'
 Plug 'ThePrimeagen/harpoon'
+Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
 
 " Functionalities - Python
 Plug 'psf/black', { 'branch': 'stable' }
@@ -57,6 +58,7 @@ Plug 'danilo-augusto/vim-afterglow'
 Plug 'junegunn/rainbow_parentheses.vim'
 Plug 'junegunn/limelight.vim'
 Plug 'junegunn/vim-journal'
+Plug 'navarasu/onedark.nvim'
 
 " Better tabs + buffers
 Plug 'kyazdani42/nvim-web-devicons'
@@ -117,8 +119,11 @@ highlight VertSplit gui=NONE guibg=NONE guifg=#444444 cterm=NONE ctermbg=NONE ct
 
 " colorscheme gruvbox-baby
 " colorscheme tokyonight
-colorscheme afterglow
-let g:afterglow_blackout=1
+" let g:afterglow_blackout=1
+" colorscheme afterglow
+" Vim
+let g:onedark_config = { 'style': 'deep' }
+colorscheme onedark
 
 set termguicolors
 
