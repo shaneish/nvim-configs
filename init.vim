@@ -42,6 +42,8 @@ Plug 'mfussenegger/nvim-dap'
 Plug 'hashivim/vim-terraform'
 Plug 'ThePrimeagen/harpoon'
 Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install' }
+Plug 'windwp/nvim-spectre'
+Plug 'samoshkin/vim-mergetool'
 
 " Functionalities - Python
 Plug 'psf/black', { 'branch': 'stable' }
@@ -172,6 +174,7 @@ lua << EOF
   require'lspconfig'.terraformls.setup{}
   require'lspconfig'.tflint.setup{}
   require'lspconfig'.pyright.setup{}
+  require('spectre').setup()
 
   vim.cmd([[silent! autocmd! filetypedetect BufRead,BufNewFile *.tf]])
   vim.cmd([[autocmd BufRead,BufNewFile *.hcl set filetype=hcl]])
@@ -244,6 +247,9 @@ local on_attach = function(client, bufnr)
 end
 EOF
 
+let g:mergetool_layout = 'mr'
+let g:mergetool_prefer_revision = 'local'
+
 """ Custom Functions
 
 " Trim Whitespaces
@@ -288,6 +294,7 @@ nnoremap <leader>fh <cmd>Telescope help_tags<cr>
 nnoremap <leader>fc <cmd>Telescope colorscheme<cr>
 nnoremap <leader>f/ <cmd>Telescope current_buffer_fuzzy_find<cr>
 nnoremap <silent> <Esc><Esc> <Esc>:nohlsearch<CR><Esc>
+nnoremap <leader>mm :MergetoolToggle<CR>
 nnoremap <leader><leader>m :lua require("harpoon.mark").add_file()<CR>
 nnoremap <leader><leader>h :lua require("harpoon.ui").toggle_quick_menu()<CR>
 nnoremap <leader><leader>u :lua require("harpoon.ui").nav_next()<CR>
@@ -298,14 +305,19 @@ nnoremap <leader><leader>3 :lua require("harpoon.ui").nav_file(3)<CR>
 nnoremap <leader><leader>4 :lua require("harpoon.ui").nav_file(4)<CR>
 nnoremap <leader><leader>5 :lua require("harpoon.ui").nav_file(5)<CR>
 nnoremap <leader><leader>f :Telescope harpoon marks<CR>
+nnoremap <leader>s <cmd>lua require('spectre').open()<CR>
+nnoremap <leader>sw <cmd>lua require('spectre').open_visual({select_word=true})<CR>
+vnoremap <leader>s <esc>:lua require('spectre').open_visual()<CR>
+nnoremap <leader>sp viw:lua require('spectre').open_file_search()<cr>
 
-" Normal remaps
+"Normal remaps
 nnoremap qq $
 nnoremap <C-u> <C-u>zz
 nnoremap <C-d> <C-d>zz
 nnoremap <leader>p :pu 0<CR>
 nnoremap p "0p
 nnoremap <C-p> p
+nnoremap ; :
 
 " Insert remaps
 inoremap jj <Esc>
