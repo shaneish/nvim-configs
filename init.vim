@@ -50,17 +50,17 @@ Plug 'psf/black', { 'branch': 'stable' }
 Plug 'heavenshell/vim-pydocstring'
 
 " Aesthetics - Colorschemes
-Plug 'luisiacc/gruvbox-baby', {'branch': 'main'}
+" Plug 'luisiacc/gruvbox-baby', {'branch': 'main'}
 Plug 'zaki/zazen'
-Plug 'yuttie/hydrangea-vim'
-Plug 'folke/tokyonight.nvim', { 'branch': 'main' }
-Plug 'danilo-augusto/vim-afterglow'
+" Plug 'yuttie/hydrangea-vim'
+" Plug 'folke/tokyonight.nvim', { 'branch': 'main' }
+" Plug 'danilo-augusto/vim-afterglow'
+Plug 'navarasu/onedark.nvim'
 
 " Aesthetics - Others
 Plug 'junegunn/rainbow_parentheses.vim'
 Plug 'junegunn/limelight.vim'
 Plug 'junegunn/vim-journal'
-Plug 'navarasu/onedark.nvim'
 
 " Better tabs + buffers
 Plug 'kyazdani42/nvim-web-devicons'
@@ -96,6 +96,7 @@ set hidden
 set title
 set matchpairs+=<:>
 set iskeyword-=_
+let mapleader=","
 
 "" Filetype-Specific Configurations
 
@@ -163,8 +164,8 @@ autocmd BufWinEnter,WinEnter term://* startinsert
 autocmd BufLeave term://* stopinsert
 
 " Python
-let g:python3_host_prog = '~/.config/nvim/env/bin/python3'
-let g:pydocstring_doq_path = '~/.config/nvim/env/bin/doq'
+let g:python3_host_prog = '~/.config/nvim/venv/bin/python3'
+let g:pydocstring_doq_path = '~/.config/nvim/venv/bin/doq'
 
 
 """ Core plugin configuration (lua)
@@ -202,17 +203,6 @@ vim.lsp.handlers["textDocument/publishDiagnostics"] =
         -- Disable underline, it's very annoying
         underline = false
         })
-local rt = require("rust-tools")
-rt.setup({
-  server = {
-    on_attach = function(_, bufnr)
-      -- Hover actions
-      vim.keymap.set("n", "<C-space>", rt.hover_actions.hover_actions, { buffer = bufnr })
-      -- Code action groups
-      vim.keymap.set("n", "<Leader>a", rt.code_action_group.code_action_group, { buffer = bufnr })
-    end,
-  },
-})
 
 local opts = { noremap=true, silent=true }
 vim.keymap.set('n', '<space>e', vim.diagnostic.open_float, opts)
@@ -245,6 +235,17 @@ local on_attach = function(client, bufnr)
   vim.keymap.set('n', 'gr', vim.lsp.buf.references, bufopts)
   vim.keymap.set('n', '<space>f', function() vim.lsp.buf.format { async = true } end, bufopts)
 end
+local rt = require("rust-tools")
+rt.setup({
+  server = {
+    on_attach = function(_, bufnr)
+      -- Hover actions
+      vim.keymap.set("n", "<C-space>", rt.hover_actions.hover_actions, { buffer = bufnr })
+      -- Code action groups
+      vim.keymap.set("n", "<Leader>a", rt.code_action_group.code_action_group, { buffer = bufnr })
+    end,
+  },
+})
 EOF
 
 let g:mergetool_layout = 'mr'
@@ -262,17 +263,14 @@ endfunction
 """ Custom Mappings (vim) (lua custom mappings are within individual lua config files)
 
 " Core
-let mapleader=","
 nmap <leader>q :NvimTreeFindFileToggle<CR>:set relativenumber<CR>:set nowrap<CR>
 nmap \ <leader>q
 nmap <leader>r :so ~/.config/nvim/init.vim<CR>
 nmap <leader>t :call TrimWhitespace()<CR>
-xmap <leader>a gaip*
-nmap <leader>a gaip*
 nmap <leader><leader>r :RainbowParentheses!!<CR>
 nmap <leader>j :set filetype=journal<CR>
 nmap <leader>k :ColorToggle<CR>
-nmap <leader>l :Limelight!!<CR>
+nmap <leader>l :Limeligh!!<CR>
 xmap <leader>l :Limelight!!<CR>
 nmap <silent> <leader><leader> :noh<CR>
 nmap <Tab> :bnext<CR>
@@ -305,7 +303,7 @@ nnoremap <leader><leader>3 :lua require("harpoon.ui").nav_file(3)<CR>
 nnoremap <leader><leader>4 :lua require("harpoon.ui").nav_file(4)<CR>
 nnoremap <leader><leader>5 :lua require("harpoon.ui").nav_file(5)<CR>
 nnoremap <leader><leader>f :Telescope harpoon marks<CR>
-nnoremap <leader>s <cmd>lua require('spectre').open()<CR>
+nnoremap <leader><leader>s <cmd>lua require('spectre').open()<CR>
 nnoremap <leader>sw <cmd>lua require('spectre').open_visual({select_word=true})<CR>
 vnoremap <leader>s <esc>:lua require('spectre').open_visual()<CR>
 nnoremap <leader>sp viw:lua require('spectre').open_file_search()<cr>
