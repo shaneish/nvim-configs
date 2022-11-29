@@ -2,9 +2,9 @@
 call plug#begin()
 
 " Core (treesitter, nvim-lspconfig, nvim-cmp, nvim-telescope, nvim-lualine)
-Plug 'nvim-treesitter/nvim-treesitter', { 'commit': 'fd4525fd9e61950520cea4737abc1800ad4aabb' }
+Plug 'nvim-treesitter/nvim-treesitter'
 Plug 'nvim-treesitter/playground'
-Plug 'neovim/nvim-lspconfig'
+
 Plug 'hrsh7th/cmp-nvim-lsp'
 Plug 'hrsh7th/cmp-buffer'
 Plug 'hrsh7th/cmp-path'
@@ -44,6 +44,7 @@ Plug 'ThePrimeagen/harpoon'
 Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install' }
 Plug 'windwp/nvim-spectre'
 Plug 'samoshkin/vim-mergetool'
+Plug 'neovim/nvim-lspconfig'
 
 " Functionalities - Python
 Plug 'psf/black', { 'branch': 'stable' }
@@ -74,7 +75,7 @@ set showmatch               " show matching
 set expandtab               " converts tabs to white space
 set autoindent              " indent a new line the same amount as the line just typed
 set number                  " add line numbers
-set cc=120                  " set an 120 column border for good coding style
+set cc=120                 " set an 120 column border for good coding style
 filetype plugin indent on   "allow auto-indenting depending on file type
 syntax on                   " syntax highlighting
 set clipboard=unnamedplus   " using system clipboard
@@ -91,7 +92,7 @@ set list listchars=trail:»,tab:»-
 set fillchars+=vert:\ 
 set wrap breakindent
 set encoding=utf-8
-set textwidth=0
+set textwidth=120
 set hidden
 set title
 set matchpairs+=<:>
@@ -176,6 +177,7 @@ lua << EOF
   require'lspconfig'.tflint.setup{}
   require'lspconfig'.pyright.setup{}
   require('spectre').setup()
+  require('lspconfig-config')
 
   vim.cmd([[silent! autocmd! filetypedetect BufRead,BufNewFile *.tf]])
   vim.cmd([[autocmd BufRead,BufNewFile *.hcl set filetype=hcl]])
@@ -189,7 +191,6 @@ servers = {
     }
 require('treesitter-config')
 require('nvim-cmp-config')
-require('lspconfig-config')
 require('telescope-config')
 require('lualine-config')
 require('nvim-tree-config')

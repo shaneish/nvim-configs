@@ -31,13 +31,13 @@ end
 -- Update nvim-cmp capabilities and add them to each language server
 local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
 
-function add_capabilities()
-    for _, lsp in ipairs(servers) do
-        require('lspconfig')[lsp].setup {
-            capabilities = capabilities,
-            on_attach = on_attach,
-        }
-    end
-end
-
-add_capabilities()
+-- function add_capabilities()
+--     for _, lsp in ipairs(servers) do
+--         require('lspconfig')[lsp].setup {
+--             capabilities = capabilities,
+--             on_attach = on_attach,
+--         }
+--     end
+-- end
+-- 
+-- add_capabilities()
