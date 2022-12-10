@@ -44,6 +44,8 @@ Plug 'ThePrimeagen/harpoon'
 Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install' }
 Plug 'windwp/nvim-spectre'
 Plug 'samoshkin/vim-mergetool'
+Plug 'rlane/pounce.nvim'
+Plug 'ggandor/leap.nvim'
 
 " Functionalities - Python
 Plug 'psf/black', { 'branch': 'stable' }
@@ -130,8 +132,8 @@ colorscheme onedark
 
 set termguicolors
 
-highlight Comment guifg=#5291ad
-highlight LineNr guifg=#5291ad
+highlight Comment guifg=#cf04cb
+highlight LineNr guifg=#cf04cb
 
 " nvim-cmp
 set completeopt=menu,menuone,noselect
@@ -172,22 +174,13 @@ let g:pydocstring_doq_path = '~/.config/nvim/venv/bin/doq'
 
 " terraform stuff
 lua << EOF
-  require'lspconfig'.terraformls.setup{}
-  require'lspconfig'.tflint.setup{}
-  require'lspconfig'.pyright.setup{}
-  require('spectre').setup()
-
-  vim.cmd([[silent! autocmd! filetypedetect BufRead,BufNewFile *.tf]])
-  vim.cmd([[autocmd BufRead,BufNewFile *.hcl set filetype=hcl]])
-  vim.cmd([[autocmd BufRead,BufNewFile .terraformrc,terraform.rc set filetype=hcl]])
-  vim.cmd([[autocmd BufRead,BufNewFile *.tf,*.tfvars set filetype=terraform]])
-  vim.cmd([[autocmd BufRead,BufNewFile *.tfstate,*.tfstate.backup set filetype=json]])
-  vim.cmd([[let g:terraform_fmt_on_save=1]])
-  vim.cmd([[let g:terraform_align=1]])
 servers = {
-    'pyright'
+    'pyright',
+    'tflint',
+    'terraformls'
     }
 require('treesitter-config')
+require('spectre').setup()
 require('nvim-cmp-config')
 require('lspconfig-config')
 require('telescope-config')
@@ -195,9 +188,18 @@ require('lualine-config')
 require('nvim-tree-config')
 require('diagnostics')
 require('telescope').load_extension('harpoon')
+require('leap').add_default_mappings()
 require('transparent').setup({
     enable = true
 })
+vim.cmd([[silent! autocmd! filetypedetect BufRead,BufNewFile *.tf]])
+vim.cmd([[autocmd BufRead,BufNewFile *.hcl set filetype=hcl]])
+vim.cmd([[autocmd BufRead,BufNewFile .terraformrc,terraform.rc set filetype=hcl]])
+vim.cmd([[autocmd BufRead,BufNewFile *.tf,*.tfvars set filetype=terraform]])
+vim.cmd([[autocmd BufRead,BufNewFile *.tfstate,*.tfstate.backup set filetype=json]])
+vim.cmd([[let g:terraform_fmt_on_save=1]])
+vim.cmd([[let g:terraform_align=1]])
+
 vim.lsp.handlers["textDocument/publishDiagnostics"] =
     vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, {
         -- Disable underline, it's very annoying
@@ -304,9 +306,9 @@ nnoremap <leader><leader>4 :lua require("harpoon.ui").nav_file(4)<CR>
 nnoremap <leader><leader>5 :lua require("harpoon.ui").nav_file(5)<CR>
 nnoremap <leader><leader>f :Telescope harpoon marks<CR>
 nnoremap <leader><leader>s <cmd>lua require('spectre').open()<CR>
-nnoremap <leader>sw <cmd>lua require('spectre').open_visual({select_word=true})<CR>
-vnoremap <leader>s <esc>:lua require('spectre').open_visual()<CR>
-nnoremap <leader>sp viw:lua require('spectre').open_file_search()<cr>
+nnoremap <leader><leader>sw <cmd>lua require('spectre').open_visual({select_word=true})<CR>
+vnoremap <leader><leader>sv <esc>:lua require('spectre').open_visual()<CR>
+nnoremap <leader><leader>sp viw:lua require('spectre').open_file_search()<cr>
 
 "Normal remaps
 nnoremap qq $
@@ -316,6 +318,15 @@ nnoremap <leader>p :pu 0<CR>
 nnoremap p "0p
 nnoremap <C-p> p
 nnoremap ; :
+nnoremap qw <Esc>A;<Esc>
+nnoremap q{ 0vf{%
+nnoremap q( 0vf(%
+nnoremap q[ 0vf[%
+nnoremap q< 0vf<%
+nnoremap R s
+nnoremap S <cmd>Pounce<CR>
+nnoremap <C-s> <cmd>PounceRepeat<CR>
+nnoremap <leader>w <cmd>Pounce<CR>
 
 " Insert remaps
 inoremap jj <Esc>
@@ -323,6 +334,8 @@ inoremap ii <Esc>la
 inoremap hh <Esc>la<BS>
 inoremap uu <C-e>
 inoremap qq <Esc>A
+inoremap qw <Esc>A;<CR>
+inoremap qe <C-e><CR>
 
 " visual remaps
 xnoremap qq $
@@ -330,3 +343,5 @@ xnoremap <leader>{ f{%
 xnoremap <leader>( f(%
 xnoremap <leader>[ f[%
 xnoremap <leader>< f<%
+xnoremap <leader>w <cmd>Pounce<CR>
+xnoremap <leader>i g<C-a>
