@@ -46,6 +46,7 @@ Plug 'windwp/nvim-spectre'
 Plug 'samoshkin/vim-mergetool'
 Plug 'rlane/pounce.nvim'
 Plug 'ggandor/leap.nvim'
+Plug 'goolord/alpha-nvim'
 
 " Functionalities - Python
 Plug 'psf/black', { 'branch': 'stable' }
@@ -98,7 +99,7 @@ set hidden
 set title
 set matchpairs+=<:>
 set iskeyword-=_
-let mapleader=","
+let mapleader=" "
 
 "" Filetype-Specific Configurations
 
@@ -177,7 +178,8 @@ lua << EOF
 servers = {
     'pyright',
     'tflint',
-    'terraformls'
+    'terraformls',
+    'gopls'
     }
 require('treesitter-config')
 require('spectre').setup()
@@ -192,6 +194,7 @@ require('leap').add_default_mappings()
 require('transparent').setup({
     enable = true
 })
+require('alpha').setup(require('alpha.themes.dashboard').config)
 vim.cmd([[silent! autocmd! filetypedetect BufRead,BufNewFile *.tf]])
 vim.cmd([[autocmd BufRead,BufNewFile *.hcl set filetype=hcl]])
 vim.cmd([[autocmd BufRead,BufNewFile .terraformrc,terraform.rc set filetype=hcl]])
@@ -279,7 +282,7 @@ nmap <Tab> :bnext<CR>
 nmap <S-Tab> :bprevious<CR>
 nmap <leader>$s <C-w>s<C-w>j:terminal<CR>:set nonumber<CR><S-a>
 nmap <leader>$v <C-w>v<C-w>l:terminal<CR>:set nonumber<CR><S-a>
-nmap <leader>dd :bd<CR>
+nmap <leader>dd :bd!<CR>
 nmap <leader>n :cnext<CR>
 
 " Python
@@ -312,17 +315,22 @@ nnoremap <leader><leader>sp viw:lua require('spectre').open_file_search()<cr>
 
 "Normal remaps
 nnoremap qq $
+nnoremap qw <Esc>A;<Esc>
+nnoremap qe _
 nnoremap <C-u> <C-u>zz
+nnoremap <leader><leader>j $
+nnoremap <leader><leader>f 0
+nnoremap <leader><leader>q <Esc>A;<Esc>
+nnoremap <leader><leader>d <Esc>_
 nnoremap <C-d> <C-d>zz
 nnoremap <leader>p :pu 0<CR>
 nnoremap p "0p
 nnoremap <C-p> p
 nnoremap ; :
-nnoremap qw <Esc>A;<Esc>
-nnoremap q{ 0vf{%
-nnoremap q( 0vf(%
-nnoremap q[ 0vf[%
-nnoremap q< 0vf<%
+nnoremap q{ 0v$F{%
+nnoremap q( 0v$F(%
+nnoremap q[ 0v$F[%
+nnoremap q< 0v$F<%
 nnoremap R s
 nnoremap S <cmd>Pounce<CR>
 nnoremap <C-s> <cmd>PounceRepeat<CR>
@@ -334,7 +342,7 @@ inoremap ii <Esc>la
 inoremap hh <Esc>la<BS>
 inoremap uu <C-e>
 inoremap qq <Esc>A
-inoremap qw <Esc>A;<CR>
+inoremap qw <Esc>A;
 inoremap qe <C-e><CR>
 
 " visual remaps
