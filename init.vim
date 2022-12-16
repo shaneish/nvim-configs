@@ -268,25 +268,22 @@ endfunction
 """ Custom Mappings (vim) (lua custom mappings are within individual lua config files)
 
 " Core
-nmap <leader>q :NvimTreeFindFileToggle<CR>:set relativenumber<CR>:set nowrap<CR>
-nmap \ <leader>q
+nmap \ :NvimTreeFindFileToggle<CR>:set relativenumber<CR>:set nowrap<CR>
 nmap <leader>r :so ~/.config/nvim/init.vim<CR>
 nmap <leader>t :call TrimWhitespace()<CR>
 nmap <leader><leader>r :RainbowParentheses!!<CR>
-nmap <leader>j :set filetype=journal<CR>
-nmap <leader>k :ColorToggle<CR>
-nmap <leader>l :Limeligh!!<CR>
-xmap <leader>l :Limelight!!<CR>
 nmap <silent> <leader><leader> :noh<CR>
 nmap <Tab> :bnext<CR>
 nmap <S-Tab> :bprevious<CR>
 nmap <leader>$s <C-w>s<C-w>j:terminal<CR>:set nonumber<CR><S-a>
 nmap <leader>$v <C-w>v<C-w>l:terminal<CR>:set nonumber<CR><S-a>
-nmap <leader>dd :bd!<CR>
+nmap <leader><leader>d <cmd>bd!<CR>
+nmap <leader><leader>w <cmd>w<CR>
+nmap <leader><leader>q <cmd>q!<CR>
+nmap <leader><leader>s <cmd>wq<CR>
 nmap <leader>n :cnext<CR>
 
 " Python
-autocmd Filetype python nmap <leader>d <Plug>(pydocstring)
 autocmd FileType python nmap <leader>fmt :Black<CR>
 
 " Telescope mappings
@@ -296,32 +293,32 @@ nnoremap <leader>fb <cmd>Telescope buffers<cr>
 nnoremap <leader>fh <cmd>Telescope help_tags<cr>
 nnoremap <leader>fc <cmd>Telescope colorscheme<cr>
 nnoremap <leader>f/ <cmd>Telescope current_buffer_fuzzy_find<cr>
-nnoremap <silent> <Esc><Esc> <Esc>:nohlsearch<CR><Esc>
-nnoremap <leader>mm :MergetoolToggle<CR>
-nnoremap <leader><leader>m :lua require("harpoon.mark").add_file()<CR>
-nnoremap <leader><leader>h :lua require("harpoon.ui").toggle_quick_menu()<CR>
-nnoremap <leader><leader>u :lua require("harpoon.ui").nav_next()<CR>
-nnoremap <leader><leader>d :lua require("harpoon.ui").nav_prev()<CR>
-nnoremap <leader><leader>1 :lua require("harpoon.ui").nav_file(1)<CR>
-nnoremap <leader><leader>2 :lua require("harpoon.ui").nav_file(2)<CR>
-nnoremap <leader><leader>3 :lua require("harpoon.ui").nav_file(3)<CR>
-nnoremap <leader><leader>4 :lua require("harpoon.ui").nav_file(4)<CR>
-nnoremap <leader><leader>5 :lua require("harpoon.ui").nav_file(5)<CR>
-nnoremap <leader><leader>f :Telescope harpoon marks<CR>
-nnoremap <leader><leader>s <cmd>lua require('spectre').open()<CR>
-nnoremap <leader><leader>sw <cmd>lua require('spectre').open_visual({select_word=true})<CR>
-vnoremap <leader><leader>sv <esc>:lua require('spectre').open_visual()<CR>
-nnoremap <leader><leader>sp viw:lua require('spectre').open_file_search()<cr>
+nnoremap <silent> <Esc><Esc> <Esc><cmd>nohlsearch<CR><Esc>
+nnoremap <leader>mm <cmd>MergetoolToggle<CR>
+nnoremap <leader>hm <cmd>lua require("harpoon.mark").add_file()<CR>
+nnoremap <leader>hh <cmd>lua require("harpoon.ui").toggle_quick_menu()<CR>
+nnoremap <leader>hu <cmd>lua require("harpoon.ui").nav_next()<CR>
+nnoremap <leader>hd <cmd>lua require("harpoon.ui").nav_prev()<CR>
+nnoremap <leader>h1 <cmd>lua require("harpoon.ui").nav_file(1)<CR>
+nnoremap <leader>h2 <cmd>lua require("harpoon.ui").nav_file(2)<CR>
+nnoremap <leader>h3 <cmd>lua require("harpoon.ui").nav_file(3)<CR>
+nnoremap <leader>h4 <cmd>lua require("harpoon.ui").nav_file(4)<CR>
+nnoremap <leader>h5 <cmd>lua require("harpoon.ui").nav_file(5)<CR>
+nnoremap <leader>hf <cmd>Telescope harpoon marks<CR>
+nnoremap <leader>ss <cmd>lua require('spectre').open()<CR>
+nnoremap <leader>sw <cmd>lua require('spectre').open_visual({select_word=true})<CR>
+vnoremap <leader>sv <esc><cmd>lua require('spectre').open_visual()<CR>
+nnoremap <leader>sp viw<cmd>lua require('spectre').open_file_search()<CR>
 
 "Normal remaps
 nnoremap qq $
 nnoremap qw <Esc>A;<Esc>
 nnoremap qe _
 nnoremap <C-u> <C-u>zz
-nnoremap <leader><leader>j $
-nnoremap <leader><leader>f 0
-nnoremap <leader><leader>q <Esc>A;<Esc>
-nnoremap <leader><leader>d <Esc>_
+nnoremap <leader>k $
+nnoremap <leader>j _
+nnoremap <leader>q A;<Esc>
+nnoremap <leader>d 0
 nnoremap <C-d> <C-d>zz
 nnoremap <leader>p :pu 0<CR>
 nnoremap p "0p
@@ -332,7 +329,6 @@ nnoremap q( 0v$F(%
 nnoremap q[ 0v$F[%
 nnoremap q< 0v$F<%
 nnoremap R s
-nnoremap S <cmd>Pounce<CR>
 nnoremap <C-s> <cmd>PounceRepeat<CR>
 nnoremap <leader>w <cmd>Pounce<CR>
 
