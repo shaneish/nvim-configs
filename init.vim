@@ -47,6 +47,7 @@ Plug 'samoshkin/vim-mergetool'
 Plug 'rlane/pounce.nvim'
 Plug 'ggandor/leap.nvim'
 Plug 'goolord/alpha-nvim'
+Plug 'booperlv/nvim-gomove'
 
 " Functionalities - Python
 Plug 'psf/black', { 'branch': 'stable' }
@@ -252,6 +253,18 @@ rt.setup({
     end,
   },
 })
+
+-- gmove
+require("gomove").setup {
+  -- whether or not to map default key bindings, (true/false)
+  map_defaults = true,
+  -- whether or not to reindent lines moved vertically (true/false)
+  reindent = true,
+  -- whether or not to undojoin same direction moves (true/false)
+  undojoin = true,
+  -- whether to not to move past end column when moving blocks horizontally, (true/false)
+  move_past_end_col = false,
+}
 EOF
 
 let g:mergetool_layout = 'mr'
@@ -272,7 +285,6 @@ endfunction
 nmap \ :NvimTreeFindFileToggle<CR>:set relativenumber<CR>:set nowrap<CR>
 nmap <leader>r :so ~/.config/nvim/init.vim<CR>
 nmap <leader>t :call TrimWhitespace()<CR>
-nmap <leader><leader>r :RainbowParentheses!!<CR>
 nmap <silent> <leader><leader> :noh<CR>
 nmap <Tab> :bnext<CR>
 nmap <S-Tab> :bprevious<CR>
@@ -329,6 +341,8 @@ nnoremap <leader>q< 0v$F<%
 nnoremap R s
 nnoremap <C-s> <cmd>PounceRepeat<CR>
 nnoremap <leader>w <cmd>Pounce<CR>
+nnoremap <C-j> <C-d>zz
+nnoremap <C-k> <C-u>zz
 
 " Insert remaps
 inoremap jj <Esc>
