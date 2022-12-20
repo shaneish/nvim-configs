@@ -58,7 +58,8 @@ Plug 'zaki/zazen'
 " Plug 'yuttie/hydrangea-vim'
 " Plug 'folke/tokyonight.nvim', { 'branch': 'main' }
 " Plug 'danilo-augusto/vim-afterglow'
-Plug 'navarasu/onedark.nvim'
+" Plug 'navarasu/onedark.nvim'
+Plug 'srcery-colors/srcery-vim'
 
 " Aesthetics - Others
 Plug 'junegunn/rainbow_parentheses.vim'
@@ -128,13 +129,14 @@ highlight VertSplit gui=NONE guibg=NONE guifg=#444444 cterm=NONE ctermbg=NONE ct
 " let g:afterglow_blackout=1
 " colorscheme afterglow
 " Vim
-let g:onedark_config = { 'style': 'deep' }
-colorscheme onedark
+" let g:onedark_config = { 'style': 'deep' }
+set t_Co=256
+colorscheme srcery
 
 set termguicolors
 
-highlight Comment guifg=#cf04cb
-highlight LineNr guifg=#cf04cb
+" highlight Comment guifg=#cf04cb
+" highlight LineNr guifg=#cf04cb
 
 " nvim-cmp
 set completeopt=menu,menuone,noselect
@@ -173,7 +175,6 @@ let g:pydocstring_doq_path = '~/.config/nvim/venv/bin/doq'
 
 """ Core plugin configuration (lua)
 
-" terraform stuff
 lua << EOF
 servers = {
     'pyright',
@@ -311,23 +312,20 @@ vnoremap <leader>sv <esc><cmd>lua require('spectre').open_visual()<CR>
 nnoremap <leader>sp viw<cmd>lua require('spectre').open_file_search()<CR>
 
 "Normal remaps
-nnoremap qq $
-nnoremap qw <Esc>A;<Esc>
-nnoremap qe _
 nnoremap <C-u> <C-u>zz
 nnoremap <leader>k $
 nnoremap <leader>j _
-nnoremap <leader>q A;<Esc>
+nnoremap <leader>qw A;<Esc>
 nnoremap <leader>d 0
 nnoremap <C-d> <C-d>zz
 nnoremap <leader>p :pu 0<CR>
 nnoremap p "0p
 nnoremap <C-p> p
 nnoremap ; :
-nnoremap q{ 0v$F{%
-nnoremap q( 0v$F(%
-nnoremap q[ 0v$F[%
-nnoremap q< 0v$F<%
+nnoremap <leader>q{ 0v$F{%
+nnoremap <leader>q( 0v$F(%
+nnoremap <leader>q[ 0v$F[%
+nnoremap <leader>q< 0v$F<%
 nnoremap R s
 nnoremap <C-s> <cmd>PounceRepeat<CR>
 nnoremap <leader>w <cmd>Pounce<CR>
