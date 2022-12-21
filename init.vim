@@ -324,12 +324,10 @@ vnoremap <leader>sv <esc><cmd>lua require('spectre').open_visual()<CR>
 nnoremap <leader>sp viw<cmd>lua require('spectre').open_file_search()<CR>
 
 "Normal remaps
-nnoremap <C-u> <C-u>zz
 nnoremap <leader>k $
 nnoremap <leader>j _
 nnoremap <leader>qw A;<Esc>
 nnoremap <leader>d 0
-nnoremap <C-d> <C-d>zz
 nnoremap <leader>p :pu 0<CR>
 nnoremap p "0p
 nnoremap <C-p> p
@@ -361,3 +359,5 @@ xnoremap <leader>[ f[%
 xnoremap <leader>< f<%
 xnoremap <leader>w <cmd>Pounce<CR>
 xnoremap <leader>i g<C-a>
+xnoremap < <gv
+xnoremap > >gv
