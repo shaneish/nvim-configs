@@ -13,7 +13,7 @@ Plug 'hrsh7th/nvim-cmp'
 Plug 'hrsh7th/cmp-vsnip'
 Plug 'hrsh7th/vim-vsnip'
 Plug 'hrsh7th/cmp-nvim-lsp-signature-help'
-Plug 'hrsh7th/cmp-nvim-lua'
+Plug 'hrsh7th/cmp-nvim-lua'sdf
 Plug 'saadparwaiz1/cmp_luasnip'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim'
@@ -146,8 +146,8 @@ highlight VertSplit gui=NONE guibg=NONE guifg=#444444 cterm=NONE ctermbg=NONE ct
 
 set termguicolors
 
-" highlight Comment guifg=#cf04cb
-" highlight LineNr guifg=#cf04cb
+highlight Comment guifg=#5291ad
+highlight LineNr guifg=#5291ad
 
 " nvim-cmp
 set completeopt=menu,menuone,noselect
