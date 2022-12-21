@@ -2,7 +2,7 @@
 call plug#begin()
 
 " Core (treesitter, nvim-lspconfig, nvim-cmp, nvim-telescope, nvim-lualine)
-Plug 'nvim-treesitter/nvim-treesitter', { 'commit': 'fd4525fd9e61950520cea4737abc1800ad4aabb' }
+Plug 'nvim-treesitter/nvim-treesitter'
 Plug 'nvim-treesitter/playground'
 Plug 'neovim/nvim-lspconfig'
 Plug 'hrsh7th/cmp-nvim-lsp'
@@ -13,6 +13,8 @@ Plug 'hrsh7th/nvim-cmp'
 Plug 'hrsh7th/cmp-vsnip'
 Plug 'hrsh7th/vim-vsnip'
 Plug 'hrsh7th/cmp-nvim-lsp-signature-help'
+Plug 'hrsh7th/cmp-nvim-lua'
+Plug 'saadparwaiz1/cmp_luasnip'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim'
 Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'make' }
@@ -49,6 +51,11 @@ Plug 'ggandor/leap.nvim'
 Plug 'goolord/alpha-nvim'
 Plug 'booperlv/nvim-gomove'
 Plug 'ellisonleao/glow.nvim'
+Plug 'williamboman/mason.nvim'
+Plug 'williamboman/mason-lspconfig.nvim'
+Plug 'L3MON4D3/LuaSnip'
+Plug 'rafamadriz/friendly-snippets'
+Plug 'VonHeikemen/lsp-zero.nvim'
 
 " Functionalities - Python
 Plug 'psf/black', { 'branch': 'stable' }
@@ -184,6 +191,9 @@ servers = {
     'terraformls',
     'gopls'
     }
+local lsp = require('lsp-zero')
+lsp.preset('recommended')
+lsp.setup()
 require('treesitter-config')
 require('spectre').setup()
 require('nvim-cmp-config')
