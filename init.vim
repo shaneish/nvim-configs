@@ -301,8 +301,6 @@ nmap \ :NvimTreeFindFileToggle<CR>:set relativenumber<CR>:set nowrap<CR>
 nmap <leader>r :so ~/.config/nvim/init.vim<CR>
 nmap <leader>t :call TrimWhitespace()<CR>
 nmap <silent> <leader><leader> :noh<CR>
-nmap <Tab> :bnext<CR>
-nmap <S-Tab> :bprevious<CR>
 nmap <leader>$s <C-w>s<C-w>j:terminal<CR>:set nonumber<CR><S-a>
 nmap <leader>$v <C-w>v<C-w>l:terminal<CR>:set nonumber<CR><S-a>
 nmap <leader><leader>d <cmd>bd!<CR>
@@ -356,6 +354,8 @@ nnoremap <C-s> <cmd>PounceRepeat<CR>
 nnoremap <leader>w <cmd>Pounce<CR>
 nnoremap <C-j> <C-d>zz
 nnoremap <C-k> <C-u>zz
+nnoremap <Tab> :bnext<CR>
+nnoremap <S-Tab> :bprevious<CR>
 
 " Insert remaps
 inoremap jj <Esc>
@@ -376,3 +376,5 @@ xnoremap <leader>w <cmd>Pounce<CR>
 xnoremap <leader>i g<C-a>
 xnoremap < <gv
 xnoremap > >gv
+xnoremap <leader>k $
+xnoremap <leader>j _
