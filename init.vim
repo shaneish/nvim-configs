@@ -302,7 +302,13 @@ endfunction
 """ Custom Mappings (vim) (lua custom mappings are within individual lua config files)
 
 " Core
+<<<<<<< HEAD
 nmap \ :NvimTreeFindFileToggle<CR>:set relativenumber<CR>:set nowrap<CR>
+=======
+let mapleader=","
+nmap <leader>q :NvimTreeFindFileToggle<CR>:setlocal relativenumber<CR>
+nmap \ <leader>q
+>>>>>>> 7b9e0e9 (added relativenumbers to treetoggle shortcut)
 nmap <leader>r :so ~/.config/nvim/init.vim<CR>
 nmap <leader>t :call TrimWhitespace()<CR>
 nmap <silent> <leader><leader> :noh<CR>
@@ -350,6 +356,7 @@ nnoremap <leader>d 0
 nnoremap <leader>p :pu 0<CR>
 nnoremap p "0p
 nnoremap <C-p> p
+nnoremap P "0p
 nnoremap ; :
 nnoremap <leader>q{ 0v$F{%
 nnoremap <leader>q( 0v$F(%
