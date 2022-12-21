@@ -48,6 +48,7 @@ Plug 'rlane/pounce.nvim'
 Plug 'ggandor/leap.nvim'
 Plug 'goolord/alpha-nvim'
 Plug 'booperlv/nvim-gomove'
+Plug 'ellisonleao/glow.nvim'
 
 " Functionalities - Python
 Plug 'psf/black', { 'branch': 'stable' }
@@ -197,6 +198,10 @@ require('transparent').setup({
     enable = true
 })
 require('alpha').setup(require('alpha.themes.dashboard').config)
+require('glow').setup({
+    width = 120,
+    height = 140,
+})
 vim.cmd([[silent! autocmd! filetypedetect BufRead,BufNewFile *.tf]])
 vim.cmd([[autocmd BufRead,BufNewFile *.hcl set filetype=hcl]])
 vim.cmd([[autocmd BufRead,BufNewFile .terraformrc,terraform.rc set filetype=hcl]])
