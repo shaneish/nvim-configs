@@ -51,11 +51,11 @@ Plug 'ggandor/leap.nvim'
 Plug 'goolord/alpha-nvim'
 Plug 'booperlv/nvim-gomove'
 Plug 'ellisonleao/glow.nvim'
-Plug 'williamboman/mason.nvim'
-Plug 'williamboman/mason-lspconfig.nvim'
-Plug 'L3MON4D3/LuaSnip'
-Plug 'rafamadriz/friendly-snippets'
-Plug 'VonHeikemen/lsp-zero.nvim'
+" Plug 'williamboman/mason.nvim'
+" Plug 'williamboman/mason-lspconfig.nvim'
+" Plug 'L3MON4D3/LuaSnip'
+" Plug 'rafamadriz/friendly-snippets'
+" Plug 'VonHeikemen/lsp-zero.nvim'
 
 " Functionalities - Python
 Plug 'psf/black', { 'branch': 'stable' }
@@ -63,12 +63,14 @@ Plug 'heavenshell/vim-pydocstring'
 
 " Aesthetics - Colorschemes
 " Plug 'luisiacc/gruvbox-baby', {'branch': 'main'}
-Plug 'zaki/zazen'
+" Plug 'zaki/zazen'
 " Plug 'yuttie/hydrangea-vim'
 " Plug 'folke/tokyonight.nvim', { 'branch': 'main' }
 " Plug 'danilo-augusto/vim-afterglow'
 " Plug 'navarasu/onedark.nvim'
-Plug 'srcery-colors/srcery-vim'
+" Plug 'srcery-colors/srcery-vim'
+Plug 'tjdevries/colorbuddy.nvim', { 'branch': 'dev' }
+Plug 'jesseleite/nvim-noirbuddy'
 
 " Aesthetics - Others
 Plug 'junegunn/rainbow_parentheses.vim'
@@ -139,8 +141,8 @@ highlight VertSplit gui=NONE guibg=NONE guifg=#444444 cterm=NONE ctermbg=NONE ct
 " colorscheme afterglow
 " Vim
 " let g:onedark_config = { 'style': 'deep' }
-set t_Co=256
-colorscheme srcery
+" set t_Co=256
+" colorscheme srcery
 
 set termguicolors
 
@@ -185,6 +187,9 @@ let g:pydocstring_doq_path = '~/.config/nvim/venv/bin/doq'
 """ Core plugin configuration (lua)
 
 lua << EOF
+require('noirbuddy').setup {
+  preset = 'kiwi',
+}
 servers = {
     'pyright',
     'tflint',
@@ -306,7 +311,7 @@ nmap <leader>$v <C-w>v<C-w>l:terminal<CR>:set nonumber<CR><S-a>
 nmap <leader><leader>d <cmd>bd!<CR>
 nmap <leader><leader>w <cmd>w<CR>
 nmap <leader><leader>q <cmd>q!<CR>
-nmap <leader><leader>s <cmd>wq<CR>
+nmap <leader><leader>s <cmd>w!<CR><cmd>q!<CR>
 nmap <leader>n :cnext<CR>
 
 " Python
@@ -339,6 +344,7 @@ nnoremap <leader>sp viw<cmd>lua require('spectre').open_file_search()<CR>
 "Normal remaps
 nnoremap <leader>k $
 nnoremap <leader>j _
+nnoremap <leader>l A
 nnoremap <leader>qw A;<Esc>
 nnoremap <leader>d 0
 nnoremap <leader>p :pu 0<CR>
@@ -378,3 +384,5 @@ xnoremap < <gv
 xnoremap > >gv
 xnoremap <leader>k $
 xnoremap <leader>j _
+xnoremap <C-j> <C-d>zz
+xnoremap <C-k> <C-u>zz
