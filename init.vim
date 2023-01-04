@@ -146,9 +146,6 @@ highlight VertSplit gui=NONE guibg=NONE guifg=#444444 cterm=NONE ctermbg=NONE ct
 
 set termguicolors
 
-" highlight Comment guifg=#cf04cb
-" highlight LineNr guifg=#cf04cb
-
 " nvim-cmp
 set completeopt=menu,menuone,noselect
 
@@ -196,9 +193,9 @@ servers = {
     'terraformls',
     'gopls'
     }
-local lsp = require('lsp-zero')
-lsp.preset('recommended')
-lsp.setup()
+-- local lsp = require('lsp-zero')
+-- lsp.preset('recommended')
+-- lsp.setup()
 require('treesitter-config')
 require('spectre').setup()
 require('nvim-cmp-config')
@@ -286,6 +283,10 @@ require("gomove").setup {
   move_past_end_col = false,
 }
 EOF
+
+highlight Comment guifg=#ad517c
+highlight LineNr guifg=#969294
+
 
 let g:mergetool_layout = 'mr'
 let g:mergetool_prefer_revision = 'local'
