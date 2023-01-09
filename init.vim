@@ -51,6 +51,7 @@ Plug 'ggandor/leap.nvim'
 Plug 'goolord/alpha-nvim'
 Plug 'booperlv/nvim-gomove'
 Plug 'ellisonleao/glow.nvim'
+Plug 'akinsho/flutter-tools.nvim'
 " Plug 'williamboman/mason.nvim'
 " Plug 'williamboman/mason-lspconfig.nvim'
 " Plug 'L3MON4D3/LuaSnip'
@@ -69,8 +70,9 @@ Plug 'heavenshell/vim-pydocstring'
 " Plug 'danilo-augusto/vim-afterglow'
 " Plug 'navarasu/onedark.nvim'
 " Plug 'srcery-colors/srcery-vim'
-Plug 'tjdevries/colorbuddy.nvim', { 'branch': 'dev' }
-Plug 'jesseleite/nvim-noirbuddy'
+" Plug 'tjdevries/colorbuddy.nvim', { 'branch': 'dev' }
+" Plug 'jesseleite/nvim-noirbuddy'
+Plug 'ray-x/aurora'
 
 " Aesthetics - Others
 Plug 'junegunn/rainbow_parentheses.vim'
@@ -128,8 +130,6 @@ autocmd FileType markdown setlocal shiftwidth=2 tabstop=2 softtabstop=2
 autocmd FileType journal setlocal shiftwidth=2 tabstop=2 softtabstop=2
 
 """ Coloring
-highlight Normal guibg=NONE ctermbg=NONE
-highlight Error guibg=NONE ctermbg=NONE
 highlight link TSError Normal
 set fillchars+=vert:\│
 highlight WinSeparator gui=NONE guibg=NONE guifg=#444444 cterm=NONE ctermbg=NONE ctermfg=gray
@@ -143,8 +143,13 @@ highlight VertSplit gui=NONE guibg=NONE guifg=#444444 cterm=NONE ctermbg=NONE ct
 " let g:onedark_config = { 'style': 'deep' }
 " set t_Co=256
 " colorscheme srcery
-
 set termguicolors
+colorscheme aurora
+
+highlight Normal guibg=NONE ctermbg=NONE
+highlight Error guibg=NONE ctermbg=NONE
+highlight Comment guifg=#ad517c
+highlight LineNr guifg=#969294
 
 " nvim-cmp
 set completeopt=menu,menuone,noselect
@@ -184,9 +189,6 @@ let g:pydocstring_doq_path = '~/.config/nvim/venv/bin/doq'
 """ Core plugin configuration (lua)
 
 lua << EOF
-require('noirbuddy').setup {
-  preset = 'kiwi',
-}
 servers = {
     'pyright',
     'tflint',
@@ -214,6 +216,7 @@ require('glow').setup({
     width = 120,
     height = 140,
 })
+require("flutter-tools").setup{}
 vim.cmd([[silent! autocmd! filetypedetect BufRead,BufNewFile *.tf]])
 vim.cmd([[autocmd BufRead,BufNewFile *.hcl set filetype=hcl]])
 vim.cmd([[autocmd BufRead,BufNewFile .terraformrc,terraform.rc set filetype=hcl]])
@@ -283,10 +286,6 @@ require("gomove").setup {
   move_past_end_col = false,
 }
 EOF
-
-highlight Comment guifg=#ad517c
-highlight LineNr guifg=#969294
-
 
 let g:mergetool_layout = 'mr'
 let g:mergetool_prefer_revision = 'local'
@@ -361,6 +360,8 @@ nnoremap <C-s> <cmd>PounceRepeat<CR>
 nnoremap <leader>w <cmd>Pounce<CR>
 nnoremap <C-j> <C-d>zz
 nnoremap <C-k> <C-u>zz
+nnoremap j jzz
+nnoremap k kzz
 nnoremap <Tab> :bnext<CR>
 nnoremap <S-Tab> :bprevious<CR>
 
@@ -387,3 +388,5 @@ xnoremap <leader>k $
 xnoremap <leader>j _
 xnoremap <C-j> <C-d>zz
 xnoremap <C-k> <C-u>zz
+xnoremap j jzz
+nnoremap k kzz
