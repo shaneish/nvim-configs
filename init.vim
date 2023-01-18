@@ -341,14 +341,21 @@ vnoremap <leader>sv <esc><cmd>lua require('spectre').open_visual()<CR>
 nnoremap <leader>sp viw<cmd>lua require('spectre').open_file_search()<CR>
 
 "Normal remaps
-nnoremap <leader>k $
+nnoremap <leader>k g_
 nnoremap <leader>j _
 nnoremap <leader>l A
 nnoremap <leader>qw A;<Esc>
 nnoremap <leader>d 0
-nnoremap <leader>p :pu 0<CR>
+nnoremap <leader>y "+y
+nnoremap <leader>yy "+yy
+nnoremap <leader>Y "+yg_
+nnoremap <leader>p "+p
+nnoremap <leader>P "+P
+nnoremap y "0y
 nnoremap p "0p
-nnoremap <C-p> p
+nnoremap d "1d
+nnoremap x "_d
+nnoremap <C-p> "1p
 nnoremap ; :
 nnoremap <leader>q{ 0v$F{%
 nnoremap <leader>q( 0v$F(%
@@ -374,7 +381,7 @@ inoremap qw <Esc>A;
 inoremap qe <C-e><CR>
 
 " visual remaps
-xnoremap qq $
+xnoremap qq g_
 xnoremap <leader>{ f{%
 xnoremap <leader>( f(%
 xnoremap <leader>[ f[%
@@ -388,4 +395,14 @@ xnoremap <leader>j _
 xnoremap <C-j> <C-d>zz
 xnoremap <C-k> <C-u>zz
 xnoremap j jzz
-nnoremap k kzz
+xnoremap k kzz
+xnoremap <leader>y "+y
+xnoremap <leader>yy "+yy
+xnoremap <leader>Y "+yg_
+xnoremap <leader>p "+p
+xnoremap <leader>P "+P
+xnoremap y "0y
+xnoremap p "0p
+xnoremap d "1d
+xnoremap x "_d
+xnoremap <C-p> "1p
