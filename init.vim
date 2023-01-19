@@ -356,7 +356,7 @@ nnoremap <leader>P "+P
 nnoremap y "0y
 nnoremap p "0p
 nnoremap d "1d
-nnoremap x "_d
+nnoremap x "_x
 nnoremap <C-p> "1p
 nnoremap ; :
 nnoremap <leader>q{ 0v$F{%
@@ -406,5 +406,5 @@ xnoremap <leader>P "+P
 xnoremap y "0y
 xnoremap p "0p
 xnoremap d "1d
-xnoremap x "_d
+xnoremap x "_x
 xnoremap <C-p> "1p
