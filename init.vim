@@ -1,4 +1,4 @@
-""" Vim-Plug
+" " Vim-Plug
 call plug#begin()
 
 " Core (treesitter, nvim-lspconfig, nvim-cmp, nvim-telescope, nvim-lualine)
@@ -13,7 +13,7 @@ Plug 'hrsh7th/nvim-cmp'
 Plug 'hrsh7th/cmp-vsnip'
 Plug 'hrsh7th/vim-vsnip'
 Plug 'hrsh7th/cmp-nvim-lsp-signature-help'
-Plug 'hrsh7th/cmp-nvim-lua'sdf
+Plug 'hrsh7th/cmp-nvim-lua'
 Plug 'saadparwaiz1/cmp_luasnip'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim'
@@ -69,8 +69,9 @@ Plug 'heavenshell/vim-pydocstring'
 " Plug 'danilo-augusto/vim-afterglow'
 " Plug 'navarasu/onedark.nvim'
 " Plug 'srcery-colors/srcery-vim'
-Plug 'tjdevries/colorbuddy.nvim', { 'branch': 'dev' }
-Plug 'jesseleite/nvim-noirbuddy'
+" Plug 'tjdevries/colorbuddy.nvim', { 'branch': 'dev' }
+" Plug 'jesseleite/nvim-noirbuddy'
+Plug 'ray-x/aurora'
 
 " Aesthetics - Others
 Plug 'junegunn/rainbow_parentheses.vim'
@@ -145,9 +146,11 @@ highlight VertSplit gui=NONE guibg=NONE guifg=#444444 cterm=NONE ctermbg=NONE ct
 " colorscheme srcery
 
 set termguicolors
-
-highlight Comment guifg=#5291ad
-highlight LineNr guifg=#5291ad
+colorscheme aurora
+highlight Normal guibg=NONE ctermbg=NONE
+highlight Error guibg=NONE ctermbg=NONE
+highlight Comment guifg=#ad517c
+highlight LineNr guifg=#969294
 
 " nvim-cmp
 set completeopt=menu,menuone,noselect
@@ -187,18 +190,15 @@ let g:pydocstring_doq_path = '~/.config/nvim/venv/bin/doq'
 """ Core plugin configuration (lua)
 
 lua << EOF
-require('noirbuddy').setup {
-  preset = 'kiwi',
-}
 servers = {
     'pyright',
     'tflint',
     'terraformls',
     'gopls'
     }
-local lsp = require('lsp-zero')
-lsp.preset('recommended')
-lsp.setup()
+-- local lsp = require('lsp-zero')
+-- lsp.preset('recommended')
+-- lsp.setup()
 require('treesitter-config')
 require('spectre').setup()
 require('nvim-cmp-config')
@@ -250,7 +250,7 @@ local on_attach = function(client, bufnr)
   vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts)
   vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts)
   vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, bufopts)
-  vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, bufopts)
+  vim.keymap.set('n', '<space><C-k>', vim.lsp.buf.signature_help, bufopts)
   vim.keymap.set('n', '<space>wa', vim.lsp.buf.add_workspace_folder, bufopts)
   vim.keymap.set('n', '<space>wr', vim.lsp.buf.remove_workspace_folder, bufopts)
   vim.keymap.set('n', '<space>wl', function()
@@ -260,7 +260,7 @@ local on_attach = function(client, bufnr)
   vim.keymap.set('n', '<space>rn', vim.lsp.buf.rename, bufopts)
   vim.keymap.set('n', '<space>ca', vim.lsp.buf.code_action, bufopts)
   vim.keymap.set('n', 'gr', vim.lsp.buf.references, bufopts)
-  vim.keymap.set('n', '<space>f', function() vim.lsp.buf.format { async = true } end, bufopts)
+  vim.keymap.set('n', '<space><space>fmt', function() vim.lsp.buf.format { async = true } end, bufopts)
 end
 local rt = require("rust-tools")
 rt.setup({
@@ -287,6 +287,7 @@ require("gomove").setup {
 }
 EOF
 
+
 let g:mergetool_layout = 'mr'
 let g:mergetool_prefer_revision = 'local'
 
@@ -302,13 +303,8 @@ endfunction
 """ Custom Mappings (vim) (lua custom mappings are within individual lua config files)
 
 " Core
-<<<<<<< HEAD
 nmap \ :NvimTreeFindFileToggle<CR>:set relativenumber<CR>:set nowrap<CR>
-=======
-let mapleader=","
-nmap <leader>q :NvimTreeFindFileToggle<CR>:setlocal relativenumber<CR>
-nmap \ <leader>q
->>>>>>> 7b9e0e9 (added relativenumbers to treetoggle shortcut)
+nmap  :<leader>q
 nmap <leader>r :so ~/.config/nvim/init.vim<CR>
 nmap <leader>t :call TrimWhitespace()<CR>
 nmap <silent> <leader><leader> :noh<CR>
@@ -329,6 +325,7 @@ noremap <leader>fg <cmd>Telescope live_grep<cr>
 nnoremap <leader>fb <cmd>Telescope buffers<cr>
 nnoremap <leader>fh <cmd>Telescope help_tags<cr>
 nnoremap <leader>fc <cmd>Telescope colorscheme<cr>
+nnoremap <expr> <leader>F ':Telescope find_files<cr>' . "'" . expand('<cword>')
 nnoremap <leader>f/ <cmd>Telescope current_buffer_fuzzy_find<cr>
 nnoremap <silent> <Esc><Esc> <Esc><cmd>nohlsearch<CR><Esc>
 nnoremap <leader>mm <cmd>MergetoolToggle<CR>
@@ -347,16 +344,23 @@ nnoremap <leader>sw <cmd>lua require('spectre').open_visual({select_word=true})<
 vnoremap <leader>sv <esc><cmd>lua require('spectre').open_visual()<CR>
 nnoremap <leader>sp viw<cmd>lua require('spectre').open_file_search()<CR>
 
+
 "Normal remaps
-nnoremap <leader>k $
+nnoremap <leader>k g_
 nnoremap <leader>j _
 nnoremap <leader>l A
 nnoremap <leader>qw A;<Esc>
 nnoremap <leader>d 0
-nnoremap <leader>p :pu 0<CR>
+nnoremap <leader>y "+y
+nnoremap <leader>yy "+yy
+nnoremap <leader>Y "+yg_
+nnoremap <leader>p "+p
+nnoremap <leader>P "+P
+nnoremap y "0y
 nnoremap p "0p
-nnoremap <C-p> p
-nnoremap P "0p
+nnoremap d "1d
+nnoremap x "_x
+nnoremap <C-p> "1p
 nnoremap ; :
 nnoremap <leader>q{ 0v$F{%
 nnoremap <leader>q( 0v$F(%
@@ -367,6 +371,8 @@ nnoremap <C-s> <cmd>PounceRepeat<CR>
 nnoremap <leader>w <cmd>Pounce<CR>
 nnoremap <C-j> <C-d>zz
 nnoremap <C-k> <C-u>zz
+nnoremap j jzz
+nnoremap k kzz
 nnoremap <Tab> :bnext<CR>
 nnoremap <S-Tab> :bprevious<CR>
 
@@ -380,7 +386,7 @@ inoremap qw <Esc>A;
 inoremap qe <C-e><CR>
 
 " visual remaps
-xnoremap qq $
+xnoremap qq g_
 xnoremap <leader>{ f{%
 xnoremap <leader>( f(%
 xnoremap <leader>[ f[%
@@ -393,3 +399,15 @@ xnoremap <leader>k $
 xnoremap <leader>j _
 xnoremap <C-j> <C-d>zz
 xnoremap <C-k> <C-u>zz
+xnoremap j jzz
+xnoremap k kzz
+xnoremap <leader>y "+y
+xnoremap <leader>yy "+yy
+xnoremap <leader>Y "+yg_
+xnoremap <leader>p "+p
+xnoremap <leader>P "+P
+xnoremap y "0y
+xnoremap p "0p
+xnoremap d "1d
+xnoremap x "_x
+xnoremap <C-p> "1p
