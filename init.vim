@@ -1,4 +1,4 @@
-""" Vim-Plug
+"float"" Vim-Plug
 call plug#begin()
 
 " Core (treesitter, nvim-lspconfig, nvim-cmp, nvim-telescope, nvim-lualine)
@@ -63,15 +63,6 @@ Plug 'psf/black', { 'branch': 'stable' }
 Plug 'heavenshell/vim-pydocstring'
 
 " Aesthetics - Colorschemes
-" Plug 'luisiacc/gruvbox-baby', {'branch': 'main'}
-" Plug 'zaki/zazen'
-" Plug 'yuttie/hydrangea-vim'
-" Plug 'folke/tokyonight.nvim', { 'branch': 'main' }
-" Plug 'danilo-augusto/vim-afterglow'
-" Plug 'navarasu/onedark.nvim'
-" Plug 'srcery-colors/srcery-vim'
-" Plug 'tjdevries/colorbuddy.nvim', { 'branch': 'dev' }
-" Plug 'jesseleite/nvim-noirbuddy'
 Plug 'ray-x/aurora'
 
 " Aesthetics - Others
@@ -98,7 +89,8 @@ set clipboard=unnamedplus   " using system clipboard
 filetype plugin on
 set cursorline              " highlight current cursorline
 set ttyfast                 " Speed up scrolling in Vim
-set backupdir=~/.cache/vim " Directory to store backup files.
+set backupdir=C:/Users/steph/AppData/Local/nvim-temp
+" set nobackup
 set relativenumber
 set tabstop=4 softtabstop=4 shiftwidth=4 expandtab smarttab autoindent
 set incsearch ignorecase smartcase hlsearch
@@ -115,7 +107,7 @@ set matchpairs+=<:>
 set iskeyword-=_
 let mapleader=" "
 set swapfile
-set dir=~/tmp
+set directory=C:/Users/steph/AppData/Local/nvim-temp
 
 "" Filetype-Specific Configurations
 
@@ -137,14 +129,6 @@ set fillchars+=vert:\│
 highlight WinSeparator gui=NONE guibg=NONE guifg=#444444 cterm=NONE ctermbg=NONE ctermfg=gray
 highlight VertSplit gui=NONE guibg=NONE guifg=#444444 cterm=NONE ctermbg=NONE ctermfg=gray
 
-" colorscheme gruvbox-baby
-" colorscheme tokyonight
-" let g:afterglow_blackout=1
-" colorscheme afterglow
-" Vim
-" let g:onedark_config = { 'style': 'deep' }
-" set t_Co=256
-" colorscheme srcery
 set termguicolors
 colorscheme aurora
 
@@ -353,11 +337,30 @@ nnoremap <leader>yy "+yy
 nnoremap <leader>Y "+yg_
 nnoremap <leader>p "+p
 nnoremap <leader>P "+P
+nnoremap <leader><C-y> _vg_y
 nnoremap y "0y
+nnoremap P "0P
 nnoremap p "0p
 nnoremap d "1d
 nnoremap x "_x
 nnoremap <C-p> "1p
+nnoremap <leader><C-p> "1P
+nmap <leader>" ysiw"
+nmap <leader>' ysiw'
+nmap <leader>[ ysiw]
+nmap <leader>] ysiw[
+nmap <leader>{ ysiw}
+nmap <leader>} ysiw{
+nmap <leader>( ysiw)
+nmap <leader><leader>" yssw"
+nmap <leader><leader>' yssw'
+nmap <leader><leader>[ yssw]
+nmap <leader><leader>] yssw[
+nmap <leader><leader>{ yssw}
+nmap <leader><leader>} yssw{
+nmap <leader><leader>( yssw)
+nmap <leader><leader>) yssw)
+nmap <leader><leader>) yssw)
 nnoremap ; :
 nnoremap <leader>q{ 0v$F{%
 nnoremap <leader>q( 0v$F(%
@@ -372,6 +375,7 @@ nnoremap j jzz
 nnoremap k kzz
 nnoremap <Tab> :bnext<CR>
 nnoremap <S-Tab> :bprevious<CR>
+nnoremap R s
 
 " Insert remaps
 inoremap jj <Esc>
@@ -384,15 +388,16 @@ inoremap qe <C-e><CR>
 
 " visual remaps
 xnoremap qq g_
-xnoremap <leader>{ f{%
-xnoremap <leader>( f(%
-xnoremap <leader>[ f[%
-xnoremap <leader>< f<%
+xnoremap <leader><C-y> v_vg_y
+xnoremap <leader><leader>{ f{%
+xnoremap <leader><leader>( f(%
+xnoremap <leader><leader>[ f[%
+xnoremap <leader><leader>< f<%
 xnoremap <leader>w <cmd>Pounce<CR>
 xnoremap <leader>i g<C-a>
 xnoremap < <gv
 xnoremap > >gv
-xnoremap <leader>k $
+xnoremap <leader>k g_
 xnoremap <leader>j _
 xnoremap <C-j> <C-d>zz
 xnoremap <C-k> <C-u>zz
@@ -408,3 +413,16 @@ xnoremap p "0p
 xnoremap d "1d
 xnoremap x "_x
 xnoremap <C-p> "1p
+xnoremap <leader><C-p> "1P
+xnoremap <expr> j  mode() ==# "v" ? "j$" : "j"
+xnoremap <expr> <C-j> mode() ==# "v" ? "<C-d>$"  : "<C-d>"
+xnoremap <expr> k  mode() ==# "v" ? "k$" : "k"
+xnoremap <expr> <C-k> mode() ==# "v" ? "<C-u>$"  : "<C-u>"
+xmap <leader>" S"
+xmap <leader>' S'
+xmap <leader>[ S]
+xmap <leader>] S[
+xmap <leader>{ S}
+xmap <leader>} S{
+xmap <leader>( S)
+xmap <leader>) S(
