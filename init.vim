@@ -134,8 +134,10 @@ colorscheme aurora
 
 highlight Normal guibg=NONE ctermbg=NONE
 highlight Error guibg=NONE ctermbg=NONE
-highlight Comment guifg=#ad517c
+highlight Comment guifg=#f9ff9f
 highlight LineNr guifg=#969294
+" highlight RustHints guifg=#f08080
+highlight RustHints guifg=#f33a6a
 
 " nvim-cmp
 set completeopt=menu,menuone,noselect
@@ -249,6 +251,11 @@ local on_attach = function(client, bufnr)
 end
 local rt = require("rust-tools")
 rt.setup({
+  tools = {
+      inlay_hints = {
+        highlight = "RustHints",
+      },
+  },
   server = {
     on_attach = function(_, bufnr)
       -- Hover actions
