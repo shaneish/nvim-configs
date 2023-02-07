@@ -52,6 +52,7 @@ Plug 'goolord/alpha-nvim'
 Plug 'booperlv/nvim-gomove'
 Plug 'ellisonleao/glow.nvim'
 Plug 'akinsho/flutter-tools.nvim'
+Plug 'SmiteshP/nvim-navic'
 " Plug 'williamboman/mason.nvim'
 " Plug 'williamboman/mason-lspconfig.nvim'
 " Plug 'L3MON4D3/LuaSnip'
@@ -259,7 +260,7 @@ rt.setup({
   server = {
     on_attach = function(_, bufnr)
       -- Hover actions
-      vim.keymap.set("n", "<C-space>", rt.hover_actions.hover_actions, { buffer = bufnr })
+      vim.keymap.set("n", "<leader><leader>a", rt.hover_actions.hover_actions, { buffer = bufnr })
       -- Code action groups
       vim.keymap.set("n", "<Leader>a", rt.code_action_group.code_action_group, { buffer = bufnr })
     end,
