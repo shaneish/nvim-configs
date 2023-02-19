@@ -1,4 +1,4 @@
-"float"" Vim-Plug
+"" Vim-Plug
 call plug#begin()
 
 " Core (treesitter, nvim-lspconfig, nvim-cmp, nvim-telescope, nvim-lualine)
@@ -58,6 +58,9 @@ Plug 'SmiteshP/nvim-navic'
 " Plug 'L3MON4D3/LuaSnip'
 " Plug 'rafamadriz/friendly-snippets'
 " Plug 'VonHeikemen/lsp-zero.nvim'
+Plug 'akinsho/git-conflict.nvim'
+Plug 'nastevens/vim-duckscript'
+Plug 'm4xshen/smartcolumn.nvim'
 
 " Functionalities - Python
 Plug 'psf/black', { 'branch': 'stable' }
@@ -83,10 +86,10 @@ set showmatch               " show matching
 set expandtab               " converts tabs to white space
 set autoindent              " indent a new line the same amount as the line just typed
 set number                  " add line numbers
-set cc=120                  " set an 120 column border for good coding style
+" set cc=120                  " set an 120 column border for good coding style
 filetype plugin indent on   "allow auto-indenting depending on file type
 syntax on                   " syntax highlighting
-set clipboard=unnamedplus   " using system clipboard
+" set clipboard=unnamedplus   " using system clipboard
 filetype plugin on
 set cursorline              " highlight current cursorline
 set ttyfast                 " Speed up scrolling in Vim
@@ -98,7 +101,7 @@ set incsearch ignorecase smartcase hlsearch
 set wildmode=longest,list,full wildmenu
 set ruler laststatus=2 showcmd showmode
 set list listchars=trail:»,tab:»-
-set fillchars+=vert:\ 
+set fillchars+=vert:\
 set wrap breakindent
 set encoding=utf-8
 set textwidth=0
@@ -187,6 +190,7 @@ servers = {
 -- local lsp = require('lsp-zero')
 -- lsp.preset('recommended')
 -- lsp.setup()
+require('git-conflict')
 require('treesitter-config')
 require('spectre').setup()
 require('nvim-cmp-config')
@@ -205,7 +209,11 @@ require('glow').setup({
     width = 120,
     height = 140,
 })
-require("flutter-tools").setup{}
+require('flutter-tools').setup{}
+require('smartcolumn').setup({
+   colorcolumn = 100,
+   disabled_filetypes = { "help", "text", "markdown", "vim" },
+})
 vim.cmd([[silent! autocmd! filetypedetect BufRead,BufNewFile *.tf]])
 vim.cmd([[autocmd BufRead,BufNewFile *.hcl set filetype=hcl]])
 vim.cmd([[autocmd BufRead,BufNewFile .terraformrc,terraform.rc set filetype=hcl]])
@@ -296,7 +304,7 @@ endfunction
 
 " Core
 nmap \ :NvimTreeFindFileToggle<CR>:set relativenumber<CR>:set nowrap<CR>
-nmap <leader>r :so ~\AppData\Local\nvim\init.vim<CR>
+nmap <leader><leader>r :so ~\AppData\Local\nvim\init.vim<CR>
 nmap <leader>t :call TrimWhitespace()<CR>
 nmap <silent> <leader><leader> :noh<CR>
 nmap <leader>$s <C-w>s<C-w>j:terminal<CR>:set nonumber<CR><S-a>
@@ -384,6 +392,7 @@ nnoremap k kzz
 nnoremap <Tab> :bnext<CR>
 nnoremap <S-Tab> :bprevious<CR>
 nnoremap R s
+nnoremap n nzz
 
 " Insert remaps
 inoremap jj <Esc>
