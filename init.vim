@@ -1,7 +1,6 @@
 "" Vim-Plug
 call plug#begin()
 
-" Core (treesitter, nvim-lspconfig, nvim-cmp, nvim-telescope, nvim-lualine)
 Plug 'nvim-treesitter/nvim-treesitter'
 Plug 'nvim-treesitter/playground'
 Plug 'neovim/nvim-lspconfig'
@@ -58,7 +57,7 @@ Plug 'SmiteshP/nvim-navic'
 " Plug 'L3MON4D3/LuaSnip'
 " Plug 'rafamadriz/friendly-snippets'
 " Plug 'VonHeikemen/lsp-zero.nvim'
-Plug 'akinsho/git-conflict.nvim'
+" Plug 'akinsho/git-conflict.nvim'
 Plug 'nastevens/vim-duckscript'
 Plug 'm4xshen/smartcolumn.nvim'
 Plug 'github/copilot.vim'
@@ -94,7 +93,7 @@ filetype plugin indent on   "allow auto-indenting depending on file type
 syntax on                   " syntax highlighting
 " set clipboard=unnamedplus   " using system clipboard
 filetype plugin on
-" set cursorline              " highlight current cursorline
+set cursorline              " highlight current cursorline
 set ttyfast                 " Speed up scrolling in Vim
 set backupdir=C:/Users/steph/AppData/Local/nvim-temp
 " set nobackup
@@ -194,7 +193,6 @@ servers = {
 -- lsp.preset('recommended')
 -- lsp.setup()
 require('oatjump').setup()
-require('git-conflict')
 require('treesitter-config')
 require('spectre').setup()
 require('nvim-cmp-config')
@@ -202,6 +200,7 @@ require('lspconfig-config')
 require('telescope-config')
 require('lualine-config')
 require('nvim-tree-config')
+require('zen-config')
 require('diagnostics')
 require('lspconfig')['sumneko_lua'].setup({
     settings = {
@@ -300,36 +299,6 @@ require("gomove").setup {
   -- whether to not to move past end column when moving blocks horizontally, (true/false)
   move_past_end_col = false,
 }
-
-vim.keymap.set("n", "<leader><leader>zz", function()
-    require("zen-mode").setup {
-        window = {
-            width = 90,
-            options = { }
-        },
-    }
-    require("zen-mode").toggle()
-    vim.wo.wrap = false
-    vim.wo.number = true
-    vim.wo.rnu = true
-    vim.wo.cursorline = true
-end)
-
-
-vim.keymap.set("n", "<leader><leader>z", function()
-    require("zen-mode").setup {
-        window = {
-            width = 80,
-            options = { }
-        },
-    }
-    require("zen-mode").toggle()
-    vim.wo.wrap = false
-    vim.wo.number = false
-    vim.wo.rnu = false
-    vim.opt.colorcolumn = "0"
-    vim.wo.cursorline = false
-end)
 EOF
 
 let g:mergetool_layout = 'mr'
