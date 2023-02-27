@@ -61,13 +61,16 @@ Plug 'SmiteshP/nvim-navic'
 Plug 'akinsho/git-conflict.nvim'
 Plug 'nastevens/vim-duckscript'
 Plug 'm4xshen/smartcolumn.nvim'
+Plug 'github/copilot.vim'
+Plug 'UnsafeOats/oatjump.nvim'
+Plug 'folke/zen-mode.nvim'
 
 " Functionalities - Python
 Plug 'psf/black', { 'branch': 'stable' }
 Plug 'heavenshell/vim-pydocstring'
 
 " Aesthetics - Colorschemes
-Plug 'ray-x/aurora'
+Plug 'arturgoms/moonbow.nvim'
 
 " Aesthetics - Others
 Plug 'junegunn/rainbow_parentheses.vim'
@@ -91,7 +94,7 @@ filetype plugin indent on   "allow auto-indenting depending on file type
 syntax on                   " syntax highlighting
 " set clipboard=unnamedplus   " using system clipboard
 filetype plugin on
-set cursorline              " highlight current cursorline
+" set cursorline              " highlight current cursorline
 set ttyfast                 " Speed up scrolling in Vim
 set backupdir=C:/Users/steph/AppData/Local/nvim-temp
 " set nobackup
@@ -134,7 +137,7 @@ highlight WinSeparator gui=NONE guibg=NONE guifg=#444444 cterm=NONE ctermbg=NONE
 highlight VertSplit gui=NONE guibg=NONE guifg=#444444 cterm=NONE ctermbg=NONE ctermfg=gray
 
 set termguicolors
-colorscheme aurora
+colorscheme moonbow
 
 highlight Normal guibg=NONE ctermbg=NONE
 highlight Error guibg=NONE ctermbg=NONE
@@ -185,11 +188,12 @@ servers = {
     'pyright',
     'tflint',
     'terraformls',
-    'gopls'
-    }
+    'gopls',
+}
 -- local lsp = require('lsp-zero')
 -- lsp.preset('recommended')
 -- lsp.setup()
+require('oatjump').setup()
 require('git-conflict')
 require('treesitter-config')
 require('spectre').setup()
@@ -199,6 +203,15 @@ require('telescope-config')
 require('lualine-config')
 require('nvim-tree-config')
 require('diagnostics')
+require('lspconfig')['sumneko_lua'].setup({
+    settings = {
+        Lua = {
+            diagnostics = {
+                globals = { 'vim' }
+            }
+        }
+    }
+})
 require('telescope').load_extension('harpoon')
 require('leap').add_default_mappings()
 require('transparent').setup({
@@ -212,7 +225,8 @@ require('glow').setup({
 require('flutter-tools').setup{}
 require('smartcolumn').setup({
    colorcolumn = 100,
-   disabled_filetypes = { "help", "text", "markdown", "vim" },
+   disabled_filetypes = { "help", "text", "markdown" },
+   limit_to_window = true,
 })
 vim.cmd([[silent! autocmd! filetypedetect BufRead,BufNewFile *.tf]])
 vim.cmd([[autocmd BufRead,BufNewFile *.hcl set filetype=hcl]])
@@ -286,6 +300,36 @@ require("gomove").setup {
   -- whether to not to move past end column when moving blocks horizontally, (true/false)
   move_past_end_col = false,
 }
+
+vim.keymap.set("n", "<leader><leader>zz", function()
+    require("zen-mode").setup {
+        window = {
+            width = 90,
+            options = { }
+        },
+    }
+    require("zen-mode").toggle()
+    vim.wo.wrap = false
+    vim.wo.number = true
+    vim.wo.rnu = true
+    vim.wo.cursorline = true
+end)
+
+
+vim.keymap.set("n", "<leader><leader>z", function()
+    require("zen-mode").setup {
+        window = {
+            width = 80,
+            options = { }
+        },
+    }
+    require("zen-mode").toggle()
+    vim.wo.wrap = false
+    vim.wo.number = false
+    vim.wo.rnu = false
+    vim.opt.colorcolumn = "0"
+    vim.wo.cursorline = false
+end)
 EOF
 
 let g:mergetool_layout = 'mr'
@@ -304,7 +348,7 @@ endfunction
 
 " Core
 nmap \ :NvimTreeFindFileToggle<CR>:set relativenumber<CR>:set nowrap<CR>
-nmap <leader><leader>r :so ~\AppData\Local\nvim\init.vim<CR>
+nmap <leader><leader>r :so C:\Users\steph\AppData\Local\nvim\init.vim<CR>
 nmap <leader>t :call TrimWhitespace()<CR>
 nmap <silent> <leader><leader> :noh<CR>
 nmap <leader>$s <C-w>s<C-w>j:terminal<CR>:set nonumber<CR><S-a>
@@ -389,7 +433,7 @@ nnoremap <C-j> <C-d>zz
 nnoremap <C-k> <C-u>zz
 nnoremap j jzz
 nnoremap k kzz
-nnoremap <Tab> :bnext<CR>
+nnoremap ` :bnext<CR>
 nnoremap <S-Tab> :bprevious<CR>
 nnoremap R s
 nnoremap n nzz
