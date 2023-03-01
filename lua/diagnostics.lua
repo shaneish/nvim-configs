@@ -1,4 +1,5 @@
 local signs = { Error = "✘", Warn = "", Hint = "•", Info = "" }
+local diagnostics_active = true
 
 for type, icon in pairs(signs) do
     local hl = "DiagnosticSign" .. type
@@ -10,3 +11,17 @@ vim.diagnostic.config({
         prefix = '●', -- Could be '●', '▎', 'x'
     }
 })
+
+local function toggle_diagnostics()
+  diagnostics_active = not diagnostics_active
+  if diagnostics_active then
+    vim.diagnostic.show()
+  else
+    vim.diagnostic.hide()
+  end
+end
+
+
+vim.keymap.set('n', '<leader><leader>D', function()
+    toggle_diagnostics()
+end)

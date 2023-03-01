@@ -90,7 +90,7 @@ set autoindent              " indent a new line the same amount as the line just
 set number                  " add line numbers
 " set cc=120                  " set an 120 column border for good coding style
 filetype plugin indent on   "allow auto-indenting depending on file type
-syntax on                   " syntax highlighting
+" syntax on                   " syntax highlighting
 " set clipboard=unnamedplus   " using system clipboard
 filetype plugin on
 set cursorline              " highlight current cursorline
