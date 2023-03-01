@@ -27,24 +27,8 @@ end
 vim.keymap.set("n", "<leader><leader>z", function()
     require("zen-mode").setup {
         window = {
-            width = 80,
-            height = 15,
-            options = { }
-        },
-        on_open = function(win)
-            on()
-        end,
-        on_close = function()
-            off()
-        end,
-    }
-    require("zen-mode").toggle()
-end)
-
-vim.keymap.set("n", "<leader><leader>Z", function()
-    require("zen-mode").setup {
-        window = {
-            width = 80,
+            width = .8,
+            height = .20,
             options = { }
         },
         on_open = function(win)
@@ -60,8 +44,42 @@ end)
 vim.keymap.set("n", "<leader><leader>x", function()
     require("zen-mode").setup {
         window = {
-            width = 100,
-            height = 15,
+            width = .80,
+            height = .50,
+            options = { }
+        },
+        on_open = function(win)
+            on()
+        end,
+        on_close = function()
+            off()
+        end,
+    }
+    require("zen-mode").toggle()
+end)
+
+vim.keymap.set("n", "<leader><leader>c", function()
+    require("zen-mode").setup {
+        window = {
+            width = .80,
+            height = .80,
+            options = { }
+        },
+        on_open = function(win)
+            on()
+        end,
+        on_close = function()
+            off()
+        end,
+    }
+    require("zen-mode").toggle()
+end)
+
+vim.keymap.set("n", "<leader><leader>Z", function()
+    require("zen-mode").setup {
+        window = {
+            width = .95,
+            height = .20,
             options = { }
         },
         on_open = function(win)
@@ -77,7 +95,59 @@ end)
 vim.keymap.set("n", "<leader><leader>X", function()
     require("zen-mode").setup {
         window = {
-            width = 100,
+            width = .95,
+            height = .50,
+            options = { }
+        },
+        on_open = function(win)
+            on()
+        end,
+        on_close = function()
+            off()
+        end,
+    }
+    require("zen-mode").toggle()
+end)
+
+vim.keymap.set("n", "<leader><leader>C", function()
+    require("zen-mode").setup {
+        window = {
+            width = .95,
+            height = .80,
+            options = { }
+        },
+        on_open = function(win)
+            on()
+        end,
+        on_close = function()
+            off()
+        end,
+    }
+    require("zen-mode").toggle()
+end)
+
+vim.keymap.set("n", "<leader><leader>v", function()
+    require("zen-mode").setup {
+        window = {
+            width = .80,
+            height = .95,
+            options = { }
+        },
+        on_open = function(win)
+            on()
+        end,
+        on_close = function()
+            off()
+        end,
+    }
+    require("zen-mode").toggle()
+end)
+
+vim.keymap.set("n", "<leader><leader>V", function()
+    require("zen-mode").setup {
+        window = {
+            width = .95,
+            height = .95,
             options = { }
         },
         on_open = function(win)
