@@ -90,12 +90,12 @@ set autoindent              " indent a new line the same amount as the line just
 set number                  " add line numbers
 " set cc=120                  " set an 120 column border for good coding style
 filetype plugin indent on   "allow auto-indenting depending on file type
-" syntax on                   " syntax highlighting
+syntax on                   " syntax highlighting
 " set clipboard=unnamedplus   " using system clipboard
 filetype plugin on
 set cursorline              " highlight current cursorline
 set ttyfast                 " Speed up scrolling in Vim
-set backupdir=C:/Users/steph/AppData/Local/nvim-temp
+set backupdir=~/.config/nvim/nvim-temp
 " set nobackup
 set relativenumber
 set tabstop=4 softtabstop=4 shiftwidth=4 expandtab smarttab autoindent
@@ -113,7 +113,6 @@ set matchpairs+=<:>
 set iskeyword-=_
 let mapleader=" "
 set swapfile
-set directory=C:/Users/steph/AppData/Local/nvim-temp
 
 "" Filetype-Specific Configurations
 
