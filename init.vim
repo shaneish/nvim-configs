@@ -16,7 +16,7 @@ Plug 'hrsh7th/cmp-nvim-lua'
 Plug 'saadparwaiz1/cmp_luasnip'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim'
-Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build' }
+Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'make' }
 Plug 'nvim-lualine/lualine.nvim'
 Plug 'kyazdani42/nvim-web-devicons'
 Plug 'kyazdani42/nvim-tree.lua'
@@ -202,7 +202,7 @@ require('lualine-config')
 require('nvim-tree-config')
 require('zen-config')
 require('diagnostics')
-require('lspconfig')['sumneko_lua'].setup({
+require('lspconfig')['lua_ls'].setup({
     settings = {
         Lua = {
             diagnostics = {
