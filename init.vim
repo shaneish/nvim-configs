@@ -413,6 +413,7 @@ nnoremap <Tab> :bnext<CR>
 nnoremap <S-Tab> :bprevious<CR>
 nnoremap R s
 nnoremap n nzz
+nnoremap <leader>g <cmd>/=======<CR>
 
 " Insert remaps
 inoremap jj <Esc>
