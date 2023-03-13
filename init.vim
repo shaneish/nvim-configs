@@ -147,6 +147,14 @@ highlight RustHints guifg=#f33a6a
 " nvim-cmp
 set completeopt=menu,menuone,noselect
 
+" copilot
+imap <silent><script><expr> <C-tab> copilot#Accept("\<CR>")
+imap <C-]> <Plug>(copilot-next)
+imap <C-[> <Plug>(copilot-previous)
+imap <C-e> <Plug>(copilot-dismiss)
+imap <C-s> <Plug>(copilot-suggest)
+let g:copilot_no_tab_map = v:true
+
 " signify
 let g:signify_sign_add = '│'
 let g:signify_sign_delete = '│'
@@ -401,7 +409,7 @@ nnoremap <C-j> <C-d>zz
 nnoremap <C-k> <C-u>zz
 nnoremap j jzz
 nnoremap k kzz
-nnoremap ` :bnext<CR>
+nnoremap <Tab> :bnext<CR>
 nnoremap <S-Tab> :bprevious<CR>
 nnoremap R s
 nnoremap n nzz
