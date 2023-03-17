@@ -63,6 +63,7 @@ Plug 'm4xshen/smartcolumn.nvim'
 Plug 'github/copilot.vim'
 Plug 'UnsafeOats/oatjump.nvim'
 Plug 'folke/zen-mode.nvim'
+Plug 'nvim-orgmode/orgmode'
 
 " Functionalities - Python
 Plug 'psf/black', { 'branch': 'stable' }
@@ -183,8 +184,8 @@ autocmd BufWinEnter,WinEnter term://* startinsert
 autocmd BufLeave term://* stopinsert
 
 " Python
-let g:python3_host_prog = '~/AppData/Local/nvim/venv/bin/python3'
-let g:pydocstring_doq_path = '~/AppData/Local/nvim/venv/bin/doq'
+let g:python3_host_prog = '~/.config/nvim/venv/bin/python3'
+let g:pydocstring_doq_path = '~/config/nvim/venv/bin/doq'
 
 
 """ Core plugin configuration (lua)
@@ -306,6 +307,27 @@ require("gomove").setup {
   -- whether to not to move past end column when moving blocks horizontally, (true/false)
   move_past_end_col = false,
 }
+
+require('orgmode').setup_ts_grammar()
+
+-- Treesitter configuration
+require('nvim-treesitter.configs').setup {
+  -- If TS highlights are not enabled at all, or disabled via `disable` prop,
+  -- highlighting will fallback to default Vim syntax highlighting
+  highlight = {
+    enable = true,
+    -- Required for spellcheck, some LaTex highlights and
+    -- code block highlights that do not have ts grammar
+    additional_vim_regex_highlighting = {'org'},
+  },
+  ensure_installed = {'org'}, -- Or run :TSUpdate org
+}
+
+require('orgmode').setup({
+  org_agenda_files = {'~/Notes/org/*', '~/my-orgs/**/*'},
+  org_default_notes_file = '~/Notes/org/refile.org',
+})
+
 EOF
 
 let g:mergetool_layout = 'mr'
@@ -324,7 +346,7 @@ endfunction
 
 " Core
 nmap \ :NvimTreeFindFileToggle<CR>:set relativenumber<CR>:set nowrap<CR>
-nmap <leader><leader>r :so C:\Users\steph\AppData\Local\nvim\init.vim<CR>
+nmap <leader><leader>r :so ~/.config/nvim/init.vim<CR>
 nmap <leader>t :call TrimWhitespace()<CR>
 nmap <silent> <leader><leader> :noh<CR>
 nmap <leader>$s <C-w>s<C-w>j:terminal<CR>:set nonumber<CR><S-a>
@@ -423,6 +445,7 @@ inoremap uu <C-e>
 inoremap qq <Esc>A
 inoremap qw <Esc>A;
 inoremap qe <C-e><CR>
+inoremap kk <Esc><leader><CR>
 
 " visual remaps
 xnoremap qq g_
