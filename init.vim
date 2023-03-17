@@ -445,7 +445,7 @@ inoremap uu <C-e>
 inoremap qq <Esc>A
 inoremap qw <Esc>A;
 inoremap qe <C-e><CR>
-inoremap kk <Esc><leader><CR>
+imap kk jj<Space><CR>
 
 " visual remaps
 xnoremap qq g_
