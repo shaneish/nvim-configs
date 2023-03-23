@@ -61,9 +61,10 @@ Plug 'SmiteshP/nvim-navic'
 Plug 'nastevens/vim-duckscript'
 Plug 'm4xshen/smartcolumn.nvim'
 Plug 'github/copilot.vim'
-Plug 'UnsafeOats/oatjump.nvim'
+" Plug 'UnsafeOats/oatjump.nvim'
 Plug 'folke/zen-mode.nvim'
 Plug 'nvim-orgmode/orgmode'
+Plug 'chentoast/marks.nvim'
 
 " Functionalities - Python
 Plug 'psf/black', { 'branch': 'stable' }
@@ -149,7 +150,7 @@ highlight RustHints guifg=#f33a6a
 set completeopt=menu,menuone,noselect
 
 " copilot
-imap <silent><script><expr> <C-tab> copilot#Accept("\<CR>")
+imap <silent><script><expr> <leader><tab> copilot#Accept("\<CR>")
 imap <C-]> <Plug>(copilot-next)
 imap <C-[> <Plug>(copilot-previous)
 imap <C-e> <Plug>(copilot-dismiss)
@@ -200,7 +201,7 @@ servers = {
 -- local lsp = require('lsp-zero')
 -- lsp.preset('recommended')
 -- lsp.setup()
-require('oatjump').setup()
+-- require('oatjump').setup()
 require('treesitter-config')
 require('spectre').setup()
 require('nvim-cmp-config')
@@ -328,6 +329,40 @@ require('orgmode').setup({
   org_default_notes_file = '~/Notes/org/refile.org',
 })
 
+require('marks').setup({
+  -- whether to map keybinds or not. default true
+  default_mappings = true,
+  -- which builtin marks to show. default {}
+  builtin_marks = { ".", "<", ">", "^" },
+  -- whether movements cycle back to the beginning/end of buffer. default true
+  cyclic = true,
+  -- whether the shada file is updated after modifying uppercase marks. default false
+  force_write_shada = false,
+  -- how often (in ms) to redraw signs/recompute mark positions. 
+  -- higher values will have better performance but may cause visual lag, 
+  -- while lower values may cause performance penalties. default 150.
+  refresh_interval = 250,
+  -- sign priorities for each type of mark - builtin marks, uppercase marks, lowercase
+  -- marks, and bookmarks.
+  -- can be either a table with all/none of the keys, or a single number, in which case
+  -- the priority applies to all marks.
+  -- default 10.
+  sign_priority = { lower=10, upper=15, builtin=8, bookmark=20 },
+  -- disables mark tracking for specific filetypes. default {}
+  excluded_filetypes = {},
+  -- marks.nvim allows you to configure up to 10 bookmark groups, each with its own
+  -- sign/virttext. Bookmarks can be used to group together positions and quickly move
+  -- across multiple buffers. default sign is '!@#$%^&*()' (from 0 to 9), and
+  -- default virt_text is "".
+  bookmark_0 = {
+      sign = "⚑",
+      virt_text = "hello world",
+      -- explicitly prompt for a virtual line annotation when setting a bookmark from this group.
+      -- defaults to false.
+      annotate = false,
+  },
+  mappings = {}
+  })
 EOF
 
 let g:mergetool_layout = 'mr'
@@ -403,22 +438,8 @@ nnoremap d "1d
 nnoremap x "_x
 nnoremap <C-p> "1p
 nnoremap <leader><C-p> "1P
-nmap <leader>" ysiw"
-nmap <leader>' ysiw'
-nmap <leader>[ ysiw]
-nmap <leader>] ysiw[
-nmap <leader>{ ysiw}
-nmap <leader>} ysiw{
-nmap <leader>( ysiw)
-nmap <leader><leader>" yssw"
-nmap <leader><leader>' yssw'
-nmap <leader><leader>[ yssw]
-nmap <leader><leader>] yssw[
-nmap <leader><leader>{ yssw}
-nmap <leader><leader>} yssw{
-nmap <leader><leader>( yssw)
-nmap <leader><leader>) yssw)
-nmap <leader><leader>) yssw)
+nmap <leader>z ysiw
+nmap <leader>zz yssw
 nnoremap ; :
 nnoremap <leader>q{ 0v$F{%
 nnoremap <leader>q( 0v$F(%
@@ -429,6 +450,8 @@ nnoremap <C-s> <cmd>PounceRepeat<CR>
 nnoremap <leader>w <cmd>Pounce<CR>
 nnoremap <C-j> <C-d>zz
 nnoremap <C-k> <C-u>zz
+nnoremap <C-h> bzz
+nnoremap <C-l> wzz
 nnoremap j jzz
 nnoremap k kzz
 nnoremap <Tab> :bnext<CR>
@@ -441,11 +464,10 @@ nnoremap <leader>g <cmd>/=======<CR>
 inoremap jj <Esc>
 inoremap ii <Esc>la
 inoremap hh <Esc>la<BS>
+inoremap jk <Esc>
+inoremap kj <Esc>
 inoremap uu <C-e>
 inoremap qq <Esc>A
-inoremap qw <Esc>A;
-inoremap qe <C-e><CR>
-imap kk jj<Space><CR>
 
 " visual remaps
 xnoremap qq g_
@@ -479,11 +501,11 @@ xnoremap <expr> j  mode() ==# "v" ? "j$" : "j"
 xnoremap <expr> <C-j> mode() ==# "v" ? "<C-d>$"  : "<C-d>"
 xnoremap <expr> k  mode() ==# "v" ? "k$" : "k"
 xnoremap <expr> <C-k> mode() ==# "v" ? "<C-u>$"  : "<C-u>"
-xmap <leader>" S"
-xmap <leader>' S'
-xmap <leader>[ S]
-xmap <leader>] S[
-xmap <leader>{ S}
-xmap <leader>} S{
-xmap <leader>( S)
-xmap <leader>) S(
+xmap <leader>z" S"
+xmap <leader>z' S'
+xmap <leader>z[ S]
+xmap <leader>z] S[
+xmap <leader>z{ S}
+xmap <leader>z} S{
+xmap <leader>z( S)
+xmap <leader>z) S(
