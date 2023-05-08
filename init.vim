@@ -1,6 +1,5 @@
 "" Vim-Plug
 call plug#begin()
-
 Plug 'nvim-treesitter/nvim-treesitter'
 Plug 'nvim-treesitter/playground'
 Plug 'neovim/nvim-lspconfig'
@@ -20,6 +19,7 @@ Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'make' }
 Plug 'nvim-lualine/lualine.nvim'
 Plug 'kyazdani42/nvim-web-devicons'
 Plug 'kyazdani42/nvim-tree.lua'
+Plug 'MunifTanjim/nui.nvim'
 
 " Functionalities
 Plug 'tpope/vim-fugitive'
@@ -52,19 +52,23 @@ Plug 'booperlv/nvim-gomove'
 Plug 'ellisonleao/glow.nvim'
 Plug 'akinsho/flutter-tools.nvim'
 Plug 'SmiteshP/nvim-navic'
-" Plug 'williamboman/mason.nvim'
-" Plug 'williamboman/mason-lspconfig.nvim'
-" Plug 'L3MON4D3/LuaSnip'
-" Plug 'rafamadriz/friendly-snippets'
-" Plug 'VonHeikemen/lsp-zero.nvim'
-" Plug 'akinsho/git-conflict.nvim'
+Plug 'williamboman/mason.nvim'
+Plug 'williamboman/mason-lspconfig.nvim'
+Plug 'L3MON4D3/LuaSnip'
+Plug 'rafamadriz/friendly-snippets'
+Plug 'VonHeikemen/lsp-zero.nvim'
+Plug 'akinsho/git-conflict.nvim'
 Plug 'nastevens/vim-duckscript'
 Plug 'm4xshen/smartcolumn.nvim'
 Plug 'github/copilot.vim'
-" Plug 'UnsafeOats/oatjump.nvim'
+Plug 'UnsafeOats/oatjump.nvim'
 Plug 'folke/zen-mode.nvim'
 Plug 'nvim-orgmode/orgmode'
 Plug 'chentoast/marks.nvim'
+Plug 'dpayne/CodeGPT.nvim'
+Plug 'ziglang/zig.vim'
+Plug 'akinsho/toggleterm.nvim'
+Plug 'NTBBloodbath/zig-tools.nvim'
 
 " Functionalities - Python
 Plug 'psf/black', { 'branch': 'stable' }
@@ -81,6 +85,7 @@ Plug 'junegunn/vim-journal'
 " Better tabs + buffers
 Plug 'kyazdani42/nvim-web-devicons'
 Plug 'romgrk/barbar.nvim'
+
 call plug#end()
 
 " Personal settings
@@ -197,11 +202,24 @@ servers = {
     'tflint',
     'terraformls',
     'gopls',
+    'zls',
 }
--- local lsp = require('lsp-zero')
--- lsp.preset('recommended')
--- lsp.setup()
--- require('oatjump').setup()
+require('mason').setup({
+    ui = {
+        icons = {
+            package_installed = "✓",
+            package_pending = "➜",
+            package_uninstalled = "✗"
+        }
+    }
+})
+require('mason-lspconfig').setup {
+    ensure_installed = { "lua_ls", "zls", "pyright", "tflint", "terraformls", "gopls" },
+}
+local lsp = require('lsp-zero')
+lsp.preset('recommended')
+lsp.setup()
+require('oatjump').setup()
 require('treesitter-config')
 require('spectre').setup()
 require('nvim-cmp-config')
@@ -211,6 +229,9 @@ require('lualine-config')
 require('nvim-tree-config')
 require('zen-config')
 require('diagnostics')
+require('codegpt.config')
+require('zig-tools').setup()
+vim.g["codegpt_openai_api_key"] = os.getenv("OPENAI_API_KEY")
 require('lspconfig')['lua_ls'].setup({
     settings = {
         Lua = {
@@ -338,8 +359,8 @@ require('marks').setup({
   cyclic = true,
   -- whether the shada file is updated after modifying uppercase marks. default false
   force_write_shada = false,
-  -- how often (in ms) to redraw signs/recompute mark positions. 
-  -- higher values will have better performance but may cause visual lag, 
+  -- how often (in ms) to redraw signs/recompute mark positions.
+  -- higher values will have better performance but may cause visual lag,
   -- while lower values may cause performance penalties. default 150.
   refresh_interval = 250,
   -- sign priorities for each type of mark - builtin marks, uppercase marks, lowercase
@@ -450,8 +471,6 @@ nnoremap <C-s> <cmd>PounceRepeat<CR>
 nnoremap <leader>w <cmd>Pounce<CR>
 nnoremap <C-j> <C-d>zz
 nnoremap <C-k> <C-u>zz
-nnoremap <C-h> bzz
-nnoremap <C-l> wzz
 nnoremap j jzz
 nnoremap k kzz
 nnoremap <Tab> :bnext<CR>
@@ -466,7 +485,7 @@ inoremap ii <Esc>la
 inoremap hh <Esc>la<BS>
 inoremap jk <Esc>
 inoremap kj <Esc>
-inoremap uu <C-e>
+imap uu <C-e>
 inoremap qq <Esc>A
 
 " visual remaps
