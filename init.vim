@@ -121,6 +121,10 @@ set iskeyword-=_
 let mapleader=" "
 set swapfile
 
+" ocaml shite
+let g:opamshare = substitute(system('opam var share'),'\n$','','''')
+execute "set rtp+=" . g:opamshare . "/merlin/vim"
+
 "" Filetype-Specific Configurations
 
 " HTML, XML, Jinja
@@ -214,7 +218,7 @@ require('mason').setup({
     }
 })
 require('mason-lspconfig').setup {
-    ensure_installed = { "lua_ls", "zls", "pyright", "tflint", "terraformls", "gopls" },
+    ensure_installed = { "lua_ls", "zls", "pyright", "tflint", "terraformls", "gopls", "ocamllsp" },
 }
 local lsp = require('lsp-zero')
 lsp.preset('recommended')
@@ -384,6 +388,10 @@ require('marks').setup({
   },
   mappings = {}
   })
+
+-- Resize split when terminal is resized
+vim.api.nvim_command('autocmd VimResized * wincmd =')
+
 EOF
 
 let g:mergetool_layout = 'mr'
