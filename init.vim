@@ -75,7 +75,8 @@ Plug 'psf/black', { 'branch': 'stable' }
 Plug 'heavenshell/vim-pydocstring'
 
 " Aesthetics - Colorschemes
-Plug 'arturgoms/moonbow.nvim'
+" Plug 'arturgoms/moonbow.nvim'
+Plug 'catppuccin/nvim', { 'as': 'catpuccin' }
 
 " Aesthetics - Others
 Plug 'junegunn/rainbow_parentheses.vim'
@@ -146,7 +147,8 @@ highlight WinSeparator gui=NONE guibg=NONE guifg=#444444 cterm=NONE ctermbg=NONE
 highlight VertSplit gui=NONE guibg=NONE guifg=#444444 cterm=NONE ctermbg=NONE ctermfg=gray
 
 set termguicolors
-colorscheme moonbow
+" colorscheme moonbow
+colorscheme catppuccin-mocha
 
 highlight Normal guibg=NONE ctermbg=NONE
 highlight Error guibg=NONE ctermbg=NONE
