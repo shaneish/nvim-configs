@@ -310,10 +310,10 @@ function! TrimWhitespace()
     call winrestview(l:save)
 endfunction
 
-""" Custom Mappings (vim) (lua custom mappings are within individual lua config files)
+
 " Core
 nmap \ :NvimTreeFindFileToggle<CR>:set relativenumber<CR>:set nowrap<CR>
-nmap <leader>r :so ~/.config/nvim/init.vim
+nmap <leader><leader>r :so ~/.config/nvim/init.vim<CR>
 nmap <leader>t :call TrimWhitespace()<CR>
 nmap <silent> <leader><leader> :noh<CR>
 nmap <leader>$s <C-w>s<C-w>j:terminal<CR>:set nonumber<CR><S-a>
@@ -370,29 +370,8 @@ nnoremap d "1d
 nnoremap x "_x
 nnoremap <C-p> "1p
 nnoremap <leader><C-p> "1P
-nmap <leader>" ysiw"
-nmap <leader>' ysiw'
-nmap <leader>[ ysiw]
-nmap <leader>] ysiw[
-nmap <leader>{ ysiw}
-nmap <leader>} ysiw{
-nmap <leader>( ysiw)
-nmap <leader>w" ysiW"
-nmap <leader>w' ysiW'
-nmap <leader>w[ ysiW]
-nmap <leader>w] ysiW[
-nmap <leader>w{ ysiW}
-nmap <leader>w} ysiW{
-nmap <leader>w( ysiW)
-nmap <leader><leader>" yssw"
-nmap <leader><leader>' yssw'
-nmap <leader><leader>[ yssw]
-nmap <leader><leader>] yssw[
-nmap <leader><leader>{ yssw}
-nmap <leader><leader>} yssw{
-nmap <leader><leader>( yssw)
-nmap <leader><leader>) yssw)
-nmap <leader><leader>) yssw)
+nmap <leader>z ysiw
+nmap <leader>zz yssw
 nnoremap ; :
 nnoremap <leader>q{ 0v$F{%
 nnoremap <leader>q( 0v$F(%
@@ -408,16 +387,17 @@ nnoremap k kzz
 nnoremap <Tab> :bnext<CR>
 nnoremap <S-Tab> :bprevious<CR>
 nnoremap R s
-nmap <C-h> <C-w>h
-nmap <C-l> <C-w>l
+nnoremap n nzz
+nnoremap <leader>g <cmd>/=======<CR>
 
 " Insert remaps
 inoremap jj <Esc>
 inoremap ii <Esc>la
-inoremap uu <C-e>
+inoremap hh <Esc>la<BS>
+inoremap jk <Esc>
+inoremap kj <Esc>
+imap uu <C-e>
 inoremap qq <Esc>A
-inoremap qw <Esc>A;
-inoremap qe <C-e><CR>
 
 " visual remaps
 xnoremap qq g_
@@ -451,11 +431,11 @@ xnoremap <expr> j  mode() ==# "v" ? "j$" : "j"
 xnoremap <expr> <C-j> mode() ==# "v" ? "<C-d>$"  : "<C-d>"
 xnoremap <expr> k  mode() ==# "v" ? "k$" : "k"
 xnoremap <expr> <C-k> mode() ==# "v" ? "<C-u>$"  : "<C-u>"
-xmap <leader>" S"
-xmap <leader>' S'
-xmap <leader>[ S]
-xmap <leader>] S[
-xmap <leader>{ S}
-xmap <leader>} S{
-xmap <leader>( S)
-xmap <leader>) S(
+xmap <leader>z" S"
+xmap <leader>z' S'
+xmap <leader>z[ S]
+xmap <leader>z] S[
+xmap <leader>z{ S}
+xmap <leader>z} S{
+xmap <leader>z( S)
+xmap <leader>z) S(
