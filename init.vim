@@ -56,6 +56,7 @@ Plug 'ellisonleao/glow.nvim'
 " Plug 'L3MON4D3/LuaSnip'
 " Plug 'rafamadriz/friendly-snippets'
 " Plug 'VonHeikemen/lsp-zero.nvim'
+Plug 'github/copilot.vim'
 
 " Functionalities - Python
 Plug 'psf/black', { 'branch': 'stable' }
@@ -71,7 +72,8 @@ Plug 'heavenshell/vim-pydocstring'
 " Plug 'srcery-colors/srcery-vim'
 " Plug 'tjdevries/colorbuddy.nvim', { 'branch': 'dev' }
 " Plug 'jesseleite/nvim-noirbuddy'
-Plug 'ray-x/aurora'
+" Plug 'ray-x/aurora'
+Plug 'arturgoms/moonbow.nvim'
 
 " Aesthetics - Others
 Plug 'junegunn/rainbow_parentheses.vim'
@@ -93,7 +95,7 @@ set number                  " add line numbers
 set cc=120                  " set an 120 column border for good coding style
 filetype plugin indent on   "allow auto-indenting depending on file type
 syntax on                   " syntax highlighting
-set clipboard=unnamedplus   " using system clipboard
+" set clipboard=unnamedplus
 filetype plugin on
 set cursorline              " highlight current cursorline
 set ttyfast                 " Speed up scrolling in Vim
@@ -146,14 +148,22 @@ highlight VertSplit gui=NONE guibg=NONE guifg=#444444 cterm=NONE ctermbg=NONE ct
 " colorscheme srcery
 
 set termguicolors
-colorscheme aurora
+colorscheme moonbow
 highlight Normal guibg=NONE ctermbg=NONE
 highlight Error guibg=NONE ctermbg=NONE
-highlight Comment guifg=#ad517c
+highlight Comment guifg=#f9ff9f
 highlight LineNr guifg=#969294
 
 " nvim-cmp
 set completeopt=menu,menuone,noselect
+
+" copilot
+imap <silent><script><expr> <C-tab> copilot#Accept("\<CR>")
+imap <C-]> <Plug>(copilot-next)
+imap <C-[> <Plug>(copilot-previous)
+imap <C-e> <Plug>(copilot-dismiss)
+imap <C-s> <Plug>(copilot-suggest)
+let g:copilot_no_tab_map = v:true
 
 " signify
 let g:signify_sign_add = '│'
@@ -301,11 +311,9 @@ function! TrimWhitespace()
 endfunction
 
 """ Custom Mappings (vim) (lua custom mappings are within individual lua config files)
-
 " Core
 nmap \ :NvimTreeFindFileToggle<CR>:set relativenumber<CR>:set nowrap<CR>
-nmap  :<leader>q
-nmap <leader>r :so ~/.config/nvim/init.vim<CR>
+nmap <leader>r :so ~/.config/nvim/init.vim
 nmap <leader>t :call TrimWhitespace()<CR>
 nmap <silent> <leader><leader> :noh<CR>
 nmap <leader>$s <C-w>s<C-w>j:terminal<CR>:set nonumber<CR><S-a>
@@ -325,7 +333,6 @@ noremap <leader>fg <cmd>Telescope live_grep<cr>
 nnoremap <leader>fb <cmd>Telescope buffers<cr>
 nnoremap <leader>fh <cmd>Telescope help_tags<cr>
 nnoremap <leader>fc <cmd>Telescope colorscheme<cr>
-nnoremap <expr> <leader>F ':Telescope find_files<cr>' . "'" . expand('<cword>')
 nnoremap <leader>f/ <cmd>Telescope current_buffer_fuzzy_find<cr>
 nnoremap <silent> <Esc><Esc> <Esc><cmd>nohlsearch<CR><Esc>
 nnoremap <leader>mm <cmd>MergetoolToggle<CR>
@@ -344,7 +351,6 @@ nnoremap <leader>sw <cmd>lua require('spectre').open_visual({select_word=true})<
 vnoremap <leader>sv <esc><cmd>lua require('spectre').open_visual()<CR>
 nnoremap <leader>sp viw<cmd>lua require('spectre').open_file_search()<CR>
 
-
 "Normal remaps
 nnoremap <leader>k g_
 nnoremap <leader>j _
@@ -356,11 +362,37 @@ nnoremap <leader>yy "+yy
 nnoremap <leader>Y "+yg_
 nnoremap <leader>p "+p
 nnoremap <leader>P "+P
+nnoremap <leader><C-y> _vg_y
 nnoremap y "0y
+nnoremap P "0P
 nnoremap p "0p
 nnoremap d "1d
 nnoremap x "_x
 nnoremap <C-p> "1p
+nnoremap <leader><C-p> "1P
+nmap <leader>" ysiw"
+nmap <leader>' ysiw'
+nmap <leader>[ ysiw]
+nmap <leader>] ysiw[
+nmap <leader>{ ysiw}
+nmap <leader>} ysiw{
+nmap <leader>( ysiw)
+nmap <leader>w" ysiW"
+nmap <leader>w' ysiW'
+nmap <leader>w[ ysiW]
+nmap <leader>w] ysiW[
+nmap <leader>w{ ysiW}
+nmap <leader>w} ysiW{
+nmap <leader>w( ysiW)
+nmap <leader><leader>" yssw"
+nmap <leader><leader>' yssw'
+nmap <leader><leader>[ yssw]
+nmap <leader><leader>] yssw[
+nmap <leader><leader>{ yssw}
+nmap <leader><leader>} yssw{
+nmap <leader><leader>( yssw)
+nmap <leader><leader>) yssw)
+nmap <leader><leader>) yssw)
 nnoremap ; :
 nnoremap <leader>q{ 0v$F{%
 nnoremap <leader>q( 0v$F(%
@@ -375,11 +407,13 @@ nnoremap j jzz
 nnoremap k kzz
 nnoremap <Tab> :bnext<CR>
 nnoremap <S-Tab> :bprevious<CR>
+nnoremap R s
+nmap <C-h> <C-w>h
+nmap <C-l> <C-w>l
 
 " Insert remaps
 inoremap jj <Esc>
 inoremap ii <Esc>la
-inoremap hh <Esc>la<BS>
 inoremap uu <C-e>
 inoremap qq <Esc>A
 inoremap qw <Esc>A;
@@ -387,15 +421,16 @@ inoremap qe <C-e><CR>
 
 " visual remaps
 xnoremap qq g_
-xnoremap <leader>{ f{%
-xnoremap <leader>( f(%
-xnoremap <leader>[ f[%
-xnoremap <leader>< f<%
+xnoremap <leader><C-y> v_vg_y
+xnoremap <leader><leader>{ f{%
+xnoremap <leader><leader>( f(%
+xnoremap <leader><leader>[ f[%
+xnoremap <leader><leader>< f<%
 xnoremap <leader>w <cmd>Pounce<CR>
 xnoremap <leader>i g<C-a>
 xnoremap < <gv
 xnoremap > >gv
-xnoremap <leader>k $
+xnoremap <leader>k g_
 xnoremap <leader>j _
 xnoremap <C-j> <C-d>zz
 xnoremap <C-k> <C-u>zz
@@ -411,3 +446,16 @@ xnoremap p "0p
 xnoremap d "1d
 xnoremap x "_x
 xnoremap <C-p> "1p
+xnoremap <leader><C-p> "1P
+xnoremap <expr> j  mode() ==# "v" ? "j$" : "j"
+xnoremap <expr> <C-j> mode() ==# "v" ? "<C-d>$"  : "<C-d>"
+xnoremap <expr> k  mode() ==# "v" ? "k$" : "k"
+xnoremap <expr> <C-k> mode() ==# "v" ? "<C-u>$"  : "<C-u>"
+xmap <leader>" S"
+xmap <leader>' S'
+xmap <leader>[ S]
+xmap <leader>] S[
+xmap <leader>{ S}
+xmap <leader>} S{
+xmap <leader>( S)
+xmap <leader>) S(
