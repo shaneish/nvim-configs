@@ -21,6 +21,8 @@ Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'make' }
 Plug 'nvim-lualine/lualine.nvim'
 Plug 'kyazdani42/nvim-web-devicons'
 Plug 'kyazdani42/nvim-tree.lua'
+Plug 'hat0uma/csvview.nvim'
+Plug 'cameron-wags/rainbow_csv.nvim'
 
 " Functionalities
 Plug 'tpope/vim-fugitive'
@@ -158,7 +160,7 @@ highlight LineNr guifg=#969294
 set completeopt=menu,menuone,noselect
 
 " copilot
-imap <silent><script><expr> <C-tab> copilot#Accept("\<CR>")
+imap <silent><script><expr> <leader><tab> copilot#Accept("\<CR>")
 imap <C-]> <Plug>(copilot-next)
 imap <C-[> <Plug>(copilot-previous)
 imap <C-e> <Plug>(copilot-dismiss)
@@ -209,6 +211,8 @@ servers = {
 -- local lsp = require('lsp-zero')
 -- lsp.preset('recommended')
 -- lsp.setup()
+require('rainbow_csv').setup()
+require('csvview').setup()
 require('treesitter-config')
 require('spectre').setup()
 require('nvim-cmp-config')
@@ -219,9 +223,9 @@ require('nvim-tree-config')
 require('diagnostics')
 require('telescope').load_extension('harpoon')
 require('leap').add_default_mappings()
-require('transparent').setup({
-    enable = true
-})
+-- require('transparent').setup({
+--     enable = true
+-- })
 require('alpha').setup(require('alpha.themes.dashboard').config)
 require('glow').setup({
     width = 120,
@@ -327,6 +331,24 @@ nmap <leader>n :cnext<CR>
 " Python
 autocmd FileType python nmap <leader>fmt :Black<CR>
 
+" CSV-ish stuff
+let s:mappingsState=1
+command! TM call ToggleMappings()
+function! ToggleMappings()
+    if s:mappingsState
+        :CsvViewEnable
+    else
+        :CsvViewDisable
+    endif
+
+    let s:mappingsState = !s:mappingsState
+endfunction
+
+autocmd BufRead,BufNewFile *.csv.txt set filetype=csv
+autocmd BufRead,BufNewFile *.tsv.txt set filetype=tsv
+autocmd FileType csv nmap <leader>= :call ToggleMappings()<CR>
+autocmd FileType tsv nmap <leader>= :call ToggleMappings()<CR>
+
 " Telescope mappings
 nnoremap <leader>ff <cmd>Telescope find_files<cr>
 noremap <leader>fg <cmd>Telescope live_grep<cr>
@@ -394,8 +416,6 @@ nnoremap <leader>g <cmd>/=======<CR>
 inoremap jj <Esc>
 inoremap ii <Esc>la
 inoremap hh <Esc>la<BS>
-inoremap jk <Esc>
-inoremap kj <Esc>
 imap uu <C-e>
 inoremap qq <Esc>A
 
