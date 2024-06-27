@@ -63,6 +63,7 @@ Plug 'github/copilot.vim'
 " Functionalities - Python
 Plug 'psf/black', { 'branch': 'stable' }
 Plug 'heavenshell/vim-pydocstring'
+Plug 'glacambre/firenvim', { 'do': { _ -> firenvim#install(0) } }
 
 " Aesthetics - Colorschemes
 " Plug 'luisiacc/gruvbox-baby', {'branch': 'main'}
@@ -394,7 +395,6 @@ nnoremap <C-p> "1p
 nnoremap <leader><C-p> "1P
 nmap <leader>z ysiw
 nmap <leader>zz yssw
-nnoremap ; :
 nnoremap <leader>q{ 0v$F{%
 nnoremap <leader>q( 0v$F(%
 nnoremap <leader>q[ 0v$F[%
@@ -413,11 +413,9 @@ nnoremap n nzz
 nnoremap <leader>g <cmd>/=======<CR>
 
 " Insert remaps
-inoremap jj <Esc>
-inoremap ii <Esc>la
-inoremap hh <Esc>la<BS>
-imap uu <C-e>
-inoremap qq <Esc>A
+inoremap kj <Esc>
+inoremap ;; <Esc>la
+inoremap hh <Esc>lxa
 
 " visual remaps
 xnoremap qq g_
