@@ -427,6 +427,23 @@ function! TrimWhitespace()
     call winrestview(l:save)
 endfunction
 
+" CSV-ish stuff
+let s:mappingsState=1
+command! TM call ToggleMappings()
+function! ToggleMappings()
+    if s:mappingsState
+        :CsvViewEnable
+    else
+        :CsvViewDisable
+    endif
+
+    let s:mappingsState = !s:mappingsState
+endfunction
+
+autocmd BufRead,BufNewFile *.csv.txt set filetype=csv
+autocmd BufRead,BufNewFile *.tsv.txt set filetype=tsv
+autocmd FileType csv nmap <leader>= :call ToggleMappings()<CR>
+autocmd FileType tsv nmap <leader>= :call ToggleMappings()<CR>
 """ Custom Mappings (vim) (lua custom mappings are within individual lua config files)
 
 " Core
@@ -473,9 +490,6 @@ nnoremap <leader>sp viw<cmd>lua require('spectre').open_file_search()<CR>
 "Normal remaps
 nnoremap <leader>k g_
 nnoremap <leader>j _
-nnoremap <leader>l A
-nnoremap <leader>qw A;<Esc>
-nnoremap <leader>d 0
 nnoremap <leader>y "+y
 nnoremap <leader>yy "+yy
 nnoremap <leader>Y "+yg_
@@ -491,14 +505,12 @@ nnoremap <C-p> "1p
 nnoremap <leader><C-p> "1P
 nmap <leader>z ysiw
 nmap <leader>zz yssw
-nnoremap ; :
 nnoremap <leader>q{ 0v$F{%
 nnoremap <leader>q( 0v$F(%
 nnoremap <leader>q[ 0v$F[%
 nnoremap <leader>q< 0v$F<%
 nnoremap R s
-nnoremap <C-s> <cmd>PounceRepeat<CR>
-nnoremap <leader>w <cmd>Pounce<CR>
+nnoremap <C-s> <cmd>Pounce<CR>
 nnoremap <C-j> <C-d>zz
 nnoremap <C-k> <C-u>zz
 nnoremap j jzz
@@ -510,13 +522,9 @@ nnoremap n nzz
 nnoremap <leader>g <cmd>/=======<CR>
 
 " Insert remaps
-inoremap jj <Esc>
-inoremap ii <Esc>la
-inoremap hh <Esc>la<BS>
-inoremap jk <Esc>
 inoremap kj <Esc>
-imap uu <C-e>
-inoremap qq <Esc>A
+inoremap ;; <Esc>la
+inoremap hh <Esc>lxa
 
 " visual remaps
 xnoremap qq g_
@@ -558,3 +566,6 @@ xmap <leader>z{ S}
 xmap <leader>z} S{
 xmap <leader>z( S)
 xmap <leader>z) S(
+
+" term stuff
+:tnoremap <Esc> <C-\><C-n>
