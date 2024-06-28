@@ -59,7 +59,11 @@ Plug 'rafamadriz/friendly-snippets'
 Plug 'VonHeikemen/lsp-zero.nvim'
 Plug 'akinsho/git-conflict.nvim'
 Plug 'nastevens/vim-duckscript'
-Plug 'm4xshen/smartcolumn.nvim'
+Plug 'cameron-wags/rainbow_csv.nvim'
+Plug 'hat0uma/csvview.nvim'
+Plug 'glacambre/firenvim', { 'do': { _ -> firenvim#install(0) } }
+
+" Plug 'm4xshen/smartcolumn.nvim'
 Plug 'github/copilot.vim'
 Plug 'UnsafeOats/oatjump.nvim'
 Plug 'folke/zen-mode.nvim'
@@ -123,8 +127,8 @@ let mapleader=" "
 set swapfile
 
 " ocaml shite
-let g:opamshare = substitute(system('opam var share'),'\n$','','''')
-execute "set rtp+=" . g:opamshare . "/merlin/vim"
+" let g:opamshare = substitute(system('opam var share'),'\n$','','''')
+" execute "set rtp+=" . g:opamshare . "/merlin/vim"
 
 "" Filetype-Specific Configurations
 
@@ -177,6 +181,7 @@ hi DiffDelete guifg=#ff5555 guibg=none
 " indentLine
 let g:indentLine_char = '▏'
 let g:indentLine_defaultGroup = 'NonText'
+
 " Disable indentLine from concealing json and markdown syntax (e.g. ```)
 let g:vim_json_syntax_conceal = 0
 let g:vim_markdown_conceal = 0
@@ -207,7 +212,6 @@ servers = {
     'pyright',
     'tflint',
     'terraformls',
-    'gopls',
     'zls',
 }
 require('mason').setup({
@@ -220,12 +224,24 @@ require('mason').setup({
     }
 })
 require('mason-lspconfig').setup {
-    ensure_installed = { "lua_ls", "zls", "pyright", "tflint", "terraformls", "gopls", "ocamllsp" },
+    ensure_installed = { "lua_ls", "zls", "pyright", "tflint", "terraformls" },
 }
 local lsp = require('lsp-zero')
 lsp.preset('recommended')
 lsp.setup()
 require('oatjump').setup()
+require('csvview').setup()
+-- csvview:
+--  + ON - :CsvViewEnable
+--  + OFF - :CsvViewDisable
+require('rainbow_csv').setup()
+-- rainbow_csv:
+--  + ON - :RainbowDelim
+--  + ALIGN - :RainbowAlign
+--  + UNALIGN - :RainbowShrink
+--  + LINT - :CSVLint
+--  + QUERY - :Select [a1, a1 order by a1 desc]
+--  + MANIPULATE COLUMNS - :Update [a1 = a1 + "_" + a2]
 require('treesitter-config')
 require('spectre').setup()
 require('nvim-cmp-config')
@@ -258,11 +274,11 @@ require('glow').setup({
     height = 140,
 })
 require('flutter-tools').setup{}
-require('smartcolumn').setup({
-   colorcolumn = 100,
-   disabled_filetypes = { "help", "text", "markdown" },
-   limit_to_window = true,
-})
+-- require('smartcolumn').setup({
+--    colorcolumn = 100,
+--    disabled_filetypes = { "help", "text", "markdown" },
+--    limit_to_window = true,
+-- })
 vim.cmd([[silent! autocmd! filetypedetect BufRead,BufNewFile *.tf]])
 vim.cmd([[autocmd BufRead,BufNewFile *.hcl set filetype=hcl]])
 vim.cmd([[autocmd BufRead,BufNewFile .terraformrc,terraform.rc set filetype=hcl]])
@@ -399,6 +415,9 @@ EOF
 let g:mergetool_layout = 'mr'
 let g:mergetool_prefer_revision = 'local'
 
+""" Rainbow CSV
+let g:rbql_with_headers = 1
+
 """ Custom Functions
 
 " Trim Whitespaces
@@ -408,12 +427,29 @@ function! TrimWhitespace()
     call winrestview(l:save)
 endfunction
 
+" CSV-ish stuff
+let s:mappingsState=1
+command! TM call ToggleMappings()
+function! ToggleMappings()
+    if s:mappingsState
+        :CsvViewEnable
+    else
+        :CsvViewDisable
+    endif
+
+    let s:mappingsState = !s:mappingsState
+endfunction
+
+autocmd BufRead,BufNewFile *.csv.txt set filetype=csv
+autocmd BufRead,BufNewFile *.tsv.txt set filetype=tsv
+autocmd FileType csv nmap <leader>= :call ToggleMappings()<CR>
+autocmd FileType tsv nmap <leader>= :call ToggleMappings()<CR>
 """ Custom Mappings (vim) (lua custom mappings are within individual lua config files)
 
 " Core
 nmap \ :NvimTreeFindFileToggle<CR>:set relativenumber<CR>:set nowrap<CR>
 nmap <leader><leader>r :so ~/.config/nvim/init.vim<CR>
-nmap <leader>t :call TrimWhitespace()<CR>
+nmap <leader>t= :call TrimWhitespace()<CR>
 nmap <silent> <leader><leader> :noh<CR>
 nmap <leader>$s <C-w>s<C-w>j:terminal<CR>:set nonumber<CR><S-a>
 nmap <leader>$v <C-w>v<C-w>l:terminal<CR>:set nonumber<CR><S-a>
@@ -434,11 +470,12 @@ nnoremap <leader>fh <cmd>Telescope help_tags<cr>
 nnoremap <leader>fc <cmd>Telescope colorscheme<cr>
 nnoremap <leader>f/ <cmd>Telescope current_buffer_fuzzy_find<cr>
 nnoremap <silent> <Esc><Esc> <Esc><cmd>nohlsearch<CR><Esc>
-nnoremap <leader>mm <cmd>MergetoolToggle<CR>
+nnoremap <leader>gm <cmd>MergetoolToggle<CR>
+nnoremap <leader>t <cmd>lua require("harpoon.term").gotoTerminal(1)<CR>
 nnoremap <leader>hm <cmd>lua require("harpoon.mark").add_file()<CR>
 nnoremap <leader>hh <cmd>lua require("harpoon.ui").toggle_quick_menu()<CR>
-nnoremap <leader>hu <cmd>lua require("harpoon.ui").nav_next()<CR>
-nnoremap <leader>hd <cmd>lua require("harpoon.ui").nav_prev()<CR>
+nnoremap <leader>h] <cmd>lua require("harpoon.ui").nav_next()<CR>
+nnoremap <leader>h[ <cmd>lua require("harpoon.ui").nav_prev()<CR>
 nnoremap <leader>h1 <cmd>lua require("harpoon.ui").nav_file(1)<CR>
 nnoremap <leader>h2 <cmd>lua require("harpoon.ui").nav_file(2)<CR>
 nnoremap <leader>h3 <cmd>lua require("harpoon.ui").nav_file(3)<CR>
@@ -453,9 +490,6 @@ nnoremap <leader>sp viw<cmd>lua require('spectre').open_file_search()<CR>
 "Normal remaps
 nnoremap <leader>k g_
 nnoremap <leader>j _
-nnoremap <leader>l A
-nnoremap <leader>qw A;<Esc>
-nnoremap <leader>d 0
 nnoremap <leader>y "+y
 nnoremap <leader>yy "+yy
 nnoremap <leader>Y "+yg_
@@ -471,14 +505,12 @@ nnoremap <C-p> "1p
 nnoremap <leader><C-p> "1P
 nmap <leader>z ysiw
 nmap <leader>zz yssw
-nnoremap ; :
 nnoremap <leader>q{ 0v$F{%
 nnoremap <leader>q( 0v$F(%
 nnoremap <leader>q[ 0v$F[%
 nnoremap <leader>q< 0v$F<%
 nnoremap R s
-nnoremap <C-s> <cmd>PounceRepeat<CR>
-nnoremap <leader>w <cmd>Pounce<CR>
+nnoremap <C-s> <cmd>Pounce<CR>
 nnoremap <C-j> <C-d>zz
 nnoremap <C-k> <C-u>zz
 nnoremap j jzz
@@ -490,13 +522,9 @@ nnoremap n nzz
 nnoremap <leader>g <cmd>/=======<CR>
 
 " Insert remaps
-inoremap jj <Esc>
-inoremap ii <Esc>la
-inoremap hh <Esc>la<BS>
-inoremap jk <Esc>
 inoremap kj <Esc>
-imap uu <C-e>
-inoremap qq <Esc>A
+inoremap ;; <Esc>la
+inoremap hh <Esc>lxa
 
 " visual remaps
 xnoremap qq g_
@@ -538,3 +566,6 @@ xmap <leader>z{ S}
 xmap <leader>z} S{
 xmap <leader>z( S)
 xmap <leader>z) S(
+
+" term stuff
+:tnoremap <Esc> <C-\><C-n>
