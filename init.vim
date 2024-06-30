@@ -80,7 +80,8 @@ Plug 'heavenshell/vim-pydocstring'
 
 " Aesthetics - Colorschemes
 " Plug 'arturgoms/moonbow.nvim'
-Plug 'catppuccin/nvim', { 'as': 'catpuccin' }
+" Plug 'catppuccin/nvim', { 'as': 'catpuccin' }
+Plug 'n1ghtmare/noirblaze-vim'
 
 " Aesthetics - Others
 Plug 'junegunn/rainbow_parentheses.vim'
@@ -94,6 +95,7 @@ Plug 'romgrk/barbar.nvim'
 call plug#end()
 
 " Personal settings
+set linespace=10
 set mouse=a
 set nocompatible            " disable compatibility to old-time vi
 set showmatch               " show matching
@@ -152,7 +154,8 @@ highlight VertSplit gui=NONE guibg=NONE guifg=#444444 cterm=NONE ctermbg=NONE ct
 
 set termguicolors
 " colorscheme moonbow
-colorscheme catppuccin-mocha
+set guifont=JetBrains\ Mono\ 13
+colorscheme noirblaze
 
 highlight Normal guibg=NONE ctermbg=NONE
 highlight Error guibg=NONE ctermbg=NONE
