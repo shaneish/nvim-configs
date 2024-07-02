@@ -59,6 +59,7 @@ Plug 'ellisonleao/glow.nvim'
 " Plug 'rafamadriz/friendly-snippets'
 " Plug 'VonHeikemen/lsp-zero.nvim'
 Plug 'github/copilot.vim'
+Plug 'chentoast/marks.nvim'
 
 " Functionalities - Python
 Plug 'psf/black', { 'branch': 'stable' }
@@ -76,7 +77,9 @@ Plug 'glacambre/firenvim', { 'do': { _ -> firenvim#install(0) } }
 " Plug 'tjdevries/colorbuddy.nvim', { 'branch': 'dev' }
 " Plug 'jesseleite/nvim-noirbuddy'
 " Plug 'ray-x/aurora'
-Plug 'arturgoms/moonbow.nvim'
+" Plug 'arturgoms/moonbow.nvim'
+Plug 'tjdevries/colorbuddy.nvim'
+Plug 'jesseleite/nvim-noirbuddy'
 
 " Aesthetics - Others
 Plug 'junegunn/rainbow_parentheses.vim'
@@ -117,7 +120,7 @@ set hidden
 set title
 set matchpairs+=<:>
 set iskeyword-=_
-let mapleader=" "
+let mapleader=";"
 
 "" Filetype-Specific Configurations
 
@@ -151,7 +154,8 @@ highlight VertSplit gui=NONE guibg=NONE guifg=#444444 cterm=NONE ctermbg=NONE ct
 " colorscheme srcery
 
 set termguicolors
-colorscheme moonbow
+colorscheme noirbuddy
+set guifont=JetBrains\ Mono\ 13
 highlight Normal guibg=NONE ctermbg=NONE
 highlight Error guibg=NONE ctermbg=NONE
 highlight Comment guifg=#f9ff9f
@@ -189,7 +193,7 @@ let g:cursorhold_updatetime = 100
 let g:context_nvim_no_redraw = 1
 
 " Neovim :Terminal
-tmap <Esc> <C-\><C-n>
+tmap kj <C-\><C-n>
 tmap <C-w> <Esc><C-w>
 tmap <C-d> <Esc>:q<CR>
 autocmd BufWinEnter,WinEnter term://* startinsert
@@ -212,6 +216,9 @@ servers = {
 -- local lsp = require('lsp-zero')
 -- lsp.preset('recommended')
 -- lsp.setup()
+require('noirbuddy').setup {
+  preset = 'kiwi',
+}
 require('rainbow_csv').setup()
 require('csvview').setup()
 require('treesitter-config')
@@ -300,6 +307,43 @@ require("gomove").setup {
   -- whether to not to move past end column when moving blocks horizontally, (true/false)
   move_past_end_col = false,
 }
+
+require'marks'.setup {
+  -- whether to map keybinds or not. default true
+  default_mappings = true,
+  -- which builtin marks to show. default {}
+  builtin_marks = { ".", "<", ">", "^" },
+  -- whether movements cycle back to the beginning/end of buffer. default true
+  cyclic = true,
+  -- whether the shada file is updated after modifying uppercase marks. default false
+  force_write_shada = false,
+  -- how often (in ms) to redraw signs/recompute mark positions.
+  -- higher values will have better performance but may cause visual lag,
+  -- while lower values may cause performance penalties. default 150.
+  refresh_interval = 250,
+  -- sign priorities for each type of mark - builtin marks, uppercase marks, lowercase
+  -- marks, and bookmarks.
+  -- can be either a table with all/none of the keys, or a single number, in which case
+  -- the priority applies to all marks.
+  -- default 10.
+  sign_priority = { lower=10, upper=15, builtin=8, bookmark=20 },
+  -- disables mark tracking for specific filetypes. default {}
+  excluded_filetypes = {},
+  -- disables mark tracking for specific buftypes. default {}
+  excluded_buftypes = {},
+  -- marks.nvim allows you to configure up to 10 bookmark groups, each with its own
+  -- sign/virttext. Bookmarks can be used to group together positions and quickly move
+  -- across multiple buffers. default sign is '!@#$%^&*()' (from 0 to 9), and
+  -- default virt_text is "".
+  bookmark_0 = {
+    sign = "⚑",
+    virt_text = "hello world",
+    -- explicitly prompt for a virtual line annotation when setting a bookmark from this group.
+    -- defaults to false.
+    annotate = false,
+  },
+  mappings = {}
+}
 EOF
 
 
@@ -315,6 +359,11 @@ function! TrimWhitespace()
     call winrestview(l:save)
 endfunction
 
+" Weirdish
+nmap <space> <leader>
+nmap <space><space> <leader><leader>
+xmap <space> <leader>
+xmap <space><space> <leader><leader>
 
 " Core
 nmap \ :NvimTreeFindFileToggle<CR>:set relativenumber<CR>:set nowrap<CR>
@@ -378,8 +427,7 @@ nnoremap <leader>sp viw<cmd>lua require('spectre').open_file_search()<CR>
 nnoremap <leader>k g_
 nnoremap <leader>j _
 nnoremap <leader>l A
-nnoremap <leader>qw A;<Esc>
-nnoremap <leader>d 0
+nnoremap <leader>h I
 nnoremap <leader>y "+y
 nnoremap <leader>yy "+yy
 nnoremap <leader>Y "+yg_
@@ -414,8 +462,9 @@ nnoremap <leader>g <cmd>/=======<CR>
 
 " Insert remaps
 inoremap kj <Esc>
-inoremap ;; <Esc>la
-inoremap hh <Esc>lxa
+inoremap <leader><leader> <Esc>
+inoremap <leader>k <Esc>la
+inoremap <leader>j <Esc>lxa
 
 " visual remaps
 xnoremap qq g_
