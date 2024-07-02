@@ -81,7 +81,9 @@ Plug 'heavenshell/vim-pydocstring'
 " Aesthetics - Colorschemes
 " Plug 'arturgoms/moonbow.nvim'
 " Plug 'catppuccin/nvim', { 'as': 'catpuccin' }
-Plug 'n1ghtmare/noirblaze-vim'
+" Plug 'n1ghtmare/noirblaze-vim'
+Plug 'tjdevries/colorbuddy.vim'
+Plug 'jesseleite/nvim-noirbuddy'
 
 " Aesthetics - Others
 Plug 'junegunn/rainbow_parentheses.vim'
@@ -155,7 +157,7 @@ highlight VertSplit gui=NONE guibg=NONE guifg=#444444 cterm=NONE ctermbg=NONE ct
 set termguicolors
 " colorscheme moonbow
 set guifont=JetBrains\ Mono\ 13
-colorscheme noirblaze
+colorscheme noirbuddy
 
 highlight Normal guibg=NONE ctermbg=NONE
 highlight Error guibg=NONE ctermbg=NONE
@@ -232,6 +234,9 @@ require('mason-lspconfig').setup {
 local lsp = require('lsp-zero')
 lsp.preset('recommended')
 lsp.setup()
+require('noirbuddy').setup({
+    preset = 'kiwi',
+})
 require('oatjump').setup()
 require('csvview').setup()
 -- csvview:
@@ -449,6 +454,12 @@ autocmd FileType csv nmap <leader>= :call ToggleMappings()<CR>
 autocmd FileType tsv nmap <leader>= :call ToggleMappings()<CR>
 """ Custom Mappings (vim) (lua custom mappings are within individual lua config files)
 
+" Weirdish
+nmap <space> <leader>
+nmap <space><space> <leader><leader>
+xmap <space> <leader>
+xmap <space><space> <leader><leader>
+
 " Core
 nmap \ :NvimTreeFindFileToggle<CR>:set relativenumber<CR>:set nowrap<CR>
 nmap <leader><leader>r :so ~/.config/nvim/init.vim<CR>
@@ -526,8 +537,9 @@ nnoremap <leader>g <cmd>/=======<CR>
 
 " Insert remaps
 inoremap kj <Esc>
-inoremap ;; <Esc>la
-inoremap hh <Esc>lxa
+inoremap <leader><leader> <Esc>
+inoremap <leader>k <Esc>la
+inoremap <leader>j <Esc>lxa
 
 " visual remaps
 xnoremap qq g_
