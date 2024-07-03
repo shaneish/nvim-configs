@@ -60,6 +60,7 @@ Plug 'ellisonleao/glow.nvim'
 " Plug 'VonHeikemen/lsp-zero.nvim'
 Plug 'github/copilot.vim'
 Plug 'chentoast/marks.nvim'
+Plug 'duane9/nvim-rg'
 
 " Functionalities - Python
 Plug 'psf/black', { 'branch': 'stable' }
@@ -196,10 +197,9 @@ let g:context_nvim_no_redraw = 1
 " Neovim :Terminal
 tmap kj <C-\><C-n>
 tmap <C-w> <Esc><C-w>
-tmap <C-d> <Esc>:q<CR>
+tmap <C-space> <Esc><cmd>bd!<CR>
 autocmd BufWinEnter,WinEnter term://* startinsert
 autocmd BufLeave term://* stopinsert
-nmap <leader>
 
 " Python
 let g:python3_host_prog = '~/.config/nvim/venv/bin/python3'
@@ -379,8 +379,8 @@ nmap <leader><leader>w <cmd>w<CR>
 nmap <leader><leader>q <cmd>q!<CR>
 nmap <leader><leader>s <cmd>w!<CR><cmd>q!<CR>
 nmap <leader>n :cnext<CR>
-nmap <C-space> :botright terminal<CR>
-xmap <C-space> :botright terminal<CR>
+nmap <C-space> :botright terminal<CR>:resize 15<CR>i
+xmap <C-space> :botright terminal<CR>:resize 15<CR>i
 
 " Python
 autocmd FileType python nmap <leader>fmt :Black<CR>
@@ -426,6 +426,9 @@ nnoremap <leader>ss <cmd>lua require('spectre').open()<CR>
 nnoremap <leader>sw <cmd>lua require('spectre').open_visual({select_word=true})<CR>
 vnoremap <leader>sv <esc><cmd>lua require('spectre').open_visual()<CR>
 nnoremap <leader>sp viw<cmd>lua require('spectre').open_file_search()<CR>
+nnoremap <C-m><C-m> :MarksListAll<CR>
+nnoremap <C-m>g :MarksListGlobal<CR>
+nnoremap <C-m>l :MarksListBuf<CR>
 
 "Normal remaps
 nnoremap <leader>k g_
@@ -466,13 +469,19 @@ nnoremap <leader>g <cmd>/=======<CR>
 
 " Insert remaps
 inoremap kj <Esc>
+inoremap <C-j> <Esc>
+inoremap <C-s> <Esc>:w!<CR>
+inoremap <C-q> <Esc>:q!<CR>
+inoremap <C-Q> <Esc>:w!<CR>:q!<CR>
 inoremap <leader><leader> <Esc>
-inoremap <C-space><C-l> <Esc>la
-inoremap <C-space><C-k> <Esc>lxa
+inoremap <C-l> <Esc>la
+inoremap <C-L> <Esc>lxa
 
 " visual remaps
+
 xnoremap qq g_
-xnoremap <leader><C-y> v_vg_y
+xmap <C-y> _vg_y
+xmap <leader><C-y> _vg_"+y
 xnoremap <leader><leader>{ f{%
 xnoremap <leader><leader>( f(%
 xnoremap <leader><leader>[ f[%
