@@ -162,10 +162,11 @@ highlight Comment guifg=#f9ff9f
 highlight LineNr guifg=#969294
 
 " nvim-cmp
-set completeopt=menu,menuone,noselect
+" set completeopt=menu,menuone,noselect
 
 " copilot
-imap <silent><script><expr> <leader><tab> copilot#Accept("\<CR>")
+imap <silent><script><expr> <C-space><tab> copilot#Accept("\<CR>")
+imap <silent><script><expr> <C-space><C-space> copilot#Accept("\<CR>")
 imap <C-]> <Plug>(copilot-next)
 imap <C-[> <Plug>(copilot-previous)
 imap <C-e> <Plug>(copilot-dismiss)
@@ -198,6 +199,7 @@ tmap <C-w> <Esc><C-w>
 tmap <C-d> <Esc>:q<CR>
 autocmd BufWinEnter,WinEnter term://* startinsert
 autocmd BufLeave term://* stopinsert
+nmap <leader>
 
 " Python
 let g:python3_host_prog = '~/.config/nvim/venv/bin/python3'
@@ -223,7 +225,7 @@ require('rainbow_csv').setup()
 require('csvview').setup()
 require('treesitter-config')
 require('spectre').setup()
-require('nvim-cmp-config')
+-- require('nvim-cmp-config')
 require('lspconfig-config')
 require('telescope-config')
 require('lualine-config')
@@ -377,6 +379,8 @@ nmap <leader><leader>w <cmd>w<CR>
 nmap <leader><leader>q <cmd>q!<CR>
 nmap <leader><leader>s <cmd>w!<CR><cmd>q!<CR>
 nmap <leader>n :cnext<CR>
+nmap <C-space> :botright terminal<CR>
+xmap <C-space> :botright terminal<CR>
 
 " Python
 autocmd FileType python nmap <leader>fmt :Black<CR>
@@ -463,8 +467,8 @@ nnoremap <leader>g <cmd>/=======<CR>
 " Insert remaps
 inoremap kj <Esc>
 inoremap <leader><leader> <Esc>
-inoremap <leader>k <Esc>la
-inoremap <leader>j <Esc>lxa
+inoremap <C-space><C-l> <Esc>la
+inoremap <C-space><C-k> <Esc>lxa
 
 " visual remaps
 xnoremap qq g_
