@@ -483,7 +483,6 @@ nnoremap <leader>fb <cmd>Telescope buffers<cr>
 nnoremap <leader>fh <cmd>Telescope help_tags<cr>
 nnoremap <leader>fc <cmd>Telescope colorscheme<cr>
 nnoremap <leader>f/ <cmd>Telescope current_buffer_fuzzy_find<cr>
-nnoremap <silent> <Esc><Esc> <Esc><cmd>nohlsearch<CR><Esc>
 nnoremap <leader>gm <cmd>MergetoolToggle<CR>
 nnoremap <leader>t <cmd>lua require("harpoon.term").gotoTerminal(1)<CR>
 nnoremap <leader>hm <cmd>lua require("harpoon.mark").add_file()<CR>
@@ -540,6 +539,8 @@ inoremap kj <Esc>
 inoremap <leader><leader> <Esc>
 inoremap <leader>k <Esc>la
 inoremap <leader>j <Esc>lxa
+inoremap <C-k> <Esc>A
+inoremap <C-j> <Esc>I
 
 " visual remaps
 xnoremap qq g_
