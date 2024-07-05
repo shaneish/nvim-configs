@@ -533,6 +533,8 @@ nnoremap <S-Tab> :bprevious<CR>
 nnoremap R s
 nnoremap n nzz
 nnoremap <leader>g <cmd>/=======<CR>
+nnoremap <C-enter>j o<Esc>_C<Esc>
+nnoremap <C-enter>k O<Esc>_C<Esc>
 
 " Insert remaps
 inoremap kj <Esc>
@@ -541,6 +543,8 @@ inoremap <leader>k <Esc>la
 inoremap <leader>j <Esc>lxa
 inoremap <C-k> <Esc>A
 inoremap <C-j> <Esc>I
+inoremap <C-enter>j <Esc>o<Esc>_C
+inoremap <C-enter>k <Esc>O<Esc>_C
 
 " visual remaps
 xnoremap qq g_
