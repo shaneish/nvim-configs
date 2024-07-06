@@ -79,9 +79,6 @@ Plug 'psf/black', { 'branch': 'stable' }
 Plug 'heavenshell/vim-pydocstring'
 
 " Aesthetics - Colorschemes
-" Plug 'arturgoms/moonbow.nvim'
-" Plug 'catppuccin/nvim', { 'as': 'catpuccin' }
-" Plug 'n1ghtmare/noirblaze-vim'
 Plug 'tjdevries/colorbuddy.vim'
 Plug 'jesseleite/nvim-noirbuddy'
 
@@ -127,8 +124,14 @@ set hidden
 set title
 set matchpairs+=<:>
 set iskeyword-=_
-let mapleader=" "
 set swapfile
+
+" Weird leader stuff
+let mapleader=";"
+nmap <space> <leader>
+nmap <space><space> <leader><leader>
+xmap <space> <leader>
+xmap <space><space> <leader><leader>
 
 " ocaml shite
 " let g:opamshare = substitute(system('opam var share'),'\n$','','''')
@@ -161,16 +164,15 @@ colorscheme noirbuddy
 
 highlight Normal guibg=NONE ctermbg=NONE
 highlight Error guibg=NONE ctermbg=NONE
-highlight Comment guifg=#f9ff9f
-highlight LineNr guifg=#969294
-" highlight RustHints guifg=#f08080
+highlight Comment guifg=#d3ffce
+highlight LineNr guifg=#e9f0fd
 highlight RustHints guifg=#f33a6a
 
 " nvim-cmp
 set completeopt=menu,menuone,noselect
 
 " copilot
-imap <silent><script><expr> <leader><tab> copilot#Accept("\<CR>")
+imap <silent><script><expr> <C-space><tab> copilot#Accept("\<CR>")
 imap <C-]> <Plug>(copilot-next)
 imap <C-[> <Plug>(copilot-previous)
 imap <C-e> <Plug>(copilot-dismiss)
@@ -199,9 +201,9 @@ let g:cursorhold_updatetime = 100
 let g:context_nvim_no_redraw = 1
 
 " Neovim :Terminal
-tmap <Esc> <C-\><C-n>
-tmap <C-w> <Esc><C-w>
-tmap <C-d> <Esc>:q<CR>
+tmap kj <C-\><C-n>
+tmap <C-d> kj:q<CR>
+tmap <C-t> <Esc><cmd>bd!<CR>
 autocmd BufWinEnter,WinEnter term://* startinsert
 autocmd BufLeave term://* stopinsert
 
@@ -280,6 +282,7 @@ require('alpha').setup(require('alpha.themes.dashboard').config)
 require('glow').setup({
     width = 120,
     height = 140,
+    install_path = '/usr/bin/glow'
 })
 require('flutter-tools').setup{}
 -- require('smartcolumn').setup({
@@ -452,26 +455,22 @@ autocmd BufRead,BufNewFile *.csv.txt set filetype=csv
 autocmd BufRead,BufNewFile *.tsv.txt set filetype=tsv
 autocmd FileType csv nmap <leader>= :call ToggleMappings()<CR>
 autocmd FileType tsv nmap <leader>= :call ToggleMappings()<CR>
+
 """ Custom Mappings (vim) (lua custom mappings are within individual lua config files)
-
-" Weirdish
-nmap <space> <leader>
-nmap <space><space> <leader><leader>
-xmap <space> <leader>
-xmap <space><space> <leader><leader>
-
 " Core
 nmap \ :NvimTreeFindFileToggle<CR>:set relativenumber<CR>:set nowrap<CR>
 nmap <leader><leader>r :so ~/.config/nvim/init.vim<CR>
-nmap <leader>t= :call TrimWhitespace()<CR>
+nmap <leader><leader>t :call TrimWhitespace()<CR>
 nmap <silent> <leader><leader> :noh<CR>
-nmap <leader>$s <C-w>s<C-w>j:terminal<CR>:set nonumber<CR><S-a>
-nmap <leader>$v <C-w>v<C-w>l:terminal<CR>:set nonumber<CR><S-a>
-nmap <leader><leader>d <cmd>bd!<CR>
+nmap <leader><leader>d <cmd>silent! bd!<CR>
 nmap <leader><leader>w <cmd>w<CR>
 nmap <leader><leader>q <cmd>q!<CR>
 nmap <leader><leader>s <cmd>w!<CR><cmd>q!<CR>
-nmap <leader>n :cnext<CR>
+nmap <C-space>n :cnext<CR>
+nmap <C-space>N :cprevious<CR>
+nmap <C-t> :botright terminal<CR>:resize 15<CR>i
+xmap <C-t> :botright terminal<CR>:resize 15<CR>i
+
 
 " Python
 autocmd FileType python nmap <leader>fmt :Black<CR>
@@ -483,7 +482,7 @@ nnoremap <leader>fb <cmd>Telescope buffers<cr>
 nnoremap <leader>fh <cmd>Telescope help_tags<cr>
 nnoremap <leader>fc <cmd>Telescope colorscheme<cr>
 nnoremap <leader>f/ <cmd>Telescope current_buffer_fuzzy_find<cr>
-nnoremap <leader>gm <cmd>MergetoolToggle<CR>
+nnoremap <leader>g <cmd>MergetoolToggle<CR>
 nnoremap <leader>t <cmd>lua require("harpoon.term").gotoTerminal(1)<CR>
 nnoremap <leader>hm <cmd>lua require("harpoon.mark").add_file()<CR>
 nnoremap <leader>hh <cmd>lua require("harpoon.ui").toggle_quick_menu()<CR>
@@ -528,33 +527,28 @@ nnoremap <C-j> <C-d>zz
 nnoremap <C-k> <C-u>zz
 nnoremap j jzz
 nnoremap k kzz
+nnoremap n nzz
 nnoremap <Tab> :bnext<CR>
 nnoremap <S-Tab> :bprevious<CR>
 nnoremap R s
-nnoremap n nzz
-nnoremap <leader>g <cmd>/=======<CR>
-nnoremap <C-enter>j o<Esc>_C<Esc>
-nnoremap <C-enter>k O<Esc>_C<Esc>
+nnoremap <C-space>j o<Esc>_C<Esc>
+nnoremap <C-space>k O<Esc>_C<Esc>
 
 " Insert remaps
 inoremap kj <Esc>
 inoremap <leader><leader> <Esc>
-inoremap <leader>k <Esc>la
-inoremap <leader>j <Esc>lxa
+inoremap <C-space><C-space> <Esc>la
+inoremap <C-space><space> <Esc>lxa
 inoremap <C-k> <Esc>A
 inoremap <C-j> <Esc>I
-inoremap <C-enter>j <Esc>o<Esc>_C
-inoremap <C-enter>k <Esc>O<Esc>_C
+inoremap <C-space>j <Esc>o<Esc>_C
+inoremap <C-space>k <Esc>O<Esc>_C
+inoremap <C-q> <Esc>:q!<CR> " used to use firenvim faster
+inoremap <C-Q> <Esc>:w!<CR>:q!<CR> " used to use firenvim faster
 
 " visual remaps
 xnoremap qq g_
 xnoremap <leader><C-y> v_vg_y
-xnoremap <leader><leader>{ f{%
-xnoremap <leader><leader>( f(%
-xnoremap <leader><leader>[ f[%
-xnoremap <leader><leader>< f<%
-xnoremap <leader>w <cmd>Pounce<CR>
-xnoremap <leader>i g<C-a>
 xnoremap < <gv
 xnoremap > >gv
 xnoremap <leader>k g_
@@ -578,14 +572,12 @@ xnoremap <expr> j  mode() ==# "v" ? "j$" : "j"
 xnoremap <expr> <C-j> mode() ==# "v" ? "<C-d>$"  : "<C-d>"
 xnoremap <expr> k  mode() ==# "v" ? "k$" : "k"
 xnoremap <expr> <C-k> mode() ==# "v" ? "<C-u>$"  : "<C-u>"
-xmap <leader>z" S"
-xmap <leader>z' S'
-xmap <leader>z[ S]
-xmap <leader>z] S[
-xmap <leader>z{ S}
-xmap <leader>z} S{
-xmap <leader>z( S)
-xmap <leader>z) S(
+" xmap <leader>z" S"
+" xmap <leader>z' S'
+" xmap <leader>z[ S]
+" xmap <leader>z] S[
+" xmap <leader>z{ S}
+" xmap <leader>z} S{
+" xmap <leader>z( S)
+" xmap <leader>z) S(
 
-" term stuff
-:tnoremap <Esc> <C-\><C-n>
