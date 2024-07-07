@@ -237,7 +237,12 @@ local lsp = require('lsp-zero')
 lsp.preset('recommended')
 lsp.setup()
 require('noirbuddy').setup({
-    preset = 'kiwi',
+    preset = 'miami-nights',
+    colors = {
+        background = '#141414',
+        secondary = '#e37383',
+        primary = '#e30b5c'
+    }
 })
 require('oatjump').setup()
 require('csvview').setup()
