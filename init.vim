@@ -37,7 +37,6 @@ Plug 'KabbAmine/vCoolor.vim'
 Plug 'dkarter/bullets.vim'
 Plug 'wellle/context.vim'
 Plug 'antoinemadec/FixCursorHold.nvim'
-Plug 'xiyaowong/nvim-transparent'
 Plug 'simrat39/rust-tools.nvim'
 Plug 'mfussenegger/nvim-dap'
 Plug 'hashivim/vim-terraform'
@@ -173,6 +172,7 @@ set completeopt=menu,menuone,noselect
 
 " copilot
 imap <silent><script><expr> <C-space><tab> copilot#Accept("\<CR>")
+imap <silent><script><expr> <C-a> copilot#Accept("\<CR>")
 imap <C-]> <Plug>(copilot-next)
 imap <C-[> <Plug>(copilot-previous)
 imap <C-e> <Plug>(copilot-dismiss)
@@ -201,6 +201,7 @@ let g:cursorhold_updatetime = 100
 let g:context_nvim_no_redraw = 1
 
 " Neovim :Terminal
+:set shell=~/.cargo/bin/nu
 tmap kj <C-\><C-n>
 tmap <C-d> kj:q<CR>
 tmap <C-t> <Esc><cmd>bd!<CR>
@@ -210,7 +211,6 @@ autocmd BufLeave term://* stopinsert
 " Python
 let g:python3_host_prog = '~/.config/nvim/venv/bin/python3'
 let g:pydocstring_doq_path = '~/config/nvim/venv/bin/doq'
-
 
 """ Core plugin configuration (lua)
 
@@ -280,9 +280,6 @@ require('lspconfig')['lua_ls'].setup({
 })
 require('telescope').load_extension('harpoon')
 require('leap').add_default_mappings()
-require('transparent').setup({
-    enable = true
-})
 require('alpha').setup(require('alpha.themes.dashboard').config)
 require('glow').setup({
     width = 120,
@@ -367,9 +364,10 @@ require("gomove").setup {
   -- whether to not to move past end column when moving blocks horizontally, (true/false)
   move_past_end_col = false,
 }
-
-require('orgmode').setup_ts_grammar()
-
+require('orgmode').setup({
+  org_agenda_files = '~/notes/org/**/*',
+  org_default_notes_file = '~/notes/org/refile.org',
+})
 -- Treesitter configuration
 require('nvim-treesitter.configs').setup {
   -- If TS highlights are not enabled at all, or disabled via `disable` prop,
