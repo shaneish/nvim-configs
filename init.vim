@@ -63,7 +63,8 @@ Plug 'heavenshell/vim-pydocstring'
 
 " Aesthetics - Colorschemes
 Plug 'tjdevries/colorbuddy.vim'
-Plug 'jesseleite/nvim-noirbuddy'
+Plug 'rktjmp/lush.nvim'
+Plug 'zenbones-theme/zenbones.nvim'
 
 " Aesthetics - Others
 Plug 'junegunn/rainbow_parentheses.vim'
@@ -79,7 +80,6 @@ call plug#end()
 filetype plugin indent on
 syntax on
 filetype plugin on
-colorscheme noirbuddy
 
 set linespace=10
 set mouse=a
@@ -111,6 +111,8 @@ set termguicolors
 set guifont=JetBrains\ Mono\ 13
 set fillchars+=vert:\│
 set completeopt=menu,menuone,noselect
+
+colorscheme zenwritten
 
 " Weird leader stuff
 let mapleader=";"
@@ -312,14 +314,6 @@ require('marks').setup({
       annotate = false,
   },
   mappings = {}
-})
-require('noirbuddy').setup({
-    preset = 'miami-nights',
-    colors = {
-        background = '#141414',
-        secondary = '#e37383',
-        primary = '#e30b5c'
-    }
 })
 require('oatjump').setup()
 vim.lsp.handlers["textDocument/publishDiagnostics"] =
