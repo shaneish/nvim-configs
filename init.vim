@@ -12,12 +12,10 @@ Plug 'hrsh7th/cmp-vsnip'
 Plug 'hrsh7th/vim-vsnip'
 Plug 'hrsh7th/cmp-nvim-lsp-signature-help'
 Plug 'hrsh7th/cmp-nvim-lua'
-Plug 'saadparwaiz1/cmp_luasnip'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim'
 Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'make' }
 Plug 'nvim-lualine/lualine.nvim'
-Plug 'kyazdani42/nvim-web-devicons'
 Plug 'kyazdani42/nvim-tree.lua'
 Plug 'MunifTanjim/nui.nvim'
 
@@ -25,54 +23,39 @@ Plug 'MunifTanjim/nui.nvim'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-surround'
+Plug 'tpope/vim-repeat'
 Plug 'mhinz/vim-signify'
-Plug 'jiangmiao/auto-pairs'
+Plug 'm4xshen/autoclose.nvim'
 Plug 'alvan/vim-closetag'
 Plug 'tpope/vim-abolish'
-Plug 'junegunn/vim-easy-align'
 Plug 'scrooloose/nerdcommenter'
 Plug 'Yggdroot/indentLine'
 Plug 'chrisbra/Colorizer'
 Plug 'KabbAmine/vCoolor.vim'
 Plug 'dkarter/bullets.vim'
 Plug 'wellle/context.vim'
-Plug 'antoinemadec/FixCursorHold.nvim'
-Plug 'xiyaowong/nvim-transparent'
 Plug 'simrat39/rust-tools.nvim'
-Plug 'mfussenegger/nvim-dap'
 Plug 'hashivim/vim-terraform'
 Plug 'ThePrimeagen/harpoon'
-Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install' }
-Plug 'windwp/nvim-spectre'
 Plug 'samoshkin/vim-mergetool'
 Plug 'rlane/pounce.nvim'
 Plug 'ggandor/leap.nvim'
-Plug 'goolord/alpha-nvim'
 Plug 'booperlv/nvim-gomove'
 Plug 'ellisonleao/glow.nvim'
-Plug 'akinsho/flutter-tools.nvim'
-Plug 'SmiteshP/nvim-navic'
 Plug 'williamboman/mason.nvim'
 Plug 'williamboman/mason-lspconfig.nvim'
-Plug 'L3MON4D3/LuaSnip'
-Plug 'rafamadriz/friendly-snippets'
 Plug 'VonHeikemen/lsp-zero.nvim'
-Plug 'akinsho/git-conflict.nvim'
-Plug 'nastevens/vim-duckscript'
+Plug 'rhysd/conflict-marker.vim'
 Plug 'cameron-wags/rainbow_csv.nvim'
 Plug 'hat0uma/csvview.nvim'
-Plug 'glacambre/firenvim', { 'do': { _ -> firenvim#install(0) } }
+Plug 'SmiteshP/nvim-navic'
 
 " Plug 'm4xshen/smartcolumn.nvim'
 Plug 'github/copilot.vim'
 Plug 'UnsafeOats/oatjump.nvim'
 Plug 'folke/zen-mode.nvim'
-Plug 'nvim-orgmode/orgmode'
 Plug 'chentoast/marks.nvim'
-Plug 'dpayne/CodeGPT.nvim'
 Plug 'ziglang/zig.vim'
-Plug 'akinsho/toggleterm.nvim'
-Plug 'NTBBloodbath/zig-tools.nvim'
 
 " Functionalities - Python
 Plug 'psf/black', { 'branch': 'stable' }
@@ -93,23 +76,22 @@ Plug 'romgrk/barbar.nvim'
 
 call plug#end()
 
-" Personal settings
+filetype plugin indent on
+syntax on
+filetype plugin on
+colorscheme noirbuddy
+
 set linespace=10
 set mouse=a
-set nocompatible            " disable compatibility to old-time vi
-set showmatch               " show matching
-set expandtab               " converts tabs to white space
-set autoindent              " indent a new line the same amount as the line just typed
-set number                  " add line numbers
-" set cc=120                  " set an 120 column border for good coding style
-filetype plugin indent on   "allow auto-indenting depending on file type
-syntax on                   " syntax highlighting
-" set clipboard=unnamedplus   " using system clipboard
-filetype plugin on
-set cursorline              " highlight current cursorline
-set ttyfast                 " Speed up scrolling in Vim
+set nocompatible
+set showmatch
+set expandtab
+set autoindent
+set number
+set cc=120
+set cursorline
+set ttyfast
 set backupdir=~/.config/nvim/nvim-temp
-" set nobackup
 set relativenumber
 set tabstop=4 softtabstop=4 shiftwidth=4 expandtab smarttab autoindent
 set incsearch ignorecase smartcase hlsearch
@@ -125,6 +107,10 @@ set title
 set matchpairs+=<:>
 set iskeyword-=_
 set swapfile
+set termguicolors
+set guifont=JetBrains\ Mono\ 13
+set fillchars+=vert:\│
+set completeopt=menu,menuone,noselect
 
 " Weird leader stuff
 let mapleader=";"
@@ -133,94 +119,140 @@ nmap <space><space> <leader><leader>
 xmap <space> <leader>
 xmap <space><space> <leader><leader>
 
-" ocaml shite
-" let g:opamshare = substitute(system('opam var share'),'\n$','','''')
-" execute "set rtp+=" . g:opamshare . "/merlin/vim"
+let g:indentLine_char = '▏'
+let g:indentLine_defaultGroup = 'NonText'
+let g:vim_json_syntax_conceal = 0
+let g:vim_markdown_conceal = 0
+let g:vim_markdown_conceal_code_blocks = 0
+let g:vim_markdown_folding_disabled = 0
+let g:conceallevel = 0
+let g:python3_host_prog = '~/.config/nvim/venv/bin/python3'
+let g:pydocstring_doq_path = '~/config/nvim/venv/bin/doq'
+let g:copilot_no_tab_map = v:true
+let g:signify_sign_add = '│'
+let g:signify_sign_delete = '│'
+let g:signify_sign_change = '│'
+let g:indentLine_char = '▏'
+let g:indentLine_defaultGroup = 'NonText'
+let g:vim_json_syntax_conceal = 0
+let g:vim_markdown_conceal = 0
+let g:vim_markdown_conceal_code_blocks = 0
+let g:vim_markdown_folding_disabled = 0
+let g:conceallevel = 0
+let g:cursorhold_updatetime = 100
+let g:context_nvim_no_redraw = 1
+let g:mergetool_layout = 'mr'
+let g:mergetool_prefer_revision = 'local'
+let g:rbql_with_headers = 1
 
-"" Filetype-Specific Configurations
+" Trim Whitespaces
+function! TrimWhitespace()
+    let l:save = winsaveview()
+    %s/\\\@<!\s\+$//e
+    call winrestview(l:save)
+endfunction
 
-" HTML, XML, Jinja
+" CSV-ish stuff
+let s:mappingsState=1
+command! TM call ToggleMappings()
+function! ToggleMappings()
+    if s:mappingsState
+        :CsvViewEnable
+    else
+        :CsvViewDisable
+    endif
+    let s:mappingsState = !s:mappingsState
+endfunction
+
+autocmd BufRead,BufNewFile *.csv.txt set filetype=csv
+autocmd BufRead,BufNewFile *.tsv.txt set filetype=tsv
+autocmd FileType csv nmap <C-f> :call ToggleMappings()<CR>
+autocmd FileType tsv nmap <C-f> :call ToggleMappings()<CR>
+autocmd FileType python nmap <C-f> :Black<CR>
 autocmd FileType html setlocal shiftwidth=2 tabstop=2 softtabstop=2
 autocmd FileType css setlocal shiftwidth=2 tabstop=2 softtabstop=2
 autocmd FileType xml setlocal shiftwidth=2 tabstop=2 softtabstop=2
 autocmd FileType htmldjango setlocal shiftwidth=2 tabstop=2 softtabstop=2
 autocmd FileType htmldjango inoremap {% {%  %}<left><left><left>
 autocmd FileType htmldjango inoremap {# {#  #}<left><left><left>
-
-" Markdown and Journal
 autocmd FileType markdown setlocal shiftwidth=2 tabstop=2 softtabstop=2
 autocmd FileType journal setlocal shiftwidth=2 tabstop=2 softtabstop=2
+autocmd FileType md nmap <C-f> :set conceallevel=0<CR>
+autocmd FileType json nmap <C-f> :set conceallevel=0<CR>
+autocmd FileType text nmap <C-f> :set conceallevel=0<CR>
 
-""" Coloring
 highlight link TSError Normal
-set fillchars+=vert:\│
 highlight WinSeparator gui=NONE guibg=NONE guifg=#444444 cterm=NONE ctermbg=NONE ctermfg=gray
 highlight VertSplit gui=NONE guibg=NONE guifg=#444444 cterm=NONE ctermbg=NONE ctermfg=gray
-
-set termguicolors
-" colorscheme moonbow
-set guifont=JetBrains\ Mono\ 13
-colorscheme noirbuddy
-
 highlight Normal guibg=NONE ctermbg=NONE
 highlight Error guibg=NONE ctermbg=NONE
 highlight Comment guifg=#d3ffce
 highlight LineNr guifg=#e9f0fd
 highlight RustHints guifg=#f33a6a
-
-" nvim-cmp
-set completeopt=menu,menuone,noselect
-
-" copilot
-imap <silent><script><expr> <C-space><tab> copilot#Accept("\<CR>")
-imap <C-]> <Plug>(copilot-next)
-imap <C-[> <Plug>(copilot-previous)
-imap <C-e> <Plug>(copilot-dismiss)
-imap <C-s> <Plug>(copilot-suggest)
-let g:copilot_no_tab_map = v:true
-
-" signify
-let g:signify_sign_add = '│'
-let g:signify_sign_delete = '│'
-let g:signify_sign_change = '│'
-hi DiffDelete guifg=#ff5555 guibg=none
-
-" indentLine
-let g:indentLine_char = '▏'
-let g:indentLine_defaultGroup = 'NonText'
-
-" Disable indentLine from concealing json and markdown syntax (e.g. ```)
-let g:vim_json_syntax_conceal = 0
-let g:vim_markdown_conceal = 0
-let g:vim_markdown_conceal_code_blocks = 0
-
-" FixCursorHold for better performance
-let g:cursorhold_updatetime = 100
-
-" context.vim
-let g:context_nvim_no_redraw = 1
-
-" Neovim :Terminal
-tmap kj <C-\><C-n>
-tmap <C-d> kj:q<CR>
-tmap <C-t> <Esc><cmd>bd!<CR>
-autocmd BufWinEnter,WinEnter term://* startinsert
-autocmd BufLeave term://* stopinsert
-
-" Python
-let g:python3_host_prog = '~/.config/nvim/venv/bin/python3'
-let g:pydocstring_doq_path = '~/config/nvim/venv/bin/doq'
-
-
-""" Core plugin configuration (lua)
+highlight DiffDelete guifg=#ff5555 guibg=none
 
 lua << EOF
-servers = {
-    'pyright',
-    'tflint',
-    'terraformls',
-    'zls',
-}
+servers = {}
+require('treesitter-config')
+require('nvim-cmp-config')
+require('lspconfig-config')
+require('telescope-config')
+require('lualine-config')
+require('nvim-tree-config')
+require('diagnostics')
+require('telescope').load_extension('harpoon')
+require("autoclose").setup({
+   keys = {
+      ["("] = { escape = false, close = true, pair = "()" },
+      ["["] = { escape = false, close = true, pair = "[]" },
+      ["{"] = { escape = false, close = true, pair = "{}" },
+      [">"] = { escape = true, close = false, pair = "<>" },
+      [")"] = { escape = true, close = false, pair = "()" },
+      ["]"] = { escape = true, close = false, pair = "[]" },
+      ["}"] = { escape = true, close = false, pair = "{}" },
+      ['"'] = { escape = true, close = true, pair = '""' },
+      ["'"] = { escape = true, close = true, pair = "''" },
+      ["`"] = { escape = true, close = true, pair = "``" },
+   },
+   options = {
+      disabled_filetypes = { },
+      disable_when_touch = true,
+      touch_regex = "[%w(%[{]",
+      pair_spaces = false,
+      auto_indent = true,
+      disable_command_mode = false,
+   },
+})
+require("rust-tools").setup({
+  tools = {
+      inlay_hints = {
+        highlight = "RustHints",
+      },
+  },
+  server = {
+    on_attach = function(_, bufnr)
+      -- Hover actions
+      vim.keymap.set("n", "<C-space>a", rt.hover_actions.hover_actions, { buffer = bufnr })
+      -- Code action groups
+      vim.keymap.set("n", "<C-space>A", rt.code_action_group.code_action_group, { buffer = bufnr })
+    end,
+  },
+})
+require("gomove").setup({
+  -- whether or not to map default key bindings, (true/false)
+  map_defaults = true,
+  -- whether or not to reindent lines moved vertically (true/false)
+  reindent = true,
+  -- whether or not to undojoin same direction moves (true/false)
+  undojoin = true,
+  -- whether to not to move past end column when moving blocks horizontally, (true/false)
+  move_past_end_col = false,
+})
+require('glow').setup({
+    width = 120,
+    height = 140,
+    install_path = '/usr/bin/glow'
+})
 require('mason').setup({
     ui = {
         icons = {
@@ -233,18 +265,8 @@ require('mason').setup({
 require('mason-lspconfig').setup {
     ensure_installed = { "lua_ls", "zls", "pyright", "tflint", "terraformls" },
 }
-local lsp = require('lsp-zero')
-lsp.preset('recommended')
-lsp.setup()
-require('noirbuddy').setup({
-    preset = 'miami-nights',
-    colors = {
-        background = '#141414',
-        secondary = '#e37383',
-        primary = '#e30b5c'
-    }
-})
-require('oatjump').setup()
+-- require('lsp-zero').preset('recommended').setup()
+require('leap').add_default_mappings()
 require('csvview').setup()
 -- csvview:
 --  + ON - :CsvViewEnable
@@ -257,137 +279,6 @@ require('rainbow_csv').setup()
 --  + LINT - :CSVLint
 --  + QUERY - :Select [a1, a1 order by a1 desc]
 --  + MANIPULATE COLUMNS - :Update [a1 = a1 + "_" + a2]
-require('treesitter-config')
-require('spectre').setup()
-require('nvim-cmp-config')
-require('lspconfig-config')
-require('telescope-config')
-require('lualine-config')
-require('nvim-tree-config')
-require('zen-config')
-require('diagnostics')
-require('codegpt.config')
-require('zig-tools').setup()
-vim.g["codegpt_openai_api_key"] = os.getenv("OPENAI_API_KEY")
-require('lspconfig')['lua_ls'].setup({
-    settings = {
-        Lua = {
-            diagnostics = {
-                globals = { 'vim' }
-            }
-        }
-    }
-})
-require('telescope').load_extension('harpoon')
-require('leap').add_default_mappings()
-require('transparent').setup({
-    enable = true
-})
-require('alpha').setup(require('alpha.themes.dashboard').config)
-require('glow').setup({
-    width = 120,
-    height = 140,
-    install_path = '/usr/bin/glow'
-})
-require('flutter-tools').setup{}
--- require('smartcolumn').setup({
---    colorcolumn = 100,
---    disabled_filetypes = { "help", "text", "markdown" },
---    limit_to_window = true,
--- })
-vim.cmd([[silent! autocmd! filetypedetect BufRead,BufNewFile *.tf]])
-vim.cmd([[autocmd BufRead,BufNewFile *.hcl set filetype=hcl]])
-vim.cmd([[autocmd BufRead,BufNewFile .terraformrc,terraform.rc set filetype=hcl]])
-vim.cmd([[autocmd BufRead,BufNewFile *.tf,*.tfvars set filetype=terraform]])
-vim.cmd([[autocmd BufRead,BufNewFile *.tfstate,*.tfstate.backup set filetype=json]])
-vim.cmd([[let g:terraform_fmt_on_save=1]])
-vim.cmd([[let g:terraform_align=1]])
-
-vim.lsp.handlers["textDocument/publishDiagnostics"] =
-    vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, {
-        -- Disable underline, it's very annoying
-        underline = false
-        })
-
-local opts = { noremap=true, silent=true }
-vim.keymap.set('n', '<space>e', vim.diagnostic.open_float, opts)
-vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, opts)
-vim.keymap.set('n', ']d', vim.diagnostic.goto_next, opts)
-vim.keymap.set('n', '<space>q', vim.diagnostic.setloclist, opts)
-
--- Use an on_attach function to only map the following keys
--- after the language server attaches to the current buffer
-local on_attach = function(client, bufnr)
-  -- Enable completion triggered by <c-x><c-o>
-  vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
-
-  -- Mappings.
-  -- See `:help vim.lsp.*` for documentation on any of the below functions
-  local bufopts = { noremap=true, silent=true, buffer=bufnr }
-  vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, bufopts)
-  vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts)
-  vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts)
-  vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, bufopts)
-  vim.keymap.set('n', '<space>wa', vim.lsp.buf.add_workspace_folder, bufopts)
-  vim.keymap.set('n', '<space>wr', vim.lsp.buf.remove_workspace_folder, bufopts)
-  vim.keymap.set('n', '<space>wl', function()
-    print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-  end, bufopts)
-  vim.keymap.set('n', '<space>D', vim.lsp.buf.type_definition, bufopts)
-  vim.keymap.set('n', '<space>rn', vim.lsp.buf.rename, bufopts)
-  vim.keymap.set('n', '<space>ca', vim.lsp.buf.code_action, bufopts)
-  vim.keymap.set('n', 'gr', vim.lsp.buf.references, bufopts)
-  vim.keymap.set('n', '<space>f', function() vim.lsp.buf.format { async = true } end, bufopts)
-end
-local rt = require("rust-tools")
-rt.setup({
-  tools = {
-      inlay_hints = {
-        highlight = "RustHints",
-      },
-  },
-  server = {
-    on_attach = function(_, bufnr)
-      -- Hover actions
-      vim.keymap.set("n", "<leader><leader>a", rt.hover_actions.hover_actions, { buffer = bufnr })
-      -- Code action groups
-      vim.keymap.set("n", "<leader>a", rt.code_action_group.code_action_group, { buffer = bufnr })
-    end,
-  },
-})
-
--- gmove
-require("gomove").setup {
-  -- whether or not to map default key bindings, (true/false)
-  map_defaults = true,
-  -- whether or not to reindent lines moved vertically (true/false)
-  reindent = true,
-  -- whether or not to undojoin same direction moves (true/false)
-  undojoin = true,
-  -- whether to not to move past end column when moving blocks horizontally, (true/false)
-  move_past_end_col = false,
-}
-
-require('orgmode').setup_ts_grammar()
-
--- Treesitter configuration
-require('nvim-treesitter.configs').setup {
-  -- If TS highlights are not enabled at all, or disabled via `disable` prop,
-  -- highlighting will fallback to default Vim syntax highlighting
-  highlight = {
-    enable = true,
-    -- Required for spellcheck, some LaTex highlights and
-    -- code block highlights that do not have ts grammar
-    additional_vim_regex_highlighting = {'org'},
-  },
-  ensure_installed = {'org'}, -- Or run :TSUpdate org
-}
-
-require('orgmode').setup({
-  org_agenda_files = {'~/Notes/org/*', '~/my-orgs/**/*'},
-  org_default_notes_file = '~/Notes/org/refile.org',
-})
-
 require('marks').setup({
   -- whether to map keybinds or not. default true
   default_mappings = true,
@@ -421,53 +312,82 @@ require('marks').setup({
       annotate = false,
   },
   mappings = {}
-  })
+})
+require('noirbuddy').setup({
+    preset = 'miami-nights',
+    colors = {
+        background = '#141414',
+        secondary = '#e37383',
+        primary = '#e30b5c'
+    }
+})
+require('oatjump').setup()
+vim.lsp.handlers["textDocument/publishDiagnostics"] =
+    vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, {
+        -- Disable underline, it's very annoying
+        underline = false
+        })
+local opts = { noremap=true, silent=true }
+vim.keymap.set('n', '<space>e', vim.diagnostic.open_float, opts)
+vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, opts)
+vim.keymap.set('n', ']d', vim.diagnostic.goto_next, opts)
+vim.keymap.set('n', '<space>q', vim.diagnostic.setloclist, opts)
+-- Use an on_attach function to only map the following keys
+-- after the language server attaches to the current buffer
+local on_attach = function(client, bufnr)
+  -- Enable completion triggered by <c-x><c-o>
+  vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
+  -- Mappings.
+  -- See `:help vim.lsp.*` for documentation on any of the below functions
+  local bufopts = { noremap=true, silent=true, buffer=bufnr }
+  vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, bufopts)
+  vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts)
+  vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts)
+  vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, bufopts)
+  vim.keymap.set('n', '<space>wa', vim.lsp.buf.add_workspace_folder, bufopts)
+  vim.keymap.set('n', '<space>wr', vim.lsp.buf.remove_workspace_folder, bufopts)
+  vim.keymap.set('n', '<space>wl', function()
+    print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+  end, bufopts)
+  vim.keymap.set('n', '<space>D', vim.lsp.buf.type_definition, bufopts)
+  vim.keymap.set('n', '<space>rn', vim.lsp.buf.rename, bufopts)
+  vim.keymap.set('n', '<space>ca', vim.lsp.buf.code_action, bufopts)
+  vim.keymap.set('n', 'gr', vim.lsp.buf.references, bufopts)
+  vim.keymap.set('n', '<space>f', function() vim.lsp.buf.format { async = true } end, bufopts)
+end
 
--- Resize split when terminal is resized
-vim.api.nvim_command('autocmd VimResized * wincmd =')
-
+vim.cmd([[silent! autocmd! filetypedetect BufRead,BufNewFile *.tf]])
+vim.cmd([[autocmd BufRead,BufNewFile *.hcl set filetype=hcl]])
+vim.cmd([[autocmd BufRead,BufNewFile .terraformrc,terraform.rc set filetype=hcl]])
+vim.cmd([[autocmd BufRead,BufNewFile *.tf,*.tfvars set filetype=terraform]])
+vim.cmd([[autocmd BufRead,BufNewFile *.tfstate,*.tfstate.backup set filetype=json]])
+vim.cmd([[let g:terraform_fmt_on_save=1]])
+vim.cmd([[let g:terraform_align=1]])
 EOF
 
-let g:mergetool_layout = 'mr'
-let g:mergetool_prefer_revision = 'local'
+" Copilot
+imap <silent><script><expr> <C-space><tab> copilot#Accept("\<CR>")
+imap <silent><script><expr> <C-c> copilot#Accept("\<CR>")
+imap <C-]> <Plug>(copilot-next)
+imap <C-[> <Plug>(copilot-previous)
+imap <C-e> <Plug>(copilot-dismiss)
+imap <C-s> <Plug>(copilot-suggest)
 
-""" Rainbow CSV
-let g:rbql_with_headers = 1
+" Terminal
+tmap kj <C-\><C-n>
+tmap <C-d> kj:q<CR>
+tmap <C-t> <Esc><cmd>bd!<CR>
+autocmd BufWinEnter,WinEnter term://* startinsert
+autocmd BufLeave term://* stopinsert
 
-""" Custom Functions
 
-" Trim Whitespaces
-function! TrimWhitespace()
-    let l:save = winsaveview()
-    %s/\\\@<!\s\+$//e
-    call winrestview(l:save)
-endfunction
-
-" CSV-ish stuff
-let s:mappingsState=1
-command! TM call ToggleMappings()
-function! ToggleMappings()
-    if s:mappingsState
-        :CsvViewEnable
-    else
-        :CsvViewDisable
-    endif
-
-    let s:mappingsState = !s:mappingsState
-endfunction
-
-autocmd BufRead,BufNewFile *.csv.txt set filetype=csv
-autocmd BufRead,BufNewFile *.tsv.txt set filetype=tsv
-autocmd FileType csv nmap <leader>= :call ToggleMappings()<CR>
-autocmd FileType tsv nmap <leader>= :call ToggleMappings()<CR>
-
-""" Custom Mappings (vim) (lua custom mappings are within individual lua config files)
 " Core
 nmap \ :NvimTreeFindFileToggle<CR>:set relativenumber<CR>:set nowrap<CR>
 nmap <leader><leader>r :so ~/.config/nvim/init.vim<CR>
 nmap <leader><leader>t :call TrimWhitespace()<CR>
 nmap <silent> <leader><leader> :noh<CR>
 nmap <leader><leader>d <cmd>silent! bd!<CR>
+nmap <C-d> <cmd>silent! bd!<CR>
 nmap <leader><leader>w <cmd>w<CR>
 nmap <leader><leader>q <cmd>q!<CR>
 nmap <leader><leader>s <cmd>w!<CR><cmd>q!<CR>
@@ -476,19 +396,13 @@ nmap <C-space>N :cprevious<CR>
 nmap <C-t> :botright terminal<CR>:resize 15<CR>i
 xmap <C-t> :botright terminal<CR>:resize 15<CR>i
 
-
-" Python
-autocmd FileType python nmap <leader>fmt :Black<CR>
-
 " Telescope mappings
 nnoremap <leader>ff <cmd>Telescope find_files<cr>
 noremap <leader>fg <cmd>Telescope live_grep<cr>
 nnoremap <leader>fb <cmd>Telescope buffers<cr>
 nnoremap <leader>fh <cmd>Telescope help_tags<cr>
-nnoremap <leader>fc <cmd>Telescope colorscheme<cr>
 nnoremap <leader>f/ <cmd>Telescope current_buffer_fuzzy_find<cr>
-nnoremap <leader>g <cmd>MergetoolToggle<CR>
-nnoremap <leader>t <cmd>lua require("harpoon.term").gotoTerminal(1)<CR>
+nnoremap <leader>gm <cmd>MergetoolToggle<CR>
 nnoremap <leader>hm <cmd>lua require("harpoon.mark").add_file()<CR>
 nnoremap <leader>hh <cmd>lua require("harpoon.ui").toggle_quick_menu()<CR>
 nnoremap <leader>h] <cmd>lua require("harpoon.ui").nav_next()<CR>
@@ -496,23 +410,15 @@ nnoremap <leader>h[ <cmd>lua require("harpoon.ui").nav_prev()<CR>
 nnoremap <leader>h1 <cmd>lua require("harpoon.ui").nav_file(1)<CR>
 nnoremap <leader>h2 <cmd>lua require("harpoon.ui").nav_file(2)<CR>
 nnoremap <leader>h3 <cmd>lua require("harpoon.ui").nav_file(3)<CR>
-nnoremap <leader>h4 <cmd>lua require("harpoon.ui").nav_file(4)<CR>
-nnoremap <leader>h5 <cmd>lua require("harpoon.ui").nav_file(5)<CR>
 nnoremap <leader>hf <cmd>Telescope harpoon marks<CR>
-nnoremap <leader>ss <cmd>lua require('spectre').open()<CR>
-nnoremap <leader>sw <cmd>lua require('spectre').open_visual({select_word=true})<CR>
-vnoremap <leader>sv <esc><cmd>lua require('spectre').open_visual()<CR>
-nnoremap <leader>sp viw<cmd>lua require('spectre').open_file_search()<CR>
 
 "Normal remaps
 nnoremap <leader>k g_
 nnoremap <leader>j _
 nnoremap <leader>y "+y
 nnoremap <leader>yy "+yy
-nnoremap <leader>Y "+yg_
 nnoremap <leader>p "+p
 nnoremap <leader>P "+P
-nnoremap <leader><C-y> _vg_y
 nnoremap y "0y
 nnoremap P "0P
 nnoremap p "0p
@@ -520,12 +426,6 @@ nnoremap d "1d
 nnoremap x "_x
 nnoremap <C-p> "1p
 nnoremap <leader><C-p> "1P
-nmap <leader>z ysiw
-nmap <leader>zz yssw
-nnoremap <leader>q{ 0v$F{%
-nnoremap <leader>q( 0v$F(%
-nnoremap <leader>q[ 0v$F[%
-nnoremap <leader>q< 0v$F<%
 nnoremap R s
 nnoremap <C-s> <cmd>Pounce<CR>
 nnoremap <C-j> <C-d>zz
@@ -535,25 +435,22 @@ nnoremap k kzz
 nnoremap n nzz
 nnoremap <Tab> :bnext<CR>
 nnoremap <S-Tab> :bprevious<CR>
-nnoremap R s
 nnoremap <C-space>j o<Esc>_C<Esc>
 nnoremap <C-space>k O<Esc>_C<Esc>
+nnoremap <C-d> :bd!<CR>
 
 " Insert remaps
 inoremap kj <Esc>
 inoremap <leader><leader> <Esc>
 inoremap <C-space><C-space> <Esc>la
-inoremap <C-space><space> <Esc>lxa
-inoremap <C-k> <Esc>A
-inoremap <C-j> <Esc>I
+inoremap <C-space>x <Esc>lxa
+inoremap <C-space>l <Esc>A
+inoremap <C-space>h <Esc>I
 inoremap <C-space>j <Esc>o<Esc>_C
 inoremap <C-space>k <Esc>O<Esc>_C
-inoremap <C-q> <Esc>:q!<CR> " used to use firenvim faster
-inoremap <C-Q> <Esc>:w!<CR>:q!<CR> " used to use firenvim faster
+inoremap <C-d> :bd!<CR>
 
-" visual remaps
-xnoremap qq g_
-xnoremap <leader><C-y> v_vg_y
+" Visual remaps
 xnoremap < <gv
 xnoremap > >gv
 xnoremap <leader>k g_
@@ -577,12 +474,3 @@ xnoremap <expr> j  mode() ==# "v" ? "j$" : "j"
 xnoremap <expr> <C-j> mode() ==# "v" ? "<C-d>$"  : "<C-d>"
 xnoremap <expr> k  mode() ==# "v" ? "k$" : "k"
 xnoremap <expr> <C-k> mode() ==# "v" ? "<C-u>$"  : "<C-u>"
-" xmap <leader>z" S"
-" xmap <leader>z' S'
-" xmap <leader>z[ S]
-" xmap <leader>z] S[
-" xmap <leader>z{ S}
-" xmap <leader>z} S{
-" xmap <leader>z( S)
-" xmap <leader>z) S(
-
