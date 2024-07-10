@@ -79,7 +79,9 @@ Plug 'heavenshell/vim-pydocstring'
 
 " Aesthetics - Colorschemes
 Plug 'tjdevries/colorbuddy.vim'
-Plug 'jesseleite/nvim-noirbuddy'
+" Plug 'jesseleite/nvim-noirbuddy'
+Plug 'zenbones-theme/zenbones.nvim'
+Plug 'rktjmp/lush.nvim'
 
 " Aesthetics - Others
 Plug 'junegunn/rainbow_parentheses.vim'
@@ -159,11 +161,11 @@ highlight VertSplit gui=NONE guibg=NONE guifg=#444444 cterm=NONE ctermbg=NONE ct
 set termguicolors
 " colorscheme moonbow
 set guifont=JetBrains\ Mono\ 13
-colorscheme noirbuddy
+colorscheme zenwritten
 
 highlight Normal guibg=NONE ctermbg=NONE
 highlight Error guibg=NONE ctermbg=NONE
-highlight Comment guifg=#d3ffce
+" highlight Comment guifg=#d3ffce
 highlight LineNr guifg=#e9f0fd
 highlight RustHints guifg=#f33a6a
 
@@ -236,14 +238,14 @@ require('mason-lspconfig').setup {
 local lsp = require('lsp-zero')
 lsp.preset('recommended')
 lsp.setup()
-require('noirbuddy').setup({
-    preset = 'miami-nights',
-    colors = {
-        background = '#141414',
-        secondary = '#e37383',
-        primary = '#e30b5c'
-    }
-})
+-- require('noirbuddy').setup({
+--     preset = 'minimal',
+--     colors = {
+--         background = '#141414',
+--         primary = '#e37383',
+--         secondary = '#e30b5c'
+--     }
+-- })
 require('oatjump').setup()
 require('csvview').setup()
 -- csvview:
@@ -284,7 +286,7 @@ require('alpha').setup(require('alpha.themes.dashboard').config)
 require('glow').setup({
     width = 120,
     height = 140,
-    install_path = '/usr/bin/glow'
+    install_path = '/opt/homebrew/bin/glow'
 })
 require('flutter-tools').setup{}
 -- require('smartcolumn').setup({
@@ -536,14 +538,18 @@ nnoremap <S-Tab> :bprevious<CR>
 nnoremap R s
 nnoremap <C-space>j o<Esc>_C<Esc>
 nnoremap <C-space>k O<Esc>_C<Esc>
+nnoremap <leader>ml :MarksListAll<CR>
+nnoremap <leader>mlb :MarksListBuf<CR>
+nnoremap <leader>mlg :MarksListGlobal<CR>
+nmap <C-f> :set conceallevel=0<CR>
 
 " Insert remaps
 inoremap kj <Esc>
 inoremap <leader><leader> <Esc>
 inoremap <C-space><C-space> <Esc>la
 inoremap <C-space><space> <Esc>lxa
-inoremap <C-k> <Esc>A
-inoremap <C-j> <Esc>I
+inoremap <C-l> <Esc>A
+inoremap <C-h> <Esc>I
 inoremap <C-space>j <Esc>o<Esc>_C
 inoremap <C-space>k <Esc>O<Esc>_C
 inoremap <C-q> <Esc>:q!<CR> " used to use firenvim faster
