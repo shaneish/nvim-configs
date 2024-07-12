@@ -18,8 +18,6 @@ Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'make' }
 Plug 'nvim-lualine/lualine.nvim'
 Plug 'kyazdani42/nvim-tree.lua'
 Plug 'MunifTanjim/nui.nvim'
-
-" Functionalities
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-surround'
@@ -49,32 +47,21 @@ Plug 'rhysd/conflict-marker.vim'
 Plug 'cameron-wags/rainbow_csv.nvim'
 Plug 'hat0uma/csvview.nvim'
 Plug 'SmiteshP/nvim-navic'
-
-" Plug 'm4xshen/smartcolumn.nvim'
 Plug 'github/copilot.vim'
 Plug 'UnsafeOats/oatjump.nvim'
 Plug 'folke/zen-mode.nvim'
 Plug 'chentoast/marks.nvim'
 Plug 'ziglang/zig.vim'
-
-" Functionalities - Python
 Plug 'psf/black', { 'branch': 'stable' }
 Plug 'heavenshell/vim-pydocstring'
-
-" Aesthetics - Colorschemes
 Plug 'tjdevries/colorbuddy.vim'
 Plug 'rktjmp/lush.nvim'
-Plug 'zenbones-theme/zenbones.nvim'
-
-" Aesthetics - Others
 Plug 'junegunn/rainbow_parentheses.vim'
 Plug 'junegunn/limelight.vim'
 Plug 'junegunn/vim-journal'
-
-" Better tabs + buffers
 Plug 'kyazdani42/nvim-web-devicons'
 Plug 'romgrk/barbar.nvim'
-
+Plug 'zenbones-theme/zenbones.nvim'
 call plug#end()
 
 filetype plugin indent on
@@ -121,6 +108,7 @@ nmap <space><space> <leader><leader>
 xmap <space> <leader>
 xmap <space><space> <leader><leader>
 
+" Uhhhhhh vars I guess?
 let g:indentLine_char = '▏'
 let g:indentLine_defaultGroup = 'NonText'
 let g:vim_json_syntax_conceal = 0
@@ -188,10 +176,10 @@ highlight WinSeparator gui=NONE guibg=NONE guifg=#444444 cterm=NONE ctermbg=NONE
 highlight VertSplit gui=NONE guibg=NONE guifg=#444444 cterm=NONE ctermbg=NONE ctermfg=gray
 highlight Normal guibg=NONE ctermbg=NONE
 highlight Error guibg=NONE ctermbg=NONE
-highlight Comment guifg=#d3ffce
 highlight LineNr guifg=#e9f0fd
 highlight RustHints guifg=#f33a6a
 highlight DiffDelete guifg=#ff5555 guibg=none
+" highlight Comment guifg=#d3ffce
 
 lua << EOF
 servers = {}
@@ -219,7 +207,7 @@ require("autoclose").setup({
    options = {
       disabled_filetypes = { },
       disable_when_touch = true,
-      touch_regex = "[%w(%[{]",
+      touch_regex = "[%w(%<[{]",
       pair_spaces = false,
       auto_indent = true,
       disable_command_mode = false,
@@ -334,20 +322,20 @@ local on_attach = function(client, bufnr)
   -- Mappings.
   -- See `:help vim.lsp.*` for documentation on any of the below functions
   local bufopts = { noremap=true, silent=true, buffer=bufnr }
-  vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, bufopts)
-  vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts)
-  vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts)
-  vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, bufopts)
-  vim.keymap.set('n', '<space>wa', vim.lsp.buf.add_workspace_folder, bufopts)
-  vim.keymap.set('n', '<space>wr', vim.lsp.buf.remove_workspace_folder, bufopts)
-  vim.keymap.set('n', '<space>wl', function()
+  vim.keymap.set('n', '<C-g>D', vim.lsp.buf.declaration, bufopts)
+  vim.keymap.set('n', '<C-g>d', vim.lsp.buf.definition, bufopts)
+  vim.keymap.set('n', '<C-g>k', vim.lsp.buf.hover, bufopts)
+  vim.keymap.set('n', '<C-g>i', vim.lsp.buf.implementation, bufopts)
+  vim.keymap.set('n', '<C-g>wa', vim.lsp.buf.add_workspace_folder, bufopts)
+  vim.keymap.set('n', '<C-g>wr', vim.lsp.buf.remove_workspace_folder, bufopts)
+  vim.keymap.set('n', '<C-g>wl', function()
     print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
   end, bufopts)
-  vim.keymap.set('n', '<space>D', vim.lsp.buf.type_definition, bufopts)
-  vim.keymap.set('n', '<space>rn', vim.lsp.buf.rename, bufopts)
-  vim.keymap.set('n', '<space>ca', vim.lsp.buf.code_action, bufopts)
-  vim.keymap.set('n', 'gr', vim.lsp.buf.references, bufopts)
-  vim.keymap.set('n', '<space>f', function() vim.lsp.buf.format { async = true } end, bufopts)
+  vim.keymap.set('n', '<C-g>t', vim.lsp.buf.type_definition, bufopts)
+  vim.keymap.set('n', '<C-g>rn', vim.lsp.buf.rename, bufopts)
+  vim.keymap.set('n', '<C-g>ca', vim.lsp.buf.code_action, bufopts)
+  vim.keymap.set('n', '<C-g>r', vim.lsp.buf.references, bufopts)
+  vim.keymap.set('n', '<C-g>f', function() vim.lsp.buf.format { async = true } end, bufopts)
 end
 
 vim.cmd([[silent! autocmd! filetypedetect BufRead,BufNewFile *.tf]])
@@ -360,7 +348,7 @@ vim.cmd([[let g:terraform_align=1]])
 EOF
 
 " Copilot
-imap <silent><script><expr> <C-space><tab> copilot#Accept("\<CR>")
+imap <silent><script><expr> <C-space><l> copilot#Accept("\<CR>")
 imap <silent><script><expr> <C-c> copilot#Accept("\<CR>")
 imap <C-]> <Plug>(copilot-next)
 imap <C-[> <Plug>(copilot-previous)
