@@ -1,4 +1,6 @@
-"" Vim-Plug
+"
+" Plug-ish ish
+"
 call plug#begin()
 Plug 'nvim-treesitter/nvim-treesitter'
 Plug 'nvim-treesitter/playground'
@@ -18,8 +20,6 @@ Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'make' }
 Plug 'nvim-lualine/lualine.nvim'
 Plug 'kyazdani42/nvim-tree.lua'
 Plug 'MunifTanjim/nui.nvim'
-
-" Functionalities
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-surround'
@@ -49,152 +49,34 @@ Plug 'rhysd/conflict-marker.vim'
 Plug 'cameron-wags/rainbow_csv.nvim'
 Plug 'hat0uma/csvview.nvim'
 Plug 'SmiteshP/nvim-navic'
-
-" Plug 'm4xshen/smartcolumn.nvim'
+Plug 'duane9/nvim-rg'
+Plug 'lotabout/skim', { 'dir': '~/.skim', 'do': './install' }
 Plug 'github/copilot.vim'
 Plug 'UnsafeOats/oatjump.nvim'
 Plug 'folke/zen-mode.nvim'
 Plug 'chentoast/marks.nvim'
 Plug 'ziglang/zig.vim'
-
-" Functionalities - Python
 Plug 'psf/black', { 'branch': 'stable' }
 Plug 'heavenshell/vim-pydocstring'
-
-" Aesthetics - Colorschemes
 Plug 'tjdevries/colorbuddy.vim'
-Plug 'rktjmp/lush.nvim'
-Plug 'zenbones-theme/zenbones.nvim'
-
-" Aesthetics - Others
 Plug 'junegunn/rainbow_parentheses.vim'
 Plug 'junegunn/limelight.vim'
 Plug 'junegunn/vim-journal'
-
-" Better tabs + buffers
 Plug 'kyazdani42/nvim-web-devicons'
 Plug 'romgrk/barbar.nvim'
-
+Plug 'oatish/smartcolumn.nvim'
+Plug 'hardselius/warlock'
 call plug#end()
 
 filetype plugin indent on
 syntax on
 filetype plugin on
 
-set linespace=10
-set mouse=a
-set nocompatible
-set showmatch
-set expandtab
-set autoindent
-set number
-set cc=120
-set cursorline
-set ttyfast
-set backupdir=~/.config/nvim/nvim-temp
-set relativenumber
-set tabstop=4 softtabstop=4 shiftwidth=4 expandtab smarttab autoindent
-set incsearch ignorecase smartcase hlsearch
-set wildmode=longest,list,full wildmenu
-set ruler laststatus=2 showcmd showmode
-set list listchars=trail:»,tab:»-
-set fillchars+=vert:\
-set wrap breakindent
-set encoding=utf-8
-set textwidth=0
-set hidden
-set title
-set matchpairs+=<:>
-set iskeyword-=_
-set swapfile
-set termguicolors
-set guifont=JetBrains\ Mono\ 13
-set fillchars+=vert:\│
-set completeopt=menu,menuone,noselect
-
-colorscheme zenwritten
-
-" Weird leader stuff
-let mapleader=";"
-nmap <space> <leader>
-nmap <space><space> <leader><leader>
-xmap <space> <leader>
-xmap <space><space> <leader><leader>
-
-let g:indentLine_char = '▏'
-let g:indentLine_defaultGroup = 'NonText'
-let g:vim_json_syntax_conceal = 0
-let g:vim_markdown_conceal = 0
-let g:vim_markdown_conceal_code_blocks = 0
-let g:vim_markdown_folding_disabled = 0
-let g:conceallevel = 0
-let g:python3_host_prog = '~/.config/nvim/venv/bin/python3'
-let g:pydocstring_doq_path = '~/config/nvim/venv/bin/doq'
-let g:copilot_no_tab_map = v:true
-let g:signify_sign_add = '│'
-let g:signify_sign_delete = '│'
-let g:signify_sign_change = '│'
-let g:indentLine_char = '▏'
-let g:indentLine_defaultGroup = 'NonText'
-let g:vim_json_syntax_conceal = 0
-let g:vim_markdown_conceal = 0
-let g:vim_markdown_conceal_code_blocks = 0
-let g:vim_markdown_folding_disabled = 0
-let g:conceallevel = 0
-let g:cursorhold_updatetime = 100
-let g:context_nvim_no_redraw = 1
-let g:mergetool_layout = 'mr'
-let g:mergetool_prefer_revision = 'local'
-let g:rbql_with_headers = 1
-
-" Trim Whitespaces
-function! TrimWhitespace()
-    let l:save = winsaveview()
-    %s/\\\@<!\s\+$//e
-    call winrestview(l:save)
-endfunction
-
-" CSV-ish stuff
-let s:mappingsState=1
-command! TM call ToggleMappings()
-function! ToggleMappings()
-    if s:mappingsState
-        :CsvViewEnable
-    else
-        :CsvViewDisable
-    endif
-    let s:mappingsState = !s:mappingsState
-endfunction
-
-autocmd BufRead,BufNewFile *.csv.txt set filetype=csv
-autocmd BufRead,BufNewFile *.tsv.txt set filetype=tsv
-autocmd FileType csv nmap <C-f> :call ToggleMappings()<CR>
-autocmd FileType tsv nmap <C-f> :call ToggleMappings()<CR>
-autocmd FileType python nmap <C-f> :Black<CR>
-autocmd FileType html setlocal shiftwidth=2 tabstop=2 softtabstop=2
-autocmd FileType css setlocal shiftwidth=2 tabstop=2 softtabstop=2
-autocmd FileType xml setlocal shiftwidth=2 tabstop=2 softtabstop=2
-autocmd FileType htmldjango setlocal shiftwidth=2 tabstop=2 softtabstop=2
-autocmd FileType htmldjango inoremap {% {%  %}<left><left><left>
-autocmd FileType htmldjango inoremap {# {#  #}<left><left><left>
-autocmd FileType markdown setlocal shiftwidth=2 tabstop=2 softtabstop=2
-autocmd FileType journal setlocal shiftwidth=2 tabstop=2 softtabstop=2
-autocmd FileType md nmap <C-f> :set conceallevel=0<CR>
-autocmd FileType json nmap <C-f> :set conceallevel=0<CR>
-autocmd FileType text nmap <C-f> :set conceallevel=0<CR>
-
-highlight link TSError Normal
-highlight WinSeparator gui=NONE guibg=NONE guifg=#444444 cterm=NONE ctermbg=NONE ctermfg=gray
-highlight VertSplit gui=NONE guibg=NONE guifg=#444444 cterm=NONE ctermbg=NONE ctermfg=gray
-highlight Normal guibg=NONE ctermbg=NONE
-highlight Error guibg=NONE ctermbg=NONE
-highlight Comment guifg=#d3ffce
-highlight LineNr guifg=#e9f0fd
-highlight RustHints guifg=#f33a6a
-highlight DiffDelete guifg=#ff5555 guibg=none
-
+"
+" Lua-ish ish
+"
 lua << EOF
-servers = {}
+servers = { "terraformls" }
 require('treesitter-config')
 require('nvim-cmp-config')
 require('lspconfig-config')
@@ -316,6 +198,9 @@ require('marks').setup({
   mappings = {}
 })
 require('oatjump').setup()
+require("smartcolumn").setup({
+    colorcolumn = 140
+})
 vim.lsp.handlers["textDocument/publishDiagnostics"] =
     vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, {
         -- Disable underline, it's very annoying
@@ -352,16 +237,158 @@ end
 
 vim.cmd([[silent! autocmd! filetypedetect BufRead,BufNewFile *.tf]])
 vim.cmd([[autocmd BufRead,BufNewFile *.hcl set filetype=hcl]])
-vim.cmd([[autocmd BufRead,BufNewFile .terraformrc,terraform.rc set filetype=hcl]])
 vim.cmd([[autocmd BufRead,BufNewFile *.tf,*.tfvars set filetype=terraform]])
 vim.cmd([[autocmd BufRead,BufNewFile *.tfstate,*.tfstate.backup set filetype=json]])
+vim.cmd([[autocmd BufRead,BufNewFile .terraformrc,terraform.rc set filetype=hcl]])
 vim.cmd([[let g:terraform_fmt_on_save=1]])
 vim.cmd([[let g:terraform_align=1]])
 EOF
 
+"
+" #functions ish
+"
+
+" Trim Whitespaces
+function! TrimWhitespace()
+    let l:save = winsaveview()
+    %s/\\\@<!\s\+$//e
+    call winrestview(l:save)
+endfunction
+
+" CSV-ish stuff
+let s:mappingsState=1
+command! TM call ToggleMappings()
+function! ToggleMappings()
+    if s:mappingsState
+        :CsvViewEnable
+    else
+        :CsvViewDisable
+    endif
+    let s:mappingsState = !s:mappingsState
+endfunction
+" Terminal-ish stuff
+let g:term_proportion_default = 4
+function! OpenTermSize()
+    let g:current_window_size = (line('w$') - line('w0')) / s:term_proportion_default
+    return g:current_window_size
+endfunction
+
+"
+" #variables ish
+"
+
+" #settings ish"
+set linespace=10
+set mouse=a
+set nocompatible
+set showmatch
+set expandtab
+set autoindent
+set number
+set cursorline
+set ttyfast
+set backupdir=~/.config/nvim/nvim-temp
+set relativenumber
+set tabstop=4 softtabstop=4 shiftwidth=4 expandtab smarttab autoindent
+set incsearch ignorecase smartcase hlsearch
+set wildmode=longest,list,full wildmenu
+set ruler laststatus=2 showcmd showmode
+set list listchars=trail:»,tab:»-
+set fillchars+=vert:\
+set wrap breakindent
+set encoding=utf-8
+set textwidth=0
+set hidden
+set title
+set matchpairs+=<:>
+set iskeyword-=_
+set swapfile
+set termguicolors
+set guifont=JetBrains\ Mono\ 13
+set fillchars+=vert:\│
+set completeopt=menu,menuone,noselect
+set shell=/Users/h62756/.cargo/bin/nu
+
+" #globalvars ish
+let g:indentLine_char = '▏'
+let g:indentLine_defaultGroup = 'NonText'
+let g:vim_json_syntax_conceal = 0
+let g:vim_markdown_conceal = 0
+let g:vim_markdown_conceal_code_blocks = 0
+let g:vim_markdown_folding_disabled = 0
+let g:conceallevel = 0
+let g:python3_host_prog = '~/.config/nvim/venv/bin/python3'
+let g:pydocstring_doq_path = '~/config/nvim/venv/bin/doq'
+let g:copilot_no_tab_map = v:true
+let g:signify_sign_add = '│'
+let g:signify_sign_delete = '│'
+let g:signify_sign_change = '│'
+let g:indentLine_char = '▏'
+let g:indentLine_defaultGroup = 'NonText'
+let g:vim_json_syntax_conceal = 0
+let g:vim_markdown_conceal = 0
+let g:vim_markdown_conceal_code_blocks = 0
+let g:vim_markdown_folding_disabled = 0
+let g:conceallevel = 0
+let g:cursorhold_updatetime = 100
+let g:context_nvim_no_redraw = 1
+let g:mergetool_layout = 'mr'
+let g:mergetool_prefer_revision = 'local'
+let g:rbql_with_headers = 1
+let g:terraform_fmt_on_save = 1
+let g:terraform_align = 1
+
+" #autcmd ish
+autocmd BufRead,BufNewFile *.hcl set filetype=hcl
+autocmd BufRead,BufNewFile *.tf,*.tfvars set filetype=terraform
+autocmd BufRead,BufNewFile *.tfstate,*.tfstate.backup set filetype=json
+autocmd BufRead,BufNewFile .terraformrc,terraform.rc set filetype=hcl
+autocmd BufWritePre *.tfvars lua vim.lsp.buf.format()
+autocmd BufWritePre *.tf lua vim.lsp.buf.format()
+autocmd BufRead,BufNewFile *.csv.txt set filetype=csv
+autocmd BufRead,BufNewFile *.tsv.txt set filetype=tsv
+autocmd FileType csv nmap <C-f> :call ToggleMappings()<CR>
+autocmd FileType tsv nmap <C-f> :call ToggleMappings()<CR>
+autocmd FileType python nmap <C-f> :Black<CR>
+autocmd FileType html setlocal shiftwidth=2 tabstop=2 softtabstop=2
+autocmd FileType css setlocal shiftwidth=2 tabstop=2 softtabstop=2
+autocmd FileType xml setlocal shiftwidth=2 tabstop=2 softtabstop=2
+autocmd FileType htmldjango setlocal shiftwidth=2 tabstop=2 softtabstop=2
+autocmd FileType htmldjango inoremap {% {%  %}<left><left><left>
+autocmd FileType htmldjango inoremap {# {#  #}<left><left><left>
+autocmd FileType markdown setlocal shiftwidth=2 tabstop=2 softtabstop=2
+autocmd FileType journal setlocal shiftwidth=2 tabstop=2 softtabstop=2
+autocmd FileType md nmap <C-f> :set conceallevel=0<CR>
+autocmd FileType json nmap <C-f> :set conceallevel=0<CR>
+autocmd FileType text nmap <C-f> :set conceallevel=0<CR>
+
+" #colorscheme ish
+" colorscheme zenwritten
+colorscheme warlock
+
+" #highlight ish
+highlight link TSError Normal
+highlight WinSeparator gui=NONE guibg=NONE guifg=#444444 cterm=NONE ctermbg=NONE ctermfg=gray
+highlight VertSplit gui=NONE guibg=NONE guifg=#444444 cterm=NONE ctermbg=NONE ctermfg=gray
+highlight Normal guibg=NONE ctermbg=NONE
+highlight Error guibg=NONE ctermbg=NONE
+highlight Comment guifg=#b9d2da
+highlight LineNr guifg=#e9f0fd
+highlight RustHints guifg=#44a6c6
+highlight DiffDelete guifg=#ff5555 guibg=none
+highlight ColorColumn guifg=#7e9198
+
+" Weird leader stuff
+let mapleader=";"
+nmap <space> <leader>
+nmap <space><space> <leader><leader>
+xmap <space> <leader>
+xmap <space><space> <leader><leader>
+
 " Copilot
-imap <silent><script><expr> <C-space><tab> copilot#Accept("\<CR>")
 imap <silent><script><expr> <C-c> copilot#Accept("\<CR>")
+imap <silent><script><expr> <M-tab> copilot#Accept("\<CR>")
+imap <silent><script><expr> <C-l> copilot#Accept("\<CR>")
 imap <C-]> <Plug>(copilot-next)
 imap <C-[> <Plug>(copilot-previous)
 imap <C-e> <Plug>(copilot-dismiss)
@@ -387,8 +414,8 @@ nmap <leader><leader>q <cmd>q!<CR>
 nmap <leader><leader>s <cmd>w!<CR><cmd>q!<CR>
 nmap <C-space>n :cnext<CR>
 nmap <C-space>N :cprevious<CR>
-nmap <C-t> :botright terminal<CR>:resize 15<CR>i
-xmap <C-t> :botright terminal<CR>:resize 15<CR>i
+nmap <C-t> :botright terminal<CR>:resize call OpenTermSize()<CR>i
+xmap <C-t> :botright terminal<CR>:resize call OpenTermSize()<CR>i
 
 " Telescope mappings
 nnoremap <leader>ff <cmd>Telescope find_files<cr>
@@ -432,6 +459,9 @@ nnoremap <S-Tab> :bprevious<CR>
 nnoremap <C-space>j o<Esc>_C<Esc>
 nnoremap <C-space>k O<Esc>_C<Esc>
 nnoremap <C-d> :bd!<CR>
+nnoremap <leader>mlb :MarksListBuf<CR>
+nnoremap <leader>mlg :MarksListGlobal<CR>
+nmap <C-f> :set conceallevel=0<CR>
 
 " Insert remaps
 inoremap kj <Esc>
@@ -442,7 +472,7 @@ inoremap <C-space>l <Esc>A
 inoremap <C-space>h <Esc>I
 inoremap <C-space>j <Esc>o<Esc>_C
 inoremap <C-space>k <Esc>O<Esc>_C
-inoremap <C-d> :bd!<CR>
+inoremap <C-d> <cmd>silent! bd!<CR>
 
 " Visual remaps
 xnoremap < <gv
@@ -464,6 +494,7 @@ xnoremap d "1d
 xnoremap x "_x
 xnoremap <C-p> "1p
 xnoremap <leader><C-p> "1P
+xnoremap <C-d> <cmd>silent! bd!<CR>
 xnoremap <expr> j  mode() ==# "v" ? "j$" : "j"
 xnoremap <expr> <C-j> mode() ==# "v" ? "<C-d>$"  : "<C-d>"
 xnoremap <expr> k  mode() ==# "v" ? "k$" : "k"
