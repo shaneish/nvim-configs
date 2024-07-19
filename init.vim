@@ -57,8 +57,8 @@ Plug 'folke/zen-mode.nvim'
 Plug 'chentoast/marks.nvim'
 Plug 'ziglang/zig.vim'
 Plug 'psf/black', { 'branch': 'stable' }
-Plug 'heavenshell/vim-pydocstring'
 Plug 'tjdevries/colorbuddy.vim'
+Plug 'heavenshell/vim-pydocstring', { 'do': 'make install', 'for': 'python' }
 Plug 'junegunn/rainbow_parentheses.vim'
 Plug 'junegunn/limelight.vim'
 Plug 'junegunn/vim-journal'
@@ -66,17 +66,19 @@ Plug 'kyazdani42/nvim-web-devicons'
 Plug 'romgrk/barbar.nvim'
 Plug 'oatish/smartcolumn.nvim'
 Plug 'hardselius/warlock'
+Plug 'akinsho/bufferline.nvim'
 call plug#end()
 
 filetype plugin indent on
 syntax on
 filetype plugin on
+let mapleader=";"
 
 "
 " Lua-ish ish
 "
 lua << EOF
-servers = { "terraformls" }
+servers = { "terraformls", "pyright", "lua_ls" }
 require('treesitter-config')
 require('nvim-cmp-config')
 require('lspconfig-config')
@@ -207,10 +209,10 @@ vim.lsp.handlers["textDocument/publishDiagnostics"] =
         underline = false
         })
 local opts = { noremap=true, silent=true }
-vim.keymap.set('n', '<space>e', vim.diagnostic.open_float, opts)
+vim.keymap.set('n', '<c-space>e', vim.diagnostic.open_float, opts)
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, opts)
 vim.keymap.set('n', ']d', vim.diagnostic.goto_next, opts)
-vim.keymap.set('n', '<space>q', vim.diagnostic.setloclist, opts)
+vim.keymap.set('n', '<c-space>q', vim.diagnostic.setloclist, opts)
 -- Use an on_attach function to only map the following keys
 -- after the language server attaches to the current buffer
 local on_attach = function(client, bufnr)
@@ -219,29 +221,21 @@ local on_attach = function(client, bufnr)
   -- Mappings.
   -- See `:help vim.lsp.*` for documentation on any of the below functions
   local bufopts = { noremap=true, silent=true, buffer=bufnr }
-  vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, bufopts)
-  vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts)
-  vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts)
-  vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, bufopts)
-  vim.keymap.set('n', '<space>wa', vim.lsp.buf.add_workspace_folder, bufopts)
-  vim.keymap.set('n', '<space>wr', vim.lsp.buf.remove_workspace_folder, bufopts)
-  vim.keymap.set('n', '<space>wl', function()
+  vim.keymap.set('n', '<c-space>D', vim.lsp.buf.declaration, bufopts)
+  vim.keymap.set('n', '<c-space>d', vim.lsp.buf.definition, bufopts)
+  vim.keymap.set('n', '<c-space>h', vim.lsp.buf.hover, bufopts)
+  vim.keymap.set('n', '<c-space>i', vim.lsp.buf.implementation, bufopts)
+  vim.keymap.set('n', '<c-space>wa', vim.lsp.buf.add_workspace_folder, bufopts)
+  vim.keymap.set('n', '<c-space>wr', vim.lsp.buf.remove_workspace_folder, bufopts)
+  vim.keymap.set('n', '<c-space>wl', function()
     print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
   end, bufopts)
-  vim.keymap.set('n', '<space>D', vim.lsp.buf.type_definition, bufopts)
-  vim.keymap.set('n', '<space>rn', vim.lsp.buf.rename, bufopts)
-  vim.keymap.set('n', '<space>ca', vim.lsp.buf.code_action, bufopts)
-  vim.keymap.set('n', 'gr', vim.lsp.buf.references, bufopts)
-  vim.keymap.set('n', '<space>f', function() vim.lsp.buf.format { async = true } end, bufopts)
+  vim.keymap.set('n', '<c-space>td', vim.lsp.buf.type_definition, bufopts)
+  vim.keymap.set('n', '<c-space>R', vim.lsp.buf.rename, bufopts)
+  vim.keymap.set('n', '<c-space>a', vim.lsp.buf.code_action, bufopts)
+  vim.keymap.set('n', '<c-space>r', vim.lsp.buf.references, bufopts)
+  vim.keymap.set('n', '<c-space>f', function() vim.lsp.buf.format { async = true } end, bufopts)
 end
-
-vim.cmd([[silent! autocmd! filetypedetect BufRead,BufNewFile *.tf]])
-vim.cmd([[autocmd BufRead,BufNewFile *.hcl set filetype=hcl]])
-vim.cmd([[autocmd BufRead,BufNewFile *.tf,*.tfvars set filetype=terraform]])
-vim.cmd([[autocmd BufRead,BufNewFile *.tfstate,*.tfstate.backup set filetype=json]])
-vim.cmd([[autocmd BufRead,BufNewFile .terraformrc,terraform.rc set filetype=hcl]])
-vim.cmd([[let g:terraform_fmt_on_save=1]])
-vim.cmd([[let g:terraform_align=1]])
 EOF
 
 "
@@ -267,10 +261,10 @@ function! ToggleMappings()
     let s:mappingsState = !s:mappingsState
 endfunction
 " Terminal-ish stuff
-let g:term_proportion_default = 4
+let g:term_proportion_default = 2.5
 function! OpenTermSize()
-    let g:current_window_size = (line('w$') - line('w0')) / s:term_proportion_default
-    return g:current_window_size
+    let current_window_size = (line('w$') - line('w0')) / g:term_proportion_default
+    return current_window_size
 endfunction
 
 "
@@ -294,7 +288,6 @@ set incsearch ignorecase smartcase hlsearch
 set wildmode=longest,list,full wildmenu
 set ruler laststatus=2 showcmd showmode
 set list listchars=trail:»,tab:»-
-set fillchars+=vert:\
 set wrap breakindent
 set encoding=utf-8
 set textwidth=0
@@ -318,7 +311,7 @@ let g:vim_markdown_conceal_code_blocks = 0
 let g:vim_markdown_folding_disabled = 0
 let g:conceallevel = 0
 let g:python3_host_prog = '~/.config/nvim/venv/bin/python3'
-let g:pydocstring_doq_path = '~/config/nvim/venv/bin/doq'
+let g:pydocstring_enable_mapping = 0
 let g:copilot_no_tab_map = v:true
 let g:signify_sign_add = '│'
 let g:signify_sign_delete = '│'
@@ -379,7 +372,6 @@ highlight DiffDelete guifg=#ff5555 guibg=none
 highlight ColorColumn guifg=#7e9198
 
 " Weird leader stuff
-let mapleader=";"
 nmap <space> <leader>
 nmap <space><space> <leader><leader>
 xmap <space> <leader>
@@ -400,6 +392,8 @@ tmap <C-d> kj:q<CR>
 tmap <C-t> <Esc><cmd>bd!<CR>
 autocmd BufWinEnter,WinEnter term://* startinsert
 autocmd BufLeave term://* stopinsert
+nmap <expr> <C-t> ":botright terminal<CR>:resize " . OpenTermSize() . "<CR>i"
+xmap <expr> <C-t> ":botright terminal<CR>:resize " . OpenTermSize() . "<CR>i"
 
 
 " Core
@@ -414,8 +408,6 @@ nmap <leader><leader>q <cmd>q!<CR>
 nmap <leader><leader>s <cmd>w!<CR><cmd>q!<CR>
 nmap <C-space>n :cnext<CR>
 nmap <C-space>N :cprevious<CR>
-nmap <C-t> :botright terminal<CR>:resize call OpenTermSize()<CR>i
-xmap <C-t> :botright terminal<CR>:resize call OpenTermSize()<CR>i
 
 " Telescope mappings
 nnoremap <leader>ff <cmd>Telescope find_files<cr>
@@ -459,9 +451,11 @@ nnoremap <S-Tab> :bprevious<CR>
 nnoremap <C-space>j o<Esc>_C<Esc>
 nnoremap <C-space>k O<Esc>_C<Esc>
 nnoremap <C-d> :bd!<CR>
-nnoremap <leader>mlb :MarksListBuf<CR>
-nnoremap <leader>mlg :MarksListGlobal<CR>
+nnoremap <C-m>ls :MarksListBuf<CR>
+nnoremap <C-m>la :MarksListGlobal<CR>
 nmap <C-f> :set conceallevel=0<CR>
+nmap <c-.> <C-W>l
+nmap <c-,> <C-W>h
 
 " Insert remaps
 inoremap kj <Esc>
