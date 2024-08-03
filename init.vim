@@ -403,11 +403,19 @@ nmap <leader><leader>t :call TrimWhitespace()<CR>
 nmap <silent> <leader><leader> :noh<CR>
 nmap <leader><leader>d <cmd>silent! bd!<CR>
 nmap <C-d> <cmd>silent! bd!<CR>
-nmap <leader><leader>w <cmd>w<CR>
+nmap <leader><leader>w <cmd>w!<CR>
+nmap W <cmd>w!<CR>
 nmap <leader><leader>q <cmd>q!<CR>
+nmap <C-q> <cmd>q!<CR>
 nmap <leader><leader>s <cmd>w!<CR><cmd>q!<CR>
 nmap <C-space>n :cnext<CR>
 nmap <C-space>N :cprevious<CR>
+xmap <leader><leader>d <cmd>silent! bd!<CR>
+xmap <C-d> <cmd>silent! bd!<CR>
+xmap <leader><leader>w <cmd>w!<CR>
+xmap <leader><leader>q <cmd>q!<CR>
+xmap <C-q> <cmd>q!<CR>
+xmap W <cmd>w!<CR>
 
 " Telescope mappings
 nnoremap <leader>ff <cmd>Telescope find_files<cr>
@@ -456,6 +464,8 @@ nnoremap <C-m>la :MarksListGlobal<CR>
 nmap <C-f> :set conceallevel=0<CR>
 nmap <c-.> <C-W>l
 nmap <c-,> <C-W>h
+nnoremap gg gg0
+nnoremap G G$
 
 " Insert remaps
 inoremap kj <Esc>
@@ -493,3 +503,5 @@ xnoremap <expr> j  mode() ==# "v" ? "j$" : "j"
 xnoremap <expr> <C-j> mode() ==# "v" ? "<C-d>$"  : "<C-d>"
 xnoremap <expr> k  mode() ==# "v" ? "k$" : "k"
 xnoremap <expr> <C-k> mode() ==# "v" ? "<C-u>$"  : "<C-u>"
+xnoremap gg gg0
+xnoremap G G$
