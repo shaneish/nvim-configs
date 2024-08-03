@@ -104,7 +104,7 @@ require("autoclose").setup({
    options = {
       disabled_filetypes = { },
       disable_when_touch = true,
-      touch_regex = "[%w(%[{]",
+      touch_regex = "[%w(%<[{]",
       pair_spaces = false,
       auto_indent = true,
       disable_command_mode = false,
@@ -380,7 +380,6 @@ xmap <space><space> <leader><leader>
 
 " Copilot
 imap <silent><script><expr> <C-c> copilot#Accept("\<CR>")
-imap <silent><script><expr> <M-tab> copilot#Accept("\<CR>")
 imap <silent><script><expr> <C-l> copilot#Accept("\<CR>")
 imap <C-]> <Plug>(copilot-next)
 imap <C-[> <Plug>(copilot-previous)
