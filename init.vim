@@ -437,9 +437,10 @@ nnoremap <leader>hf <cmd>Telescope harpoon marks<CR>
 nnoremap <leader>k g_
 nnoremap <leader>j _
 nnoremap <leader>y "+y
-nnoremap <leader>yy "+yy
+nnoremap <leader>yy ^vg_"+y
 nnoremap <leader>p "+p
 nnoremap <leader>P "+P
+nnoremap <C-y> ^vg_"+y
 nnoremap y "0y
 nnoremap P "0P
 nnoremap p "0p
@@ -466,6 +467,7 @@ nmap <c-.> <C-W>l
 nmap <c-,> <C-W>h
 nnoremap gg gg0
 nnoremap G G$
+nnoremap <leader><C-y> gg0vG$"+y
 
 " Insert remaps
 inoremap kj <Esc>
