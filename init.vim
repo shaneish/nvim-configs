@@ -68,12 +68,15 @@ Plug 'romgrk/barbar.nvim'
 Plug 'oatish/smartcolumn.nvim'
 Plug 'hardselius/warlock'
 Plug 'akinsho/bufferline.nvim'
+Plug 'mikesmithgh/kitty-scrollback.nvim'
+Plug 'norcalli/nvim-colorizer.lua'
 call plug#end()
 
 filetype plugin indent on
 syntax on
 filetype plugin on
 let mapleader=";"
+set termguicolors
 
 "
 " Lua-ish ish
@@ -204,6 +207,8 @@ require('oatjump').setup()
 require("smartcolumn").setup({
     colorcolumn = 140
 })
+require('kitty-scrollback').setup()
+require('colorizer').setup()
 vim.lsp.handlers["textDocument/publishDiagnostics"] =
     vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, {
         -- Disable underline, it's very annoying
@@ -297,7 +302,6 @@ set title
 set matchpairs+=<:>
 set iskeyword-=_
 set swapfile
-set termguicolors
 set guifont=JetBrains\ Mono\ 13
 set fillchars+=vert:\│
 set completeopt=menu,menuone,noselect
@@ -437,11 +441,14 @@ nnoremap <leader>hf <cmd>Telescope harpoon marks<CR>
 nnoremap <leader>k g_
 nnoremap <leader>j _
 nnoremap <leader>y "+y
+nnoremap <leader>yw BvE"+y
 nnoremap <leader>yy ^vg_"+y
 nnoremap <leader>p "+p
 nnoremap <leader>P "+P
-nnoremap <C-y> ^vg_"+y
+nnoremap <C-y><C-y> ^vg_"+y
+nnoremap <C-y> "+y
 nnoremap y "0y
+nnoremap yw BvEy
 nnoremap P "0P
 nnoremap p "0p
 nnoremap d "1d
@@ -494,6 +501,7 @@ xnoremap <leader>yy "+yy
 xnoremap <leader>Y "+yg_
 xnoremap <leader>p "+p
 xnoremap <leader>P "+P
+xnoremap <C-y> "+y
 xnoremap y "0y
 xnoremap p "0p
 xnoremap d "1d
