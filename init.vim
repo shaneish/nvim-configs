@@ -70,12 +70,13 @@ Plug 'hardselius/warlock'
 Plug 'akinsho/bufferline.nvim'
 Plug 'mikesmithgh/kitty-scrollback.nvim'
 Plug 'norcalli/nvim-colorizer.lua'
+Plug 'jbyuki/venn.nvim'
 call plug#end()
 
 filetype plugin indent on
 syntax on
 filetype plugin on
-let mapleader=";"
+let mapleader=" "
 set termguicolors
 
 "
@@ -229,7 +230,7 @@ local on_attach = function(client, bufnr)
   local bufopts = { noremap=true, silent=true, buffer=bufnr }
   vim.keymap.set('n', '<c-space>D', vim.lsp.buf.declaration, bufopts)
   vim.keymap.set('n', '<c-space>d', vim.lsp.buf.definition, bufopts)
-  vim.keymap.set('n', '<c-space>h', vim.lsp.buf.hover, bufopts)
+  vim.keymap.set('n', '<c-space>H', vim.lsp.buf.hover, bufopts)
   vim.keymap.set('n', '<c-space>i', vim.lsp.buf.implementation, bufopts)
   vim.keymap.set('n', '<c-space>wa', vim.lsp.buf.add_workspace_folder, bufopts)
   vim.keymap.set('n', '<c-space>wr', vim.lsp.buf.remove_workspace_folder, bufopts)
@@ -241,6 +242,7 @@ local on_attach = function(client, bufnr)
   vim.keymap.set('n', '<c-space>a', vim.lsp.buf.code_action, bufopts)
   vim.keymap.set('n', '<c-space>r', vim.lsp.buf.references, bufopts)
   vim.keymap.set('n', '<c-space>f', function() vim.lsp.buf.format { async = true } end, bufopts)
+
 end
 EOF
 
@@ -273,6 +275,16 @@ function! OpenTermSize()
     return current_window_size
 endfunction
 
+let g:venn_enabled = 0
+function! Toggle_Venn()
+    if g:venn_enabled
+        let g:venn_enabled = 0
+        set ve=
+    else
+        set ve=all
+        let g:venn_enabled = 1
+    endif
+endfunction
 "
 " #variables ish
 "
@@ -341,6 +353,8 @@ autocmd BufRead,BufNewFile *.hcl set filetype=hcl
 autocmd BufRead,BufNewFile *.tf,*.tfvars set filetype=terraform
 autocmd BufRead,BufNewFile *.tfstate,*.tfstate.backup set filetype=json
 autocmd BufRead,BufNewFile .terraformrc,terraform.rc set filetype=hcl
+autocmd Filetype terraform setlocal ts=2 sw=2 expandtab
+autocmd Filetype hcl setlocal ts=2 sw=2 expandtab
 autocmd BufWritePre *.tfvars lua vim.lsp.buf.format()
 autocmd BufWritePre *.tf lua vim.lsp.buf.format()
 autocmd BufRead,BufNewFile *.csv.txt set filetype=csv
@@ -376,12 +390,6 @@ highlight RustHints guifg=#44a6c6
 highlight DiffDelete guifg=#ff5555 guibg=none
 highlight ColorColumn guifg=#7e9198
 
-" Weird leader stuff
-nmap <space> <leader>
-nmap <space><space> <leader><leader>
-xmap <space> <leader>
-xmap <space><space> <leader><leader>
-
 " Copilot
 imap <silent><script><expr> <C-c> copilot#Accept("\<CR>")
 imap <silent><script><expr> <C-l> copilot#Accept("\<CR>")
@@ -398,9 +406,11 @@ autocmd BufWinEnter,WinEnter term://* startinsert
 autocmd BufLeave term://* stopinsert
 nmap <expr> <C-t> ":botright terminal<CR>:resize " . OpenTermSize() . "<CR>i"
 xmap <expr> <C-t> ":botright terminal<CR>:resize " . OpenTermSize() . "<CR>i"
-
+nmap <expr> <space><C-t> ":cd %:p:h<CR>:botright terminal<CR>:resize " . OpenTermSize() . "<CR>i"
+xmap <expr> <space><C-t> ":cd %:p:h<CR>:botright terminal<CR>:resize " . OpenTermSize() . "<CR>i"
 
 " Core
+inoremap <S-CR> <Esc>
 nmap \ :NvimTreeFindFileToggle<CR>:set relativenumber<CR>:set nowrap<CR>
 nmap <leader><leader>r :so ~/.config/nvim/init.vim<CR>
 nmap <leader><leader>t :call TrimWhitespace()<CR>
@@ -422,22 +432,24 @@ xmap <C-q> <cmd>q!<CR>
 xmap W <cmd>w!<CR>
 
 " Telescope mappings
-nnoremap <leader>ff <cmd>Telescope find_files<cr>
-noremap <leader>fg <cmd>Telescope live_grep<cr>
-nnoremap <leader>fb <cmd>Telescope buffers<cr>
-nnoremap <leader>fh <cmd>Telescope help_tags<cr>
-nnoremap <leader>f/ <cmd>Telescope current_buffer_fuzzy_find<cr>
-nnoremap <leader>gm <cmd>MergetoolToggle<CR>
-nnoremap <leader>hm <cmd>lua require("harpoon.mark").add_file()<CR>
-nnoremap <leader>hh <cmd>lua require("harpoon.ui").toggle_quick_menu()<CR>
-nnoremap <leader>h] <cmd>lua require("harpoon.ui").nav_next()<CR>
-nnoremap <leader>h[ <cmd>lua require("harpoon.ui").nav_prev()<CR>
-nnoremap <leader>h1 <cmd>lua require("harpoon.ui").nav_file(1)<CR>
-nnoremap <leader>h2 <cmd>lua require("harpoon.ui").nav_file(2)<CR>
-nnoremap <leader>h3 <cmd>lua require("harpoon.ui").nav_file(3)<CR>
-nnoremap <leader>hf <cmd>Telescope harpoon marks<CR>
+nnoremap <C-space>ff <cmd>Telescope find_files<cr>
+noremap <C-space>fg <cmd>Telescope live_grep<cr>
+nnoremap <C-space>fb <cmd>Telescope buffers<cr>
+nnoremap <C-space>fh <cmd>Telescope help_tags<cr>
+nnoremap <C-space>f/ <cmd>Telescope current_buffer_fuzzy_find<cr>
+nnoremap <C-space>gm <cmd>MergetoolToggle<CR>
+nnoremap <C-space>hm <cmd>lua require("harpoon.mark").add_file()<CR>
+nnoremap <C-space>hh <cmd>lua require("harpoon.ui").toggle_quick_menu()<CR>
+nnoremap <C-space>h] <cmd>lua require("harpoon.ui").nav_next()<CR>
+nnoremap <C-space>h[ <cmd>lua require("harpoon.ui").nav_prev()<CR>
+nnoremap <C-space>h1 <cmd>lua require("harpoon.ui").nav_file(1)<CR>
+nnoremap <C-space>h2 <cmd>lua require("harpoon.ui").nav_file(2)<CR>
+nnoremap <C-space>h3 <cmd>lua require("harpoon.ui").nav_file(3)<CR>
+nnoremap <C-space>hf <cmd>Telescope harpoon marks<CR>
 
 "Normal remaps
+nnoremap <leader>l g_
+nnoremap <leader>h _
 nnoremap <leader>k g_
 nnoremap <leader>j _
 nnoremap <leader>y "+y
@@ -445,16 +457,18 @@ nnoremap <leader>yw BvE"+y
 nnoremap <leader>yy ^vg_"+y
 nnoremap <leader>p "+p
 nnoremap <leader>P "+P
-nnoremap <C-y><C-y> ^vg_"+y
+nnoremap vw BvE
 nnoremap <C-y> "+y
+nnoremap <C-p> "+p
+nnoremap <leader><C-p> "+P
 nnoremap y "0y
 nnoremap yw BvEy
 nnoremap P "0P
 nnoremap p "0p
 nnoremap d "1d
 nnoremap x "_x
-nnoremap <C-p> "1p
-nnoremap <leader><C-p> "1P
+nnoremap <C-space>p "1p
+nnoremap <C-space>P "1P
 nnoremap R s
 nnoremap <C-s> <cmd>Pounce<CR>
 nnoremap <C-j> <C-d>zz
@@ -475,10 +489,26 @@ nmap <c-,> <C-W>h
 nnoremap gg gg0
 nnoremap G G$
 nnoremap <leader><C-y> gg0vG$"+y
+nnoremap <leader>b <cmd>call Toggle_Venn()<CR>
+nmap <expr> J g:venn_enabled ? '<C-v>j:VBox<CR>' : 'J'
+nmap <expr> K g:venn_enabled ? '<C-v>k:VBox<CR>' : 'K'
+nmap <expr> L g:venn_enabled ? '<C-v>l:VBox<CR>' : 'L'
+nmap <expr> H g:venn_enabled ? '<C-v>h:VBox<CR>' : 'H'
+nmap <expr> F g:venn_enabled ? '`<hk<C-v>`>lj:VBox<CR>' : 'F'
+nmap <expr> <C-space>j g:venn_enabled ? '8J' : '<C-space>j'
+nmap <expr> <C-space>k g:venn_enabled ? '8K' : '<C-space>k'
+nmap <expr> <C-space>l g:venn_enabled ? '8L' : '<C-space>l'
+nmap <expr> <C-space>h g:venn_enabled ? '8H' : '<C-space>h'
+nnoremap <leader>` _i```
+nnoremap <leader><leader>` i```
+nnoremap <leader>o o<Esc>_
+nnoremap <C-space><C-o> O<Esc>_
+nnoremap <leader><leader>o o<Esc>_i
+nnoremap <C-space><C-space><C-o> O<Esc>_i
+
 
 " Insert remaps
-inoremap kj <Esc>
-inoremap <leader><leader> <Esc>
+inoremap  <Esc>
 inoremap <C-space><C-space> <Esc>la
 inoremap <C-space>x <Esc>lxa
 inoremap <C-space>l <Esc>A
@@ -486,6 +516,8 @@ inoremap <C-space>h <Esc>I
 inoremap <C-space>j <Esc>o<Esc>_C
 inoremap <C-space>k <Esc>O<Esc>_C
 inoremap <C-d> <cmd>silent! bd!<CR>
+inoremap <C-space>` <Esc>_i```
+inoremap <C-space><C-space>` ```
 
 " Visual remaps
 xnoremap < <gv
@@ -513,5 +545,11 @@ xnoremap <expr> j  mode() ==# "v" ? "j$" : "j"
 xnoremap <expr> <C-j> mode() ==# "v" ? "<C-d>$"  : "<C-d>"
 xnoremap <expr> k  mode() ==# "v" ? "k$" : "k"
 xnoremap <expr> <C-k> mode() ==# "v" ? "<C-u>$"  : "<C-u>"
+xnoremap <expr> <C-space>V mode() ==# "v" ? "v" : "<C-v>"
 xnoremap gg gg0
 xnoremap G G$
+xnoremap <expr> f g:venn_enabled ? ':VBox<CR>' : 'f'
+xmap <expr> F g:venn_enabled ? '<Esc>F' : 'F'
+xnoremap <expr> <space>h g:venn_enabled ? '8h' : '<C-h>'
+xnoremap <expr> <space>l g:venn_enabled ? '8l' : '<C-l>'
+xnoremap <leader>` <Esc>`<O```<Esc>`>o```<Esc>
