@@ -317,7 +317,7 @@ set swapfile
 set guifont=JetBrains\ Mono\ 13
 set fillchars+=vert:\│
 set completeopt=menu,menuone,noselect
-set shell=/Users/h62756/.cargo/bin/nu
+set shell=nu
 
 " #globalvars ish
 let g:indentLine_char = '▏'
