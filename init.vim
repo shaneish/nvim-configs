@@ -122,7 +122,7 @@ require("rust-tools").setup({
 })
 require("gomove").setup({
   -- whether or not to map default key bindings, (true/false)
-  map_defaults = true,
+  map_defaults = false,
   -- whether or not to reindent lines moved vertically (true/false)
   reindent = true,
   -- whether or not to undojoin same direction moves (true/false)
@@ -317,7 +317,7 @@ set backupdir=~/.config/nvim/nvim-temp
 set tabstop=4 softtabstop=4 shiftwidth=4 expandtab smarttab autoindent
 set incsearch ignorecase smartcase hlsearch
 set wildmode=longest,list,full wildmenu
-set ruler laststatus=2 showcmd showmode
+set ruler laststatus=5 showcmd showmode
 set list listchars=trail:»,tab:»-
 set wrap breakindent
 set encoding=utf-8
@@ -485,7 +485,15 @@ xmap <Leader>r  <Plug>ReplSendVisual
 ""
 "Normal remaps
 "
-noremap <leader>e :REPLSendSession<Cr>
+nmap <A-C-j> ]]zz
+nmap <A-C-k> [[zz
+nmap <A-j> ]mzz
+nmap <A-k> [mzz
+nmap <A-l> ]Mzz
+nmap <A-h> [Mzz
+nmap <S-}> }zz
+nmap <S-{> {zz
+nnoremap <leader>e :REPLSendSession<Cr>
 nnoremap <leader>l g_
 nnoremap <leader>h _
 nnoremap <leader>k g_
@@ -522,6 +530,9 @@ nnoremap <C-space>j o<Esc>_C<Esc>
 nnoremap <C-space>k O<Esc>_C<Esc>
 nnoremap <C-d> :bd!<CR>
 nnoremap <C-m>ls :MarksListBuf<CR>
+nnoremap <leader>B <cmd>call Toggle_Venn()<CR>
+nmap <expr> J g:venn_enabled ? '<C-v>j:VBox<CR>' : 'J'
+nmap <expr> K g:venn_enabled ? '<C-v>k:VBox<CR>' : 'K'
 nnoremap <C-m>la :MarksListGlobal<CR>
 nmap <C-f> :set conceallevel=0<CR>
 nmap <c-.> <C-W>l
@@ -529,9 +540,6 @@ nmap <c-,> <C-W>h
 nnoremap gg gg0
 nnoremap G G$
 nnoremap <leader><C-y> gg0vG$"+y
-nnoremap <leader>B <cmd>call Toggle_Venn()<CR>
-nmap <expr> J g:venn_enabled ? '<C-v>j:VBox<CR>' : 'J'
-nmap <expr> K g:venn_enabled ? '<C-v>k:VBox<CR>' : 'K'
 nmap <expr> L g:venn_enabled ? '<C-v>l:VBox<CR>' : 'L'
 nmap <expr> H g:venn_enabled ? '<C-v>h:VBox<CR>' : 'H'
 nmap <expr> F g:venn_enabled ? '`<hk<C-v>`>lj:VBox<CR>' : 'F'
@@ -611,6 +619,10 @@ xnoremap <expr> f g:venn_enabled ? ':VBox<CR>' : 'f'
 xmap <expr> F g:venn_enabled ? '<Esc>F' : 'F'
 xnoremap <expr> <space>h g:venn_enabled ? '8h' : '<C-h>'
 xnoremap <expr> <space>l g:venn_enabled ? '8l' : '<C-l>'
+xmap <expr> <A-h> g:venn_enabled ? '<Plug>GoVSMLeft' : '[Mzz'
+xmap <expr> <A-j> g:venn_enabled ? '<Plug>GoVSMDown' : ']mzz'
+xmap <expr> <A-k> g:venn_enabled ? '<Plug>GoVSMUp' : '[mzz'
+xmap <expr> <A-l> g:venn_enabled ? '<Plug>GoVSMRight' : ']Mzz'
 xnoremap <leader>` <Esc>`<O```<Esc>`>o```<Esc>
 xnoremap <C-s> <cmd>Pounce<CR>
 xnoremap <Esc> <Nop>
@@ -621,3 +633,7 @@ xnoremap <C-space><C-space><C-space><C-r> <Esc>`<O<Esc>_C```rust<Esc>`>o<Esc>_C`
 xnoremap <C-space><C-space><C-space><C-s> <Esc>`<O<Esc>_C```sql<Esc>`>o<Esc>_C```<Esc>
 xnoremap <C-space><C-space><C-space><C-s><C-s> <Esc>`O<Esc>_C```scala<Esc>`>o<Esc>_C```<Esc>
 xnoremap <C-space><C-space><C-space><C-3> <Esc>`<O<Esc>_C# %%<Esc>`>o<Esc>_C# %%<Esc>
+xmap <A-C-j> ]]zz
+xmap <A-C-k> [[zz
+xmap <S-}> }zz
+xmap <S-{> {zz
