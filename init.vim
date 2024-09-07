@@ -1,5 +1,5 @@
 "
-" Plug-ish ish
+" plug-ish ish
 "
 call plug#begin()
 Plug 'nvim-treesitter/nvim-treesitter'
@@ -19,14 +19,14 @@ Plug 'nvim-telescope/telescope.nvim'
 Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'make' }
 Plug 'nvim-lualine/lualine.nvim'
 Plug 'kyazdani42/nvim-tree.lua'
-Plug 'MunifTanjim/nui.nvim'
+Plug 'muniftanjim/nui.nvim'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
 Plug 'daisuzu/autorepeat.vim'
 Plug 'mhinz/vim-signify'
-Plug 'm4xshen/autoclose.nvim'
+Plug 'oatish/autoclose.nvim'
 Plug 'alvan/vim-closetag'
 Plug 'tpope/vim-abolish'
 Plug 'scrooloose/nerdcommenter'
@@ -71,6 +71,7 @@ Plug 'akinsho/bufferline.nvim'
 Plug 'mikesmithgh/kitty-scrollback.nvim'
 Plug 'norcalli/nvim-colorizer.lua'
 Plug 'jbyuki/venn.nvim'
+Plug 'pappasam/nvim-repl'
 call plug#end()
 
 filetype plugin indent on
@@ -93,26 +94,16 @@ require('nvim-tree-config')
 require('diagnostics')
 require('telescope').load_extension('harpoon')
 require("autoclose").setup({
-   keys = {
-      ["("] = { escape = false, close = true, pair = "()" },
-      ["["] = { escape = false, close = true, pair = "[]" },
-      ["{"] = { escape = false, close = true, pair = "{}" },
-      [">"] = { escape = true, close = false, pair = "<>" },
-      [")"] = { escape = true, close = false, pair = "()" },
-      ["]"] = { escape = true, close = false, pair = "[]" },
-      ["}"] = { escape = true, close = false, pair = "{}" },
-      ['"'] = { escape = true, close = true, pair = '""' },
-      ["'"] = { escape = true, close = true, pair = "''" },
-      ["`"] = { escape = true, close = true, pair = "``" },
-   },
    options = {
-      disabled_filetypes = { },
-      disable_when_touch = true,
-      touch_regex = "[%w(%<[{]",
+      disabled_filetypes = { "text" },
+      disable_when_touch = false,
+      touch_regex = "[%w(%[{]",
+      bidirectional_disable_when_touch = true,
       pair_spaces = false,
       auto_indent = true,
       disable_command_mode = false,
    },
+disabled = false,
 })
 require("rust-tools").setup({
   tools = {
@@ -257,6 +248,21 @@ function! TrimWhitespace()
     call winrestview(l:save)
 endfunction
 
+" Centerizer
+let s:centerize=1
+function! Centerizer()
+    if s:centerize
+        return "zz"
+    else
+        return ""
+    endif
+endfunction
+
+
+function! ToggleCenterizer()
+  let s:centerize = !s:centerize
+endfunction
+
 " CSV-ish stuff
 let s:mappingsState=1
 command! TM call ToggleMappings()
@@ -268,12 +274,20 @@ function! ToggleMappings()
     endif
     let s:mappingsState = !s:mappingsState
 endfunction
+
 " Terminal-ish stuff
 let g:term_proportion_default = 2.5
+let g:term_lines_to_resize = 40
+let g:term_default_window_size = 20
 function! OpenTermSize()
-    let current_window_size = (line('w$') - line('w0')) / g:term_proportion_default
-    return current_window_size
+    let current_window_size = line('w$') - line('w0')
+    if current_window_size < g:term_lines_to_resize
+        return g:term_default_window_size
+    endif
+    let new_term_window_size = current_window_size / g:term_proportion_default
+    return new_term_window_size
 endfunction
+
 
 let g:venn_enabled = 0
 function! Toggle_Venn()
@@ -296,11 +310,10 @@ set nocompatible
 set showmatch
 set expandtab
 set autoindent
-set number
+set number relativenumber
 set cursorline
 set ttyfast
 set backupdir=~/.config/nvim/nvim-temp
-set relativenumber
 set tabstop=4 softtabstop=4 shiftwidth=4 expandtab smarttab autoindent
 set incsearch ignorecase smartcase hlsearch
 set wildmode=longest,list,full wildmenu
@@ -327,7 +340,7 @@ let g:vim_markdown_conceal = 0
 let g:vim_markdown_conceal_code_blocks = 0
 let g:vim_markdown_folding_disabled = 0
 let g:conceallevel = 0
-let g:python3_host_prog = '~/.config/nvim/venv/bin/python3'
+let g:python3_host_prog = '~/.config/pyenvs/v3.12/bin/python'
 let g:pydocstring_enable_mapping = 0
 let g:copilot_no_tab_map = v:true
 let g:signify_sign_add = '│'
@@ -347,32 +360,43 @@ let g:mergetool_prefer_revision = 'local'
 let g:rbql_with_headers = 1
 let g:terraform_fmt_on_save = 1
 let g:terraform_align = 1
+let g:repl_split = 'bottom'
+let g:repl_filetype_commands = {'python': '~/.config/pyenvs/v3.12/bin/ipython', 'rust': 'evcxr'}
+let g:code_block_identifier = "```"
 
 " #autcmd ish
 autocmd BufRead,BufNewFile *.hcl set filetype=hcl
 autocmd BufRead,BufNewFile *.tf,*.tfvars set filetype=terraform
 autocmd BufRead,BufNewFile *.tfstate,*.tfstate.backup set filetype=json
 autocmd BufRead,BufNewFile .terraformrc,terraform.rc set filetype=hcl
-autocmd Filetype terraform setlocal ts=2 sw=2 expandtab
-autocmd Filetype hcl setlocal ts=2 sw=2 expandtab
+autocmd Filetype terraform setlocal ts=2 sw=2 expandtab conceallevel=0
+autocmd Filetype hcl setlocal ts=2 sw=2 expandtab conceallevel=0
 autocmd BufWritePre *.tfvars lua vim.lsp.buf.format()
 autocmd BufWritePre *.tf lua vim.lsp.buf.format()
-autocmd BufRead,BufNewFile *.csv.txt set filetype=csv
-autocmd BufRead,BufNewFile *.tsv.txt set filetype=tsv
+autocmd BufRead,BufNewFile *.csv.txt set filetype=csv conceallevel=0
+autocmd BufRead,BufNewFile *.tsv.txt set filetype=tsv conceallevel=0
+autocmd BufRead,BufNewFile *.toml set filetype=toml conceallevel=0
 autocmd FileType csv nmap <C-f> :call ToggleMappings()<CR>
 autocmd FileType tsv nmap <C-f> :call ToggleMappings()<CR>
 autocmd FileType python nmap <C-f> :Black<CR>
-autocmd FileType html setlocal shiftwidth=2 tabstop=2 softtabstop=2
-autocmd FileType css setlocal shiftwidth=2 tabstop=2 softtabstop=2
-autocmd FileType xml setlocal shiftwidth=2 tabstop=2 softtabstop=2
-autocmd FileType htmldjango setlocal shiftwidth=2 tabstop=2 softtabstop=2
+autocmd FileType html setlocal shiftwidth=2 tabstop=2 softtabstop=2 conceallevel=0
+autocmd FileType css setlocal shiftwidth=2 tabstop=2 softtabstop=2 conceallevel=0
+autocmd FileType xml setlocal shiftwidth=2 tabstop=2 softtabstop=2 conceallevel=0
+autocmd FileType toml setlocal shiftwidth=2 tabstop=2 softtabstop=2 conceallevel=0
+autocmd FileType python setlocal conceallevel=0
+autocmd FileType htmldjango setlocal shiftwidth=2 tabstop=2 softtabstop=2 conceallevel=0
 autocmd FileType htmldjango inoremap {% {%  %}<left><left><left>
 autocmd FileType htmldjango inoremap {# {#  #}<left><left><left>
-autocmd FileType markdown setlocal shiftwidth=2 tabstop=2 softtabstop=2
-autocmd FileType journal setlocal shiftwidth=2 tabstop=2 softtabstop=2
-autocmd FileType md nmap <C-f> :set conceallevel=0<CR>
-autocmd FileType json nmap <C-f> :set conceallevel=0<CR>
-autocmd FileType text nmap <C-f> :set conceallevel=0<CR>
+autocmd FileType markdown setlocal shiftwidth=2 tabstop=2 softtabstop=2 conceallevel=0
+autocmd FileType journal setlocal shiftwidth=2 tabstop=2 softtabstop=2 conceallevel=0
+autocmd FileType md setlocal conceallevel=0
+autocmd FileType json setlocal conceallevel=0
+autocmd FileType text setlocal conceallevel=0
+autocmd FileType python let g:code_block_identifier = "# %%"
+autocmd FileType sql let g:code_block_identifier = "-- %%"
+autocmd FileType scala let g:code_block_identifier = "// %%"
+autocmd FileType vim let g:code_block_identifier = "\" %%"
+autocmd FileType lua let g:code_block_identifier = "-- %%"
 
 " #colorscheme ish
 " colorscheme zenwritten
@@ -402,21 +426,23 @@ imap <C-s> <Plug>(copilot-suggest)
 tmap kj <C-\><C-n>
 tmap <C-d> kj:q<CR>
 tmap <C-t> <Esc><cmd>bd!<CR>
+nmap <expr> <C-space><C-t> ":terminal python3 -i " . resolve(expand('%:p')) . "<CR>"
 autocmd BufWinEnter,WinEnter term://* startinsert
 autocmd BufLeave term://* stopinsert
 nmap <expr> <C-t> ":botright terminal<CR>:resize " . OpenTermSize() . "<CR>i"
 xmap <expr> <C-t> ":botright terminal<CR>:resize " . OpenTermSize() . "<CR>i"
-nmap <expr> <space><C-t> ":cd %:p:h<CR>:botright terminal<CR>:resize " . OpenTermSize() . "<CR>i"
-xmap <expr> <space><C-t> ":cd %:p:h<CR>:botright terminal<CR>:resize " . OpenTermSize() . "<CR>i"
+nmap <expr> <space><C-t> ":cd %:p:h<CR>:botright terminal<CR>i"
+
+
 
 " Core
 inoremap <S-CR> <Esc>
-nmap \ :NvimTreeFindFileToggle<CR>:set relativenumber<CR>:set nowrap<CR>
+nmap \ :NvimTreeFindFileToggle<CR>:set number<CR>:set nowrap<CR>
 nmap <leader><leader>r :so ~/.config/nvim/init.vim<CR>
 nmap <leader><leader>t :call TrimWhitespace()<CR>
 nmap <silent> <leader><leader> :noh<CR>
 nmap <leader><leader>d <cmd>silent! bd!<CR>
-nmap <C-d> <cmd>silent! bd!<CR>
+nmap D <cmd>silent! bd!<CR>
 nmap <leader><leader>w <cmd>w!<CR>
 nmap W <cmd>w!<CR>
 nmap <leader><leader>q <cmd>q!<CR>
@@ -425,11 +451,12 @@ nmap <leader><leader>s <cmd>w!<CR><cmd>q!<CR>
 nmap <C-space>n :cnext<CR>
 nmap <C-space>N :cprevious<CR>
 xmap <leader><leader>d <cmd>silent! bd!<CR>
-xmap <C-d> <cmd>silent! bd!<CR>
 xmap <leader><leader>w <cmd>w!<CR>
 xmap <leader><leader>q <cmd>q!<CR>
 xmap <C-q> <cmd>q!<CR>
 xmap W <cmd>w!<CR>
+xmap D <cmd>silent! bd!<CR>
+xnoremap <C-d> D
 
 " Telescope mappings
 nnoremap <C-space>ff <cmd>Telescope find_files<cr>
@@ -447,7 +474,18 @@ nnoremap <C-space>h2 <cmd>lua require("harpoon.ui").nav_file(2)<CR>
 nnoremap <C-space>h3 <cmd>lua require("harpoon.ui").nav_file(3)<CR>
 nnoremap <C-space>hf <cmd>Telescope harpoon marks<CR>
 
+"
+" Python repl mappings
+"
+nnoremap <Leader>rt <Cmd>ReplToggle<CR>
+nmap <Leader>rc <Plug>ReplSendCell
+nmap <Leader>rr <Plug>ReplSendLine
+xmap <Leader>r  <Plug>ReplSendVisual
+
+""
 "Normal remaps
+"
+noremap <leader>e :REPLSendSession<Cr>
 nnoremap <leader>l g_
 nnoremap <leader>h _
 nnoremap <leader>k g_
@@ -471,11 +509,13 @@ nnoremap <C-space>p "1p
 nnoremap <C-space>P "1P
 nnoremap R s
 nnoremap <C-s> <cmd>Pounce<CR>
-nnoremap <C-j> <C-d>zz
-nnoremap <C-k> <C-u>zz
-nnoremap j jzz
-nnoremap k kzz
-nnoremap n nzz
+nnoremap <expr> <C-j> '<C-d>' . Centerizer()
+nnoremap <expr> <C-k> '<C-u>' . Centerizer()
+nnoremap <expr> j 'j' . Centerizer()
+nnoremap <expr> k 'k' . Centerizer()
+nnoremap <expr> n 'n' . Centerizer()
+nnoremap <expr> N 'N' . Centerizer()
+nnoremap <C-c> zz:call ToggleCenterizer()<CR>
 nnoremap <Tab> :bnext<CR>
 nnoremap <S-Tab> :bprevious<CR>
 nnoremap <C-space>j o<Esc>_C<Esc>
@@ -489,7 +529,7 @@ nmap <c-,> <C-W>h
 nnoremap gg gg0
 nnoremap G G$
 nnoremap <leader><C-y> gg0vG$"+y
-nnoremap <leader>b <cmd>call Toggle_Venn()<CR>
+nnoremap <leader>B <cmd>call Toggle_Venn()<CR>
 nmap <expr> J g:venn_enabled ? '<C-v>j:VBox<CR>' : 'J'
 nmap <expr> K g:venn_enabled ? '<C-v>k:VBox<CR>' : 'K'
 nmap <expr> L g:venn_enabled ? '<C-v>l:VBox<CR>' : 'L'
@@ -505,29 +545,53 @@ nnoremap <leader>o o<Esc>_
 nnoremap <C-space><C-o> O<Esc>_
 nnoremap <leader><leader>o o<Esc>_i
 nnoremap <C-space><C-space><C-o> O<Esc>_i
-
+nnoremap <leader>th :/```<CR>NjVnk:noh<CR>
+nnoremap <leader>tk :/```<CR>N:noh<CR>
+nnoremap <leader>tj :/```<CR>n:noh<CR>
+" nnoremap <expr> <C-space><C-space><C-space><C-c> 'O<Esc>_C' . g:code_block_indentifier . '<Esc>o<Esc>_C' . g:code_block_indentifier . '<Esc>kA'
+nnoremap <C-space><C-space><C-space><C-p> O<Esc>_C```python<Esc>jo<Esc>_C```<Esc>k
+nnoremap <C-space><C-space><C-space><C-r> O<Esc>_C```rust<Esc>jo<Esc>_C```<Esc>k
+nnoremap <C-space><C-space><C-space><C-s> O<Esc>_C```sql<Esc>jo<Esc>_C```<Esc>k
+nnoremap <C-space><C-space><C-space><C-s><C-s> O<Esc>_C```scala<Esc>jo<Esc>_C```<Esc>k
+nnoremap <C-space><C-space><C-space><C-3><C-s> O<Esc>_C# %%<Esc>jo<Esc>_C# %%<Esc>k
 
 " Insert remaps
 inoremap  <Esc>
-inoremap <C-space><C-space> <Esc>la
-inoremap <C-space>x <Esc>lxa
+inoremap <C-l> <Esc>la
+inoremap <C-;> <Esc>lxa
+inoremap <C-h> <Esc>ha
+inoremap <C-k> <Esc>ka
+inoremap <C-j> <Esc>ja
 inoremap <C-space>l <Esc>A
 inoremap <C-space>h <Esc>I
 inoremap <C-space>j <Esc>o<Esc>_C
 inoremap <C-space>k <Esc>O<Esc>_C
-inoremap <C-d> <cmd>silent! bd!<CR>
 inoremap <C-space>` <Esc>_i```
 inoremap <C-space><C-space>` ```
+inoremap <C-space>C <Esc>lC
+inoremap <C-d>l <Esc>lC
+inoremap <C-d>h <Esc>v_di
+inoremap <C-d>j <Esc>jddkA
+inoremap <C-d>k <Esc>kddjA
+" inoremap <expr> <C-space><C-space><C-space><C-c> '<Esc>o<Esc>_C' . g:code_block_identifier . '<Esc>O<Esc>_C' . g:code_block_identifier
+" inoremap <expr> <C-space><C-space><C-space><C-p> '<Esc>O<Esc>_C' . g:code_block_identifier . 'python<Esc>jo<Esc>_C' . g:code_block_identifier . '<Esc>ki'
+" inoremap <expr> <C-space><C-space><C-space><C-r> '<Esc>O<Esc>_C' . g:code_block_identifier . 'rust<Esc>jo<Esc>_C' . g:code_block_identifier . '<Esc>ki'
+" inoremap <expr> <C-space><C-space><C-space><C-s> '<Esc>O<Esc>_C' . g:code_block_identifier . 'sql<Esc>jo<Esc>_C' . g:code_block_identifier . '<Esc>ki'
+" inoremap <expr> <C-space><C-space><C-space><C-s><C-s> '<Esc>O<Esc>_C' . g:code_block_identifier . 'scala<Esc>jo<Esc>_C' . g:code_block_identifier . '<Esc>ki'
+" inoremap <expr> <C-space><C-space><C-space><C-3> '<Esc>O<Esc>_C# %%<Esc>jo<Esc>_C# %%<Esc>ki'
 
 " Visual remaps
 xnoremap < <gv
 xnoremap > >gv
 xnoremap <leader>k g_
 xnoremap <leader>j _
-xnoremap <C-j> <C-d>zz
-xnoremap <C-k> <C-u>zz
-xnoremap j jzz
-xnoremap k kzz
+xnoremap <expr> <C-j> '<C-d>' . Centerizer()
+xnoremap <expr> <C-k> '<C-u>' . Centerize()
+xnoremap <expr> j 'j' . Centerizer()
+xnoremap <expr> k 'k' . Centerizer()
+xnoremap <expr> n 'n' . Centerizer()
+xnoremap <expr> N 'N' . Centerizer()
+xnoremap <C-c> zz:call ToggleCenterizer()<CR>
 xnoremap <leader>y "+y
 xnoremap <leader>yy "+yy
 xnoremap <leader>Y "+yg_
@@ -540,11 +604,6 @@ xnoremap d "1d
 xnoremap x "_x
 xnoremap <C-p> "1p
 xnoremap <leader><C-p> "1P
-xnoremap <C-d> <cmd>silent! bd!<CR>
-xnoremap <expr> j  mode() ==# "v" ? "j$" : "j"
-xnoremap <expr> <C-j> mode() ==# "v" ? "<C-d>$"  : "<C-d>"
-xnoremap <expr> k  mode() ==# "v" ? "k$" : "k"
-xnoremap <expr> <C-k> mode() ==# "v" ? "<C-u>$"  : "<C-u>"
 xnoremap <expr> <C-space>V mode() ==# "v" ? "v" : "<C-v>"
 xnoremap gg gg0
 xnoremap G G$
@@ -553,3 +612,12 @@ xmap <expr> F g:venn_enabled ? '<Esc>F' : 'F'
 xnoremap <expr> <space>h g:venn_enabled ? '8h' : '<C-h>'
 xnoremap <expr> <space>l g:venn_enabled ? '8l' : '<C-l>'
 xnoremap <leader>` <Esc>`<O```<Esc>`>o```<Esc>
+xnoremap <C-s> <cmd>Pounce<CR>
+xnoremap <Esc> <Nop>
+xnoremap <Esc><Esc> <Esc>
+xnoremap <C-space><C-space><C-space><C-c> <Esc>`<O<Esc>_C```<Esc>`>o<Esc>_C```<Esc>`<k$
+xnoremap <C-space><C-space><C-space><C-p> <Esc>`<O<Esc>_C```python<Esc>`>o<Esc>_C```<Esc>
+xnoremap <C-space><C-space><C-space><C-r> <Esc>`<O<Esc>_C```rust<Esc>`>o<Esc>_C```<Esc>
+xnoremap <C-space><C-space><C-space><C-s> <Esc>`<O<Esc>_C```sql<Esc>`>o<Esc>_C```<Esc>
+xnoremap <C-space><C-space><C-space><C-s><C-s> <Esc>`O<Esc>_C```scala<Esc>`>o<Esc>_C```<Esc>
+xnoremap <C-space><C-space><C-space><C-3> <Esc>`<O<Esc>_C# %%<Esc>`>o<Esc>_C# %%<Esc>
