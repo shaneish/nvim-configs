@@ -288,7 +288,6 @@ function! OpenTermSize()
     return new_term_window_size
 endfunction
 
-
 let g:venn_enabled = 0
 function! Toggle_Venn()
     if g:venn_enabled
@@ -299,6 +298,105 @@ function! Toggle_Venn()
         let g:venn_enabled = 1
     endif
 endfunction
+
+let g:is_databricks_notebook = 0
+function! ToggleDatabricksNotebook()
+    if g:is_databricks_notebook == 1
+        let g:is_databricks_notebook = 0
+    else
+        let g:is_databricks_notebook = 1
+    endif
+endfunction
+
+let g:code_type_suffix_mapping = {"python": " python", "sql": " sql", "rust": " rust", "r": " r", "rmarkdown": "{r}", "scala": " scala", "vim": " vim", "lua": " lua", "sh": " sh"}
+let g:code_type_comment_mapping = {"python": "#", "sql": "--", "rust": "//", "r": "#", "rmarkdown": "```", "markdown": "```", "md": "```", "scala": "//", "vim": '"', "lua": "--", "sh": "#"}
+let g:filetypes_with_code_block_type_identifiers = ["md", "markdown", "rmarkdown", "rmd", "journal"]
+let g:code_block_identifier = "```"
+let g:infer_default_code_block = 1
+let g:infer_default_code_block_identifiers = 1
+let g:append_text_code_block = ""
+let g:append_code_block_suffix = ""
+let g:default_code_block_suffix = "%%"
+function! CodeBlockIdentifier(append=0)
+    let out = g:code_block_identifier
+    echom "1st" . out
+    if g:infer_default_code_block == 1
+        if has_key(g:code_type_comment_mapping, &filetype) == 1
+            let out = g:code_type_comment_mapping[&filetype]
+            echom "2nd" . out
+        endif
+    endif
+    if g:is_databricks_notebook == 1
+        echom "3rd" . out . " COMMAND ----------"
+        return out . " COMMAND ----------"
+    endif
+    if a:append == 1
+        if index(g:filetypes_with_code_block_type_identifiers, &filetype) >= 0
+            if has_key(g:code_type_suffix_mapping, g:append_text_code_block) == 1
+                echom "4th" . out . g:code_type_suffix_mapping[g:append_text_code_block]
+                return out . g:code_type_suffix_mapping[g:append_text_code_block]
+            endif
+        else
+            echom "5th" . out . " " . g:default_code_block_suffix
+            return out . " " . g:default_code_block_suffix
+        endif
+    elseif index(g:filetypes_with_code_block_type_identifiers, &filetype) < 0
+        echom "6th" . out . " " . g:default_code_block_suffix
+        return out . " " . g:default_code_block_suffix
+    endif
+    echom "7th" . out
+    return out
+endfunction
+
+function! SetCodeBlockIdentifier(separator="")
+    if a:separator == ""
+        let g:code_block_identifier = input("Enter the code block identifier: ")
+    else
+        let g:code_block_identifier = a:separator
+    endif
+    let g:infer_default_code_block = 0
+endfunction
+
+function! ToggleInferDefaultCodeBlock()
+    if g:infer_default_code_block == 1
+        let g:infer_default_code_block = 0
+    else
+        let g:infer_default_code_block = 1
+    endif
+endfunction
+
+function! EchoToggleAppendCodeBlock()
+    echom "Current code block identification text: " . g:append_text_code_block . " and current filetype: " . &filetype
+endfunction
+
+function! ToggleDefaultCodeBlock()
+    if g:append_text_code_block == ""
+        let g:append_text_code_block = "python"
+    elseif g:append_text_code_block == "python"
+        let g:append_text_code_block = "sql"
+    elseif g:append_text_code_block == "sql"
+        let g:append_text_code_block = "rust"
+    elseif g:append_text_code_block == "rust"
+        let g:append_text_code_block = "r"
+    elseif g:append_text_code_block == "r"
+        let g:append_text_code_block = "rmarkdown"
+    elseif g:append_text_code_block == "rmarkdown"
+        let g:append_text_code_block = "scala"
+    elseif g:append_text_code_block == "scala"
+        let g:append_text_code_block = "vim"
+    elseif g:append_text_code_block == "vim"
+        let g:append_text_code_block = "lua"
+    else
+        let g:append_text_code_block = ""
+    endif
+    call EchoToggleAppendCodeBlock()
+endfunction
+
+function! SetDefaultCodeBlock()
+    let g:append_text_code_block = input("Enter the default code block type: ")
+    call EchoToggleAppendCodeBlock()
+endfunction
+
 "
 " #variables ish
 "
@@ -362,7 +460,6 @@ let g:terraform_fmt_on_save = 1
 let g:terraform_align = 1
 let g:repl_split = 'bottom'
 let g:repl_filetype_commands = {'python': '~/.config/pyenvs/v3.12/bin/ipython', 'rust': 'evcxr'}
-let g:code_block_identifier = "```"
 
 " #autcmd ish
 autocmd BufRead,BufNewFile *.hcl set filetype=hcl
@@ -392,11 +489,6 @@ autocmd FileType journal setlocal shiftwidth=2 tabstop=2 softtabstop=2 concealle
 autocmd FileType md setlocal conceallevel=0
 autocmd FileType json setlocal conceallevel=0
 autocmd FileType text setlocal conceallevel=0
-autocmd FileType python let g:code_block_identifier = "# %%"
-autocmd FileType sql let g:code_block_identifier = "-- %%"
-autocmd FileType scala let g:code_block_identifier = "// %%"
-autocmd FileType vim let g:code_block_identifier = "\" %%"
-autocmd FileType lua let g:code_block_identifier = "-- %%"
 
 " #colorscheme ish
 " colorscheme zenwritten
@@ -485,14 +577,14 @@ xmap <Leader>r  <Plug>ReplSendVisual
 ""
 "Normal remaps
 "
-nmap <A-C-j> ]]zz
-nmap <A-C-k> [[zz
-nmap <A-j> ]mzz
-nmap <A-k> [mzz
-nmap <A-l> ]Mzz
-nmap <A-h> [Mzz
-nmap <S-}> }zz
-nmap <S-{> {zz
+nmap <expr> <A-C-j> ']]' . Centerizer()
+nmap <expr> <A-C-k> '[[' . Centerizer()
+nmap <expr> <A-j> ']m' . Centerizer()
+nmap <expr> <A-k> '[m' . Centerizer()
+nmap <A-l> ]M
+nmap <A-h> [M
+nmap <expr> } '}' . Centerizer()
+nmap <expr> { '{' . Centerizer()
 nnoremap <leader>e :REPLSendSession<Cr>
 nnoremap <leader>l g_
 nnoremap <leader>h _
@@ -523,7 +615,6 @@ nnoremap <expr> j 'j' . Centerizer()
 nnoremap <expr> k 'k' . Centerizer()
 nnoremap <expr> n 'n' . Centerizer()
 nnoremap <expr> N 'N' . Centerizer()
-nnoremap <C-c> zz:call ToggleCenterizer()<CR>
 nnoremap <Tab> :bnext<CR>
 nnoremap <S-Tab> :bprevious<CR>
 nnoremap <C-space>j o<Esc>_C<Esc>
@@ -556,12 +647,15 @@ nnoremap <C-space><C-space><C-o> O<Esc>_i
 nnoremap <leader>th :/```<CR>NjVnk:noh<CR>
 nnoremap <leader>tk :/```<CR>N:noh<CR>
 nnoremap <leader>tj :/```<CR>n:noh<CR>
-" nnoremap <expr> <C-space><C-space><C-space><C-c> 'O<Esc>_C' . g:code_block_indentifier . '<Esc>o<Esc>_C' . g:code_block_indentifier . '<Esc>kA'
-nnoremap <C-space><C-space><C-space><C-p> O<Esc>_C```python<Esc>jo<Esc>_C```<Esc>k
-nnoremap <C-space><C-space><C-space><C-r> O<Esc>_C```rust<Esc>jo<Esc>_C```<Esc>k
-nnoremap <C-space><C-space><C-space><C-s> O<Esc>_C```sql<Esc>jo<Esc>_C```<Esc>k
-nnoremap <C-space><C-space><C-space><C-s><C-s> O<Esc>_C```scala<Esc>jo<Esc>_C```<Esc>k
-nnoremap <C-space><C-space><C-space><C-3><C-s> O<Esc>_C# %%<Esc>jo<Esc>_C# %%<Esc>k
+nnoremap t<C-c> zz:call ToggleCenterizer()<CR>
+nnoremap t<C-a> :call ToggleDefaultCodeBlock()<CR>
+nnoremap t<C-s> :call SetDefaultCodeBlock()<CR>
+nnoremap t<C-i> :call ToggleInferDefaultCodeBlock()<CR>
+nnoremap t<C-d> :call ToggleDatabricksNotebook()<CR>
+nnoremap t<C-b> :call SetCodeBlockIdentifier()<CR>
+nnoremap <C-space><C-space><C-space><C-p> :call EchoToggleAppendCodeBlock()<CR>
+nnoremap <expr> <C-c> 'O<Esc>_C' . CodeBlockIdentifier(1) . '<Esc>o<Esc>_C' . CodeBlockIdentifier() . '<Esc>ko<Esc>_C'
+nnoremap <expr> <C-i> 'O<Esc>_C' . CodeBlockIdentifier() . '<Esc>o<Esc>_C' . CodeBlockIdentifier() . '<Esc>kA '
 
 " Insert remaps
 inoremap  <Esc>
@@ -581,12 +675,8 @@ inoremap <C-d>l <Esc>lC
 inoremap <C-d>h <Esc>v_di
 inoremap <C-d>j <Esc>jddkA
 inoremap <C-d>k <Esc>kddjA
-" inoremap <expr> <C-space><C-space><C-space><C-c> '<Esc>o<Esc>_C' . g:code_block_identifier . '<Esc>O<Esc>_C' . g:code_block_identifier
-" inoremap <expr> <C-space><C-space><C-space><C-p> '<Esc>O<Esc>_C' . g:code_block_identifier . 'python<Esc>jo<Esc>_C' . g:code_block_identifier . '<Esc>ki'
-" inoremap <expr> <C-space><C-space><C-space><C-r> '<Esc>O<Esc>_C' . g:code_block_identifier . 'rust<Esc>jo<Esc>_C' . g:code_block_identifier . '<Esc>ki'
-" inoremap <expr> <C-space><C-space><C-space><C-s> '<Esc>O<Esc>_C' . g:code_block_identifier . 'sql<Esc>jo<Esc>_C' . g:code_block_identifier . '<Esc>ki'
-" inoremap <expr> <C-space><C-space><C-space><C-s><C-s> '<Esc>O<Esc>_C' . g:code_block_identifier . 'scala<Esc>jo<Esc>_C' . g:code_block_identifier . '<Esc>ki'
-" inoremap <expr> <C-space><C-space><C-space><C-3> '<Esc>O<Esc>_C# %%<Esc>jo<Esc>_C# %%<Esc>ki'
+inoremap <expr> <C-c> '<Esc>o<Esc>_C' . CodeBlockIdentifier(1) . '<Esc>o<Esc>_C' . CodeBlockIdentifier() . '<Esc>ko<Esc>_C'
+inoremap <expr> <C-i> '<Esc>o<Esc>_C' . CodeBlockIdentifier() . '<Esc>o<Esc>_C' . CodeBlockIdentifier() . '<Esc>kA '
 
 " Visual remaps
 xnoremap < <gv
@@ -599,7 +689,7 @@ xnoremap <expr> j 'j' . Centerizer()
 xnoremap <expr> k 'k' . Centerizer()
 xnoremap <expr> n 'n' . Centerizer()
 xnoremap <expr> N 'N' . Centerizer()
-xnoremap <C-c> zz:call ToggleCenterizer()<CR>
+xnoremap t<C-c> zz:call ToggleCenterizer()<CR>
 xnoremap <leader>y "+y
 xnoremap <leader>yy "+yy
 xnoremap <leader>Y "+yg_
@@ -620,20 +710,16 @@ xmap <expr> F g:venn_enabled ? '<Esc>F' : 'F'
 xnoremap <expr> <space>h g:venn_enabled ? '8h' : '<C-h>'
 xnoremap <expr> <space>l g:venn_enabled ? '8l' : '<C-l>'
 xmap <expr> <A-h> g:venn_enabled ? '<Plug>GoVSMLeft' : '[Mzz'
-xmap <expr> <A-j> g:venn_enabled ? '<Plug>GoVSMDown' : ']mzz'
-xmap <expr> <A-k> g:venn_enabled ? '<Plug>GoVSMUp' : '[mzz'
+xmap <expr> <A-j> g:venn_enabled ? '<Plug>GoVSMDown' : ']mzz' . Centerizer()
+xmap <expr> <A-k> g:venn_enabled ? '<Plug>GoVSMUp' : '[mzz' . Centerizer()
 xmap <expr> <A-l> g:venn_enabled ? '<Plug>GoVSMRight' : ']Mzz'
 xnoremap <leader>` <Esc>`<O```<Esc>`>o```<Esc>
 xnoremap <C-s> <cmd>Pounce<CR>
 xnoremap <Esc> <Nop>
 xnoremap <Esc><Esc> <Esc>
-xnoremap <C-space><C-space><C-space><C-c> <Esc>`<O<Esc>_C```<Esc>`>o<Esc>_C```<Esc>`<k$
-xnoremap <C-space><C-space><C-space><C-p> <Esc>`<O<Esc>_C```python<Esc>`>o<Esc>_C```<Esc>
-xnoremap <C-space><C-space><C-space><C-r> <Esc>`<O<Esc>_C```rust<Esc>`>o<Esc>_C```<Esc>
-xnoremap <C-space><C-space><C-space><C-s> <Esc>`<O<Esc>_C```sql<Esc>`>o<Esc>_C```<Esc>
-xnoremap <C-space><C-space><C-space><C-s><C-s> <Esc>`O<Esc>_C```scala<Esc>`>o<Esc>_C```<Esc>
-xnoremap <C-space><C-space><C-space><C-3> <Esc>`<O<Esc>_C# %%<Esc>`>o<Esc>_C# %%<Esc>
-xmap <A-C-j> ]]zz
-xmap <A-C-k> [[zz
-xmap <S-}> }zz
-xmap <S-{> {zz
+xnoremap <expr> <C-c> '<Esc><Esc>`<O<Esc>_C' . CodeBlockIdentifier(1) . '<Esc>`><Esc>o' . CodeBlockIdentifier() . '<Esc>k0'
+xnoremap <expr> <C-i> '<Esc><Esc>`<O<Esc>_C' . CodeBlockIdentifier() . '<Esc>`><Esc>o' . CodeBlockIdentifier() . '<Esc>`<k$a '
+xmap <expr> <A-C-j> ']]' . Centerizer()
+xmap <expr> <A-C-k> '[[' . Centerizer()
+xmap <expr> <S-}> '}' . Centerizer()
+xmap <expr> <S-{> '{' . Centerizer()
