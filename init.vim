@@ -298,103 +298,148 @@ function! Toggle_Venn()
         let g:venn_enabled = 1
     endif
 endfunction
+" comment comment_suffix_separator suffix type_separator (type_annotation)
+let g:jump_pattern = "\(\s\+\|_\|-\|.\|'\|\^\|\$\)\w"
+let g:code_block_comment = substitute(substitute(&commentstring, '%s', '', 'g'), '\s\+', '', 'g')
+let g:code_block_comment_alt = "```"
+let g:code_block_comment_suffix_separator = " "
+let g:code_block_comment_suffix_separator_alt = ""
+let g:code_block_suffix = "%%"
+let g:code_block_suffix_alt = ""
+let g:code_block_active_alt = 0
+let g:code_block_suffix_type_separator = " "
+let g:code_block_inferred = 1
+let g:code_block_type_annotation = ""
+let g:code_block_type_annotation_priority = ["", "python", "sql", "json", "rust", "scala", "lua", "sh", "vim", "r", "console", "toml", "yaml"]
+let g:code_block_non_comment_file_types = ["md", "markdown", "rmd", "rmarkdown", "journal"]
+let g:code_block_is_databricks_notebook = 0
+let g:code_block_no_end = 0
+let g:code_block_databricks_notebook = 0
+let g:code_block_databricks_notebook_suffix = "COMMAND ----------"
+let g:code_block_databricks_notebook_suffix_sep = "\n%"
 
-let g:is_databricks_notebook = 0
-function! ToggleDatabricksNotebook()
-    if g:is_databricks_notebook == 1
-        let g:is_databricks_notebook = 0
+function! GetCodeBlockSuffix()
+    if g:code_block_databricks_notebook == 1
+        return g:code_block_databricks_notebook_suffix
+    end
+    if g:code_block_active_alt == 0
+        return g:code_block_suffix
     else
-        let g:is_databricks_notebook = 1
+        return g:code_block_suffix_alt
     endif
 endfunction
 
-let g:code_type_suffix_mapping = {"python": " python", "sql": " sql", "rust": " rust", "r": " r", "rmarkdown": "{r}", "scala": " scala", "vim": " vim", "lua": " lua", "sh": " sh"}
-let g:code_type_comment_mapping = {"python": "#", "sql": "--", "rust": "//", "r": "#", "rmarkdown": "```", "markdown": "```", "md": "```", "scala": "//", "vim": '"', "lua": "--", "sh": "#"}
-let g:filetypes_with_code_block_type_identifiers = ["md", "markdown", "rmarkdown", "rmd", "journal"]
-let g:code_block_identifier = "```"
-let g:infer_default_code_block = 1
-let g:infer_default_code_block_identifiers = 1
-let g:append_text_code_block = ""
-let g:append_code_block_suffix = ""
-let g:default_code_block_suffix = "%%"
-function! CodeBlockIdentifier(append=0)
-    let out = g:code_block_identifier
-    echom "1st" . out
-    if g:infer_default_code_block == 1
-        if has_key(g:code_type_comment_mapping, &filetype) == 1
-            let out = g:code_type_comment_mapping[&filetype]
-            echom "2nd" . out
-        endif
+function! ToggleCodeBlockAlt()
+    if g:code_block_active_alt == 0
+        let g:code_block_active_alt = 1
+    else
+        let g:code_block_active_alt = 0
     endif
-    if g:is_databricks_notebook == 1
-        echom "3rd" . out . " COMMAND ----------"
-        return out . " COMMAND ----------"
+endfunction
+
+function! GetCodeBlockTypeSeparator()
+    if g:code_block_databricks_notebook == 1
+        return g:code_block_databricks_notebook_suffix_sep
+    end
+    return g:code_block_suffix_type_separator
     endif
-    if a:append == 1
-        if index(g:filetypes_with_code_block_type_identifiers, &filetype) >= 0
-            if has_key(g:code_type_suffix_mapping, g:append_text_code_block) == 1
-                echom "4th" . out . g:code_type_suffix_mapping[g:append_text_code_block]
-                return out . g:code_type_suffix_mapping[g:append_text_code_block]
-            endif
+endfunction
+
+function! GetCodeBlockSuffixSeparator()
+    if g:code_block_databricks_notebook == 1
+        return " "
+    end
+    if g:code_block_active_alt == 0
+        return g:code_block_comment_suffix_separator
+    else
+        return g:code_block_comment_suffix_separator_alt
+    endif
+endfunction
+
+function! GetCodeBlockComment()
+    if g:code_block_inferred == 1
+        if index(g:code_block_non_comment_file_types, &filetype) >= 0
+            let g:code_block_active_alt = 1
         else
-            echom "5th" . out . " " . g:default_code_block_suffix
-            return out . " " . g:default_code_block_suffix
+            let g:code_block_comment = substitute(substitute(&commentstring, '%s', '', 'g'), '\s\+', '', 'g')
         endif
-    elseif index(g:filetypes_with_code_block_type_identifiers, &filetype) < 0
-        echom "6th" . out . " " . g:default_code_block_suffix
-        return out . " " . g:default_code_block_suffix
+        let g:code_block_inferred = 0
     endif
-    echom "7th" . out
-    return out
-endfunction
-
-function! SetCodeBlockIdentifier(separator="")
-    if a:separator == ""
-        let g:code_block_identifier = input("Enter the code block identifier: ")
+    if g:code_block_active_alt == 0
+        return g:code_block_comment
     else
-        let g:code_block_identifier = a:separator
+        return g:code_block_comment_alt
     endif
-    let g:infer_default_code_block = 0
 endfunction
 
-function! ToggleInferDefaultCodeBlock()
-    if g:infer_default_code_block == 1
-        let g:infer_default_code_block = 0
+function! GetBaseBlockIdentifier()
+    let block = GetCodeBlockComment() . GetCodeBlockSuffixSeparator() . GetCodeBlockSuffix()
+    return block
+endfunction
+
+function! GetBlockIdentifier(append=0)
+    let block = GetBaseBlockIdentifier()
+    if a:append == 1
+        return block . GetCodeBlockTypeSeparator() . g:code_block_type_annotation
+    endif
+    return block
+endfunction
+
+function! UpdateCodeBlockSuffix()
+    let g:code_block_suffix = input("Enter the code block suffix: ")
+    let g:code_block_comment = substitute(substitute(&commentstring, '%s', ' ', 'g'), '\s\+', ' ', 'g')
+    let g:code_block_identifier = g:code_block_comment . g:code_block_suffix
+endfunction
+
+function! UpdateCodeBlockComment()
+    let g:code_block_comment = input("Enter the code block comment: ")
+endfunction
+
+function! UpdateCodeBlockTypeSuffix()
+    let g:code_block_type_annotation = input("Enter the code block type suffix: ")
+endfunction
+
+function! CycleCodeBlockTypeAnnotation()
+    let ind = index(g:code_block_type_annotation_priority, g:code_block_type_annotation)
+    if ind >= 0
+        if ind == len(g:code_block_type_annotation_priority) - 1
+            let g:code_block_type_annotation = g:code_block_type_annotation_priority[0]
+        else
+            let g:code_block_type_annotation = g:code_block_type_annotation_priority[ind + 1]
+        endif
     else
-        let g:infer_default_code_block = 1
+        let g:code_block_type_annotation = g:code_block_type_annotation_priority[0]
     endif
 endfunction
 
-function! EchoToggleAppendCodeBlock()
-    echom "Current code block identification text: " . g:append_text_code_block . " and current filetype: " . &filetype
-endfunction
-
-function! ToggleDefaultCodeBlock()
-    if g:append_text_code_block == ""
-        let g:append_text_code_block = "python"
-    elseif g:append_text_code_block == "python"
-        let g:append_text_code_block = "sql"
-    elseif g:append_text_code_block == "sql"
-        let g:append_text_code_block = "rust"
-    elseif g:append_text_code_block == "rust"
-        let g:append_text_code_block = "r"
-    elseif g:append_text_code_block == "r"
-        let g:append_text_code_block = "rmarkdown"
-    elseif g:append_text_code_block == "rmarkdown"
-        let g:append_text_code_block = "scala"
-    elseif g:append_text_code_block == "scala"
-        let g:append_text_code_block = "vim"
-    elseif g:append_text_code_block == "vim"
-        let g:append_text_code_block = "lua"
+function! ToggleDatabricksNotebook()
+    if g:code_block_databricks_notebook == 1
+        let g:code_block_databricks_notebook = 0
     else
-        let g:append_text_code_block = ""
+        let g:code_block_databricks_notebook = 1
     endif
-    call EchoToggleAppendCodeBlock()
 endfunction
 
-function! SetDefaultCodeBlock()
-    let g:append_text_code_block = input("Enter the default code block type: ")
-    call EchoToggleAppendCodeBlock()
+function! CheckLine(empty, not)
+    if getline(".") =~ '^\s*$'
+        return a:empty
+    endif
+    return a:not
+endfunction
+
+function BuffJump()
+    ls
+    let bufnr = input("Enter buffer number: ")
+    execute "buffer " . bufnr
+endfunction
+
+function! JumpWs(backwards=0)
+    let flags = "e"
+    if a:backwards == 1
+        let flags = "be"
+    endif
+    let pattern = "\\\\(\\\\s\\\\+\\\\|-\\\\|_\\\\|<\\\\|(\\\\|[\\\\|{\\\\|\\\"\\\\|'\\\\|:\\\\|#\\\\|@\\\\|^\\\\|=\\\\|+\\\\|`\\\\)\\\\w"
+    return ':call search("' . pattern . '", "' . flags . '")<CR>'
 endfunction
 
 "
@@ -459,7 +504,7 @@ let g:rbql_with_headers = 1
 let g:terraform_fmt_on_save = 1
 let g:terraform_align = 1
 let g:repl_split = 'bottom'
-let g:repl_filetype_commands = {'python': '~/.config/pyenvs/v3.12/bin/ipython', 'rust': 'evcxr'}
+let g:repl_filetype_commands = {'python': '/Users/h62756/tmp/.venv/bin/python', 'rust': 'evcxr'}
 
 " #autcmd ish
 autocmd BufRead,BufNewFile *.hcl set filetype=hcl
@@ -548,7 +593,6 @@ xmap <leader><leader>q <cmd>q!<CR>
 xmap <C-q> <cmd>q!<CR>
 xmap W <cmd>w!<CR>
 xmap D <cmd>silent! bd!<CR>
-xnoremap <C-d> D
 
 " Telescope mappings
 nnoremap <C-space>ff <cmd>Telescope find_files<cr>
@@ -577,6 +621,8 @@ xmap <Leader>r  <Plug>ReplSendVisual
 ""
 "Normal remaps
 "
+nnoremap <leader><C-o> o<Esc>_C
+nnoremap <leader>O O<Esc>_C
 nmap <expr> <A-C-j> ']]' . Centerizer()
 nmap <expr> <A-C-k> '[[' . Centerizer()
 nmap <expr> <A-j> ']m' . Centerizer()
@@ -626,8 +672,10 @@ nmap <expr> J g:venn_enabled ? '<C-v>j:VBox<CR>' : 'J'
 nmap <expr> K g:venn_enabled ? '<C-v>k:VBox<CR>' : 'K'
 nnoremap <C-m>la :MarksListGlobal<CR>
 nmap <C-f> :set conceallevel=0<CR>
-nmap <c-.> <C-W>l
-nmap <c-,> <C-W>h
+nmap <C-.> <C-W>l
+nmap <C-,> <C-W>h
+nmap <C-.> <C-W>l
+nmap <C-,> <C-W>h
 nnoremap gg gg0
 nnoremap G G$
 nnoremap <leader><C-y> gg0vG$"+y
@@ -648,14 +696,17 @@ nnoremap <leader>th :/```<CR>NjVnk:noh<CR>
 nnoremap <leader>tk :/```<CR>N:noh<CR>
 nnoremap <leader>tj :/```<CR>n:noh<CR>
 nnoremap t<C-c> zz:call ToggleCenterizer()<CR>
-nnoremap t<C-a> :call ToggleDefaultCodeBlock()<CR>
-nnoremap t<C-s> :call SetDefaultCodeBlock()<CR>
-nnoremap t<C-i> :call ToggleInferDefaultCodeBlock()<CR>
+nnoremap t<C-a> :call CycleCodeBlockTypeAnnotation()<CR>
+nnoremap t<C-t> :call UpdateCodeBlockTypeSuffix()<CR>
+nnoremap t<C-s> :call UpdateCodeBlockSuffix()<CR>
+nnoremap t<C-b> :call UpdateCodeBlockComment<CR>
 nnoremap t<C-d> :call ToggleDatabricksNotebook()<CR>
-nnoremap t<C-b> :call SetCodeBlockIdentifier()<CR>
-nnoremap <C-space><C-space><C-space><C-p> :call EchoToggleAppendCodeBlock()<CR>
-nnoremap <expr> <C-c> 'O<Esc>_C' . CodeBlockIdentifier(1) . '<Esc>o<Esc>_C' . CodeBlockIdentifier() . '<Esc>ko<Esc>_C'
-nnoremap <expr> <C-i> 'O<Esc>_C' . CodeBlockIdentifier() . '<Esc>o<Esc>_C' . CodeBlockIdentifier() . '<Esc>kA '
+nnoremap <expr> <C-b> CheckLine("C", "o<Esc>_C") . CodeBlockIdentifier(1) . '<Esc>o<Esc>_C' . CodeBlockIdentifier() . '<Esc>ko<Esc>_C'
+nnoremap <expr> <C-i> CheckLine("C", "o<Esc>_C") . CodeBlockIdentifier() . '<Esc>o<Esc>_C' . CodeBlockIdentifier() . '<Esc>kA '
+nnoremap <expr> <C-space><C-i> "a" . CodeBlockIdentifier() . '<Esc>'
+nnoremap <expr> <C-space><C-b> "a" . CodeBlockIdentifier(1) . '<Esc>'
+nnoremap <leader>s :call BuffJump()<CR>
+" nmap <expr> <C-l> JumpWs()
 
 " Insert remaps
 inoremap  <Esc>
@@ -675,8 +726,10 @@ inoremap <C-d>l <Esc>lC
 inoremap <C-d>h <Esc>v_di
 inoremap <C-d>j <Esc>jddkA
 inoremap <C-d>k <Esc>kddjA
-inoremap <expr> <C-c> '<Esc>o<Esc>_C' . CodeBlockIdentifier(1) . '<Esc>o<Esc>_C' . CodeBlockIdentifier() . '<Esc>ko<Esc>_C'
-inoremap <expr> <C-i> '<Esc>o<Esc>_C' . CodeBlockIdentifier() . '<Esc>o<Esc>_C' . CodeBlockIdentifier() . '<Esc>kA '
+inoremap <expr> <C-b> CheckLine('', '<Esc>o<Esc>_C') . CodeBlockIdentifier(1) . '<Esc>o<Esc>_C' . CodeBlockIdentifier() . '<Esc>ko<Esc>_C'
+inoremap <expr> <C-i> CheckLine('', '<Esc>o<Esc>_C') . CodeBlockIdentifier() . '<Esc>o<Esc>_C' . CodeBlockIdentifier() . '<Esc>kA '
+inoremap <expr> <C-space><C-b> CodeBlockIdentifier(1)
+inoremap <expr> <C-space><C-i> CodeBlockIdentifier()
 
 " Visual remaps
 xnoremap < <gv
@@ -717,8 +770,8 @@ xnoremap <leader>` <Esc>`<O```<Esc>`>o```<Esc>
 xnoremap <C-s> <cmd>Pounce<CR>
 xnoremap <Esc> <Nop>
 xnoremap <Esc><Esc> <Esc>
-xnoremap <expr> <C-c> '<Esc><Esc>`<O<Esc>_C' . CodeBlockIdentifier(1) . '<Esc>`><Esc>o' . CodeBlockIdentifier() . '<Esc>k0'
-xnoremap <expr> <C-i> '<Esc><Esc>`<O<Esc>_C' . CodeBlockIdentifier() . '<Esc>`><Esc>o' . CodeBlockIdentifier() . '<Esc>`<k$a '
+xnoremap <expr> <C-b> '<Esc><Esc>`<O<Esc>_C' . CodeBlockIdentifier(1) . '<Esc>`><Esc>o' . CodeBlockIdentifier() . '<Esc>`<kA '
+xnoremap <expr> <C-i> '<Esc><Esc>`<O<Esc>_C' . CodeBlockIdentifier() . '<Esc>`><Esc>o' . CodeBlockIdentifier() . '<Esc>`>jo<Esc>_C'
 xmap <expr> <A-C-j> ']]' . Centerizer()
 xmap <expr> <A-C-k> '[[' . Centerizer()
 xmap <expr> <S-}> '}' . Centerizer()
