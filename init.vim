@@ -84,7 +84,7 @@ set termguicolors
 " Lua-ish ish
 "
 lua << EOF
-servers = { "terraformls", "pyright", "lua_ls" }
+servers = { "terraformls", "pyright", "lua_ls", "vimls" }
 require('treesitter-config')
 require('nvim-cmp-config')
 require('lspconfig-config')
@@ -219,20 +219,20 @@ local on_attach = function(client, bufnr)
   -- Mappings.
   -- See `:help vim.lsp.*` for documentation on any of the below functions
   local bufopts = { noremap=true, silent=true, buffer=bufnr }
-  vim.keymap.set('n', '<c-space>D', vim.lsp.buf.declaration, bufopts)
-  vim.keymap.set('n', '<c-space>d', vim.lsp.buf.definition, bufopts)
-  vim.keymap.set('n', '<c-space>H', vim.lsp.buf.hover, bufopts)
-  vim.keymap.set('n', '<c-space>i', vim.lsp.buf.implementation, bufopts)
-  vim.keymap.set('n', '<c-space>wa', vim.lsp.buf.add_workspace_folder, bufopts)
-  vim.keymap.set('n', '<c-space>wr', vim.lsp.buf.remove_workspace_folder, bufopts)
-  vim.keymap.set('n', '<c-space>wl', function()
+  vim.keymap.set('n', '<space>lD', vim.lsp.buf.declaration, bufopts)
+  vim.keymap.set('n', '<space>ld', vim.lsp.buf.definition, bufopts)
+  vim.keymap.set('n', '<space>lh', vim.lsp.buf.hover, bufopts)
+  vim.keymap.set('n', '<space>li', vim.lsp.buf.implementation, bufopts)
+  vim.keymap.set('n', '<space>lwa', vim.lsp.buf.add_workspace_folder, bufopts)
+  vim.keymap.set('n', '<space>lwr', vim.lsp.buf.remove_workspace_folder, bufopts)
+  vim.keymap.set('n', '<space>lwl', function()
     print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
   end, bufopts)
-  vim.keymap.set('n', '<c-space>td', vim.lsp.buf.type_definition, bufopts)
-  vim.keymap.set('n', '<c-space>R', vim.lsp.buf.rename, bufopts)
-  vim.keymap.set('n', '<c-space>a', vim.lsp.buf.code_action, bufopts)
-  vim.keymap.set('n', '<c-space>r', vim.lsp.buf.references, bufopts)
-  vim.keymap.set('n', '<c-space>f', function() vim.lsp.buf.format { async = true } end, bufopts)
+  vim.keymap.set('n', '<space>ltd', vim.lsp.buf.type_definition, bufopts)
+  vim.keymap.set('n', '<space>lR', vim.lsp.buf.rename, bufopts)
+  vim.keymap.set('n', '<space>la', vim.lsp.buf.code_action, bufopts)
+  vim.keymap.set('n', '<space>lr', vim.lsp.buf.references, bufopts)
+  vim.keymap.set('n', '<space>lf', function() vim.lsp.buf.format { async = true } end, bufopts)
 
 end
 EOF
@@ -273,19 +273,6 @@ function! ToggleMappings()
         :CsvViewDisable
     endif
     let s:mappingsState = !s:mappingsState
-endfunction
-
-" Terminal-ish stuff
-let g:term_proportion_default = 2.5
-let g:term_lines_to_resize = 40
-let g:term_default_window_size = 20
-function! OpenTermSize()
-    let current_window_size = line('w$') - line('w0')
-    if current_window_size < g:term_lines_to_resize
-        return g:term_default_window_size
-    endif
-    let new_term_window_size = current_window_size / g:term_proportion_default
-    return new_term_window_size
 endfunction
 
 let g:venn_enabled = 0
@@ -342,7 +329,6 @@ function! GetCodeBlockTypeSeparator()
         return g:code_block_databricks_notebook_suffix_sep
     end
     return g:code_block_suffix_type_separator
-    endif
 endfunction
 
 function! GetCodeBlockSuffixSeparator()
@@ -410,6 +396,7 @@ function! CycleCodeBlockTypeAnnotation()
     else
         let g:code_block_type_annotation = g:code_block_type_annotation_priority[0]
     endif
+    echo g:code_block_type_annotation
 endfunction
 
 function! ToggleDatabricksNotebook()
@@ -430,16 +417,95 @@ endfunction
 function BuffJump()
     ls
     let bufnr = input("Enter buffer number: ")
-    execute "buffer " . bufnr
+    if bufnr != ""
+        execute "buffer " . bufnr
+    endif
 endfunction
 
-function! JumpWs(backwards=0)
-    let flags = "e"
-    if a:backwards == 1
-        let flags = "be"
+" Terminal-ish stuff
+let g:term_proportion_default = 2.5
+let g:term_lines_to_resize = 40
+let g:term_default_window_size = 20
+function! OpenTermSize(vertical=0)
+    if a:vertical == 0
+        let current_window_size = &lines
+    else
+        let current_window_size = &columns
     endif
-    let pattern = "\\\\(\\\\s\\\\+\\\\|-\\\\|_\\\\|<\\\\|(\\\\|[\\\\|{\\\\|\\\"\\\\|'\\\\|:\\\\|#\\\\|@\\\\|^\\\\|=\\\\|+\\\\|`\\\\)\\\\w"
-    return ':call search("' . pattern . '", "' . flags . '")<CR>'
+    if current_window_size < g:term_lines_to_resize
+        return g:term_default_window_size
+    endif
+    let new_term_window_size = current_window_size / g:term_proportion_default
+    return float2nr(new_term_window_size)
+endfunction
+
+let g:term_toggle_window_id = 1000
+let g:term_toggle_og_window_id = win_getid()
+let g:term_toggle_status = 0
+let g:term_toggle_is_vertical = 0
+let g:term_toggle_window_size_default = OpenTermSize()
+let g:term_toggle_new_term_null_toggle = 1
+let g:term_toggle_proportional_resize = 1
+function! ToggleTerm()
+    if winnr('$') > 1
+        let g:term_toggle_is_vertical = winwidth(0) != &columns
+        if g:term_toggle_status == 0
+            let g:term_toggle_status = 1
+            let g:term_toggle_window_id = win_getid()
+            if g:term_toggle_is_vertical
+                let g:term_toggle_window_size = winwidth(g:term_toggle_window_id)
+                execute "vertical resize 1"
+            else
+                let g:term_toggle_window_size = winheight(g:term_toggle_window_id)
+                execute "resize 1"
+            endif
+            execute "call win_gotoid(" . g:term_toggle_og_window_id . ")"
+        else
+            let g:term_toggle_status = 0
+            let g:term_toggle_og_window_id = win_getid()
+            execute "call win_gotoid(" . g:term_toggle_window_id . ")"
+            if g:term_toggle_is_vertical == 1
+                execute "vertical resize " . g:term_toggle_window_size
+            else
+                execute "resize " . g:term_toggle_window_size
+            endif
+        endif
+    else
+        if g:term_toggle_new_term_null_toggle == 1
+            let g:term_toggle_og_window_id = win_getid()
+            if g:term_toggle_proportional_resize == 1
+                execute "belowright split +term"
+                execute "resize " . OpenTermSize()
+                execute "startinsert"
+            else
+                execute "belowright split +term"
+                execute "startinsert"
+            endif
+        else
+            echo "No other windows to toggle"
+        endif
+    endif
+endfunction
+
+let g:python_format_on_save = 1
+let g:python_bin = '/Users/h62756/.config/pyenvs/v3.12/bin/'
+let g:python_path = g:python_bin . 'python3.12'
+let g:ipython_path = g:python_bin . 'ipython'
+function! ToggleFormat()
+    if g:python_format_on_save == 1
+        let g:python_format_on_save = 0
+        echo "Formatting disabled"
+    else
+        let g:python_format_on_save = 1
+        echo "Formatting enabled"
+    endif
+endfunction
+
+function! PyFormat()
+    if g:python_format_on_save == 1
+        execute "!" . g:python_path . " -m ruff %"
+        execute "e!"
+    endif
 endfunction
 
 "
@@ -474,6 +540,7 @@ set guifont=JetBrains\ Mono\ 13
 set fillchars+=vert:\│
 set completeopt=menu,menuone,noselect
 set shell=nu
+set splitright
 
 " #globalvars ish
 let g:indentLine_char = '▏'
@@ -483,7 +550,7 @@ let g:vim_markdown_conceal = 0
 let g:vim_markdown_conceal_code_blocks = 0
 let g:vim_markdown_folding_disabled = 0
 let g:conceallevel = 0
-let g:python3_host_prog = '~/.config/pyenvs/v3.12/bin/python'
+let g:python3_host_prog = g:python_path
 let g:pydocstring_enable_mapping = 0
 let g:copilot_no_tab_map = v:true
 let g:signify_sign_add = '│'
@@ -504,7 +571,7 @@ let g:rbql_with_headers = 1
 let g:terraform_fmt_on_save = 1
 let g:terraform_align = 1
 let g:repl_split = 'bottom'
-let g:repl_filetype_commands = {'python': '/Users/h62756/tmp/.venv/bin/python', 'rust': 'evcxr'}
+let g:repl_filetype_commands = {'python': g:ipython_path . "--no-autoindent" , 'rust': 'evcxr'}
 
 " #autcmd ish
 autocmd BufRead,BufNewFile *.hcl set filetype=hcl
@@ -520,7 +587,7 @@ autocmd BufRead,BufNewFile *.tsv.txt set filetype=tsv conceallevel=0
 autocmd BufRead,BufNewFile *.toml set filetype=toml conceallevel=0
 autocmd FileType csv nmap <C-f> :call ToggleMappings()<CR>
 autocmd FileType tsv nmap <C-f> :call ToggleMappings()<CR>
-autocmd FileType python nmap <C-f> :Black<CR>
+autocmd FileType python nmap <C-f> :call PyFormat()<CR>
 autocmd FileType html setlocal shiftwidth=2 tabstop=2 softtabstop=2 conceallevel=0
 autocmd FileType css setlocal shiftwidth=2 tabstop=2 softtabstop=2 conceallevel=0
 autocmd FileType xml setlocal shiftwidth=2 tabstop=2 softtabstop=2 conceallevel=0
@@ -528,7 +595,6 @@ autocmd FileType toml setlocal shiftwidth=2 tabstop=2 softtabstop=2 conceallevel
 autocmd FileType python setlocal conceallevel=0
 autocmd FileType htmldjango setlocal shiftwidth=2 tabstop=2 softtabstop=2 conceallevel=0
 autocmd FileType htmldjango inoremap {% {%  %}<left><left><left>
-autocmd FileType htmldjango inoremap {# {#  #}<left><left><left>
 autocmd FileType markdown setlocal shiftwidth=2 tabstop=2 softtabstop=2 conceallevel=0
 autocmd FileType journal setlocal shiftwidth=2 tabstop=2 softtabstop=2 conceallevel=0
 autocmd FileType md setlocal conceallevel=0
@@ -561,14 +627,17 @@ imap <C-s> <Plug>(copilot-suggest)
 
 " Terminal
 tmap kj <C-\><C-n>
-tmap <C-d> kj:q<CR>
-tmap <C-t> <Esc><cmd>bd!<CR>
-nmap <expr> <C-space><C-t> ":terminal python3 -i " . resolve(expand('%:p')) . "<CR>"
+tmap <Esc><Esc> <Esc><C-\><C-n>
+tmap <space><space>q <C-\><C-n>:q!<CR>
+tmap <space><space>d <Esc><cmd>bd!<CR>
+tmap <space><space>c <Esc><Esc>:clo<CR>
 autocmd BufWinEnter,WinEnter term://* startinsert
 autocmd BufLeave term://* stopinsert
-nmap <expr> <C-t> ":botright terminal<CR>:resize " . OpenTermSize() . "<CR>i"
-xmap <expr> <C-t> ":botright terminal<CR>:resize " . OpenTermSize() . "<CR>i"
-nmap <expr> <space><C-t> ":cd %:p:h<CR>:botright terminal<CR>i"
+nmap <expr> <C-t> ":belowright split +term<CR>:resize " . OpenTermSize() . "<CR>:startinsert<CR>"
+xmap <expr> <C-t> ":belowright split +term<CR>:resize " . OpenTermSize() . "<CR>:startinsert<CR>"
+nmap <expr> <space><C-t> ":cd %:p:h<CR><Esc><C-t>"
+nmap <leader><leader>t :call ToggleTerm()<CR>
+tmap <leader><leader>t <Esc><Esc>:call ToggleTerm()<CR>
 
 
 
@@ -576,23 +645,20 @@ nmap <expr> <space><C-t> ":cd %:p:h<CR>:botright terminal<CR>i"
 inoremap <S-CR> <Esc>
 nmap \ :NvimTreeFindFileToggle<CR>:set number<CR>:set nowrap<CR>
 nmap <leader><leader>r :so ~/.config/nvim/init.vim<CR>
-nmap <leader><leader>t :call TrimWhitespace()<CR>
+nmap <leader><leader><leader>t :call TrimWhitespace()<CR>
 nmap <silent> <leader><leader> :noh<CR>
 nmap <leader><leader>d <cmd>silent! bd!<CR>
-nmap D <cmd>silent! bd!<CR>
 nmap <leader><leader>w <cmd>w!<CR>
-nmap W <cmd>w!<CR>
 nmap <leader><leader>q <cmd>q!<CR>
-nmap <C-q> <cmd>q!<CR>
-nmap <leader><leader>s <cmd>w!<CR><cmd>q!<CR>
+nmap <C-n> :cnext<CR>
+nmap <C-space><C-n> :cprevious<CR>
 nmap <C-space>n :cnext<CR>
 nmap <C-space>N :cprevious<CR>
 xmap <leader><leader>d <cmd>silent! bd!<CR>
 xmap <leader><leader>w <cmd>w!<CR>
 xmap <leader><leader>q <cmd>q!<CR>
-xmap <C-q> <cmd>q!<CR>
-xmap W <cmd>w!<CR>
-xmap D <cmd>silent! bd!<CR>
+nmap <space><space>c :clo<CR>
+xmap <space><space>c :clo<CR>
 
 " Telescope mappings
 nnoremap <C-space>ff <cmd>Telescope find_files<cr>
@@ -621,19 +687,21 @@ xmap <Leader>r  <Plug>ReplSendVisual
 ""
 "Normal remaps
 "
-nnoremap <leader><C-o> o<Esc>_C
-nnoremap <leader>O O<Esc>_C
+nmap W <C-w><C-w><C-d>
+nnoremap <leader>c <C-w>c
+nnoremap <leader>s <C-w>s
+nmap <leader>d <C-space>d
+nnoremap <C-space><C-o> o<Esc>_C
+nnoremap <C-space>O O<Esc>_C
 nmap <expr> <A-C-j> ']]' . Centerizer()
 nmap <expr> <A-C-k> '[[' . Centerizer()
 nmap <expr> <A-j> ']m' . Centerizer()
 nmap <expr> <A-k> '[m' . Centerizer()
-nmap <A-l> ]M
-nmap <A-h> [M
+nmap <expr> <A-l> ']M' . Centerizer()
+nmap <expr> <A-h> '[M' . Centerizer()
 nmap <expr> } '}' . Centerizer()
 nmap <expr> { '{' . Centerizer()
 nnoremap <leader>e :REPLSendSession<Cr>
-nnoremap <leader>l g_
-nnoremap <leader>h _
 nnoremap <leader>k g_
 nnoremap <leader>j _
 nnoremap <leader>y "+y
@@ -662,10 +730,9 @@ nnoremap <expr> k 'k' . Centerizer()
 nnoremap <expr> n 'n' . Centerizer()
 nnoremap <expr> N 'N' . Centerizer()
 nnoremap <Tab> :bnext<CR>
-nnoremap <S-Tab> :bprevious<CR>
+nnoremap <leader><Tab> :bprevious<CR>
 nnoremap <C-space>j o<Esc>_C<Esc>
 nnoremap <C-space>k O<Esc>_C<Esc>
-nnoremap <C-d> :bd!<CR>
 nnoremap <C-m>ls :MarksListBuf<CR>
 nnoremap <leader>B <cmd>call Toggle_Venn()<CR>
 nmap <expr> J g:venn_enabled ? '<C-v>j:VBox<CR>' : 'J'
@@ -686,10 +753,8 @@ nmap <expr> <C-space>j g:venn_enabled ? '8J' : '<C-space>j'
 nmap <expr> <C-space>k g:venn_enabled ? '8K' : '<C-space>k'
 nmap <expr> <C-space>l g:venn_enabled ? '8L' : '<C-space>l'
 nmap <expr> <C-space>h g:venn_enabled ? '8H' : '<C-space>h'
-nnoremap <leader>` _i```
-nnoremap <leader><leader>` i```
 nnoremap <leader>o o<Esc>_
-nnoremap <C-space><C-o> O<Esc>_
+nnoremap <leader>O O<Esc>_
 nnoremap <leader><leader>o o<Esc>_i
 nnoremap <C-space><C-space><C-o> O<Esc>_i
 nnoremap <leader>th :/```<CR>NjVnk:noh<CR>
@@ -701,12 +766,11 @@ nnoremap t<C-t> :call UpdateCodeBlockTypeSuffix()<CR>
 nnoremap t<C-s> :call UpdateCodeBlockSuffix()<CR>
 nnoremap t<C-b> :call UpdateCodeBlockComment<CR>
 nnoremap t<C-d> :call ToggleDatabricksNotebook()<CR>
-nnoremap <expr> <C-b> CheckLine("C", "o<Esc>_C") . CodeBlockIdentifier(1) . '<Esc>o<Esc>_C' . CodeBlockIdentifier() . '<Esc>ko<Esc>_C'
-nnoremap <expr> <C-i> CheckLine("C", "o<Esc>_C") . CodeBlockIdentifier() . '<Esc>o<Esc>_C' . CodeBlockIdentifier() . '<Esc>kA '
-nnoremap <expr> <C-space><C-i> "a" . CodeBlockIdentifier() . '<Esc>'
-nnoremap <expr> <C-space><C-b> "a" . CodeBlockIdentifier(1) . '<Esc>'
-nnoremap <leader>s :call BuffJump()<CR>
-" nmap <expr> <C-l> JumpWs()
+nnoremap <expr> <C-b> CheckLine("C", "o<Esc>_C") . GetBlockIdentifier(1) . '<Esc>o<Esc>_C' . GetBlockIdentifier() . '<Esc>ko<Esc>_C'
+nnoremap <expr> <C-i> CheckLine("C", "o<Esc>_C") . GetBlockIdentifier() . '<Esc>o<Esc>_C' . GetBlockIdentifier() . '<Esc>kA '
+nnoremap <expr> <C-space><C-i> "a" . GetBlockIdentifier() . '<Esc>'
+nnoremap <expr> <C-space><C-b> "a" . GetBlockIdentifier(1) . '<Esc>'
+nnoremap <leader>ls :call BuffJump()<CR>
 
 " Insert remaps
 inoremap  <Esc>
@@ -726,10 +790,10 @@ inoremap <C-d>l <Esc>lC
 inoremap <C-d>h <Esc>v_di
 inoremap <C-d>j <Esc>jddkA
 inoremap <C-d>k <Esc>kddjA
-inoremap <expr> <C-b> CheckLine('', '<Esc>o<Esc>_C') . CodeBlockIdentifier(1) . '<Esc>o<Esc>_C' . CodeBlockIdentifier() . '<Esc>ko<Esc>_C'
-inoremap <expr> <C-i> CheckLine('', '<Esc>o<Esc>_C') . CodeBlockIdentifier() . '<Esc>o<Esc>_C' . CodeBlockIdentifier() . '<Esc>kA '
-inoremap <expr> <C-space><C-b> CodeBlockIdentifier(1)
-inoremap <expr> <C-space><C-i> CodeBlockIdentifier()
+inoremap <expr> <C-b> CheckLine('', '<Esc>o<Esc>_C') . GetBlockIdentifier(1) . '<Esc>o<Esc>_C' . GetBlockIdentifier() . '<Esc>ko<Esc>_C'
+inoremap <expr> <C-i> CheckLine('', '<Esc>o<Esc>_C') . GetBlockIdentifier() . '<Esc>o<Esc>_C' . GetBlockIdentifier() . '<Esc>kA '
+inoremap <expr> <C-space><C-b> GetBlockIdentifier(1)
+inoremap <expr> <C-space><C-i> GetBlockIdentifier()
 
 " Visual remaps
 xnoremap < <gv
@@ -761,7 +825,7 @@ xnoremap G G$
 xnoremap <expr> f g:venn_enabled ? ':VBox<CR>' : 'f'
 xmap <expr> F g:venn_enabled ? '<Esc>F' : 'F'
 xnoremap <expr> <space>h g:venn_enabled ? '8h' : '<C-h>'
-xnoremap <expr> <space>l g:venn_enabled ? '8l' : '<C-l>'
+xnoremap <expr> <space>l g:venn_enabled ? '9l' : '<C-l>'
 xmap <expr> <A-h> g:venn_enabled ? '<Plug>GoVSMLeft' : '[Mzz'
 xmap <expr> <A-j> g:venn_enabled ? '<Plug>GoVSMDown' : ']mzz' . Centerizer()
 xmap <expr> <A-k> g:venn_enabled ? '<Plug>GoVSMUp' : '[mzz' . Centerizer()
@@ -770,8 +834,8 @@ xnoremap <leader>` <Esc>`<O```<Esc>`>o```<Esc>
 xnoremap <C-s> <cmd>Pounce<CR>
 xnoremap <Esc> <Nop>
 xnoremap <Esc><Esc> <Esc>
-xnoremap <expr> <C-b> '<Esc><Esc>`<O<Esc>_C' . CodeBlockIdentifier(1) . '<Esc>`><Esc>o' . CodeBlockIdentifier() . '<Esc>`<kA '
-xnoremap <expr> <C-i> '<Esc><Esc>`<O<Esc>_C' . CodeBlockIdentifier() . '<Esc>`><Esc>o' . CodeBlockIdentifier() . '<Esc>`>jo<Esc>_C'
+xnoremap <expr> <C-b> '<Esc><Esc>`<O<Esc>_C' . GetBlockIdentifier(1) . '<Esc>`><Esc>o' . GetBlockIdentifier() . '<Esc>`<kA '
+xnoremap <expr> <C-i> '<Esc><Esc>`<O<Esc>_C' . GetBlockIdentifier() . '<Esc>`><Esc>o' . GetBlockIdentifier() . '<Esc>`>jo<Esc>_C'
 xmap <expr> <A-C-j> ']]' . Centerizer()
 xmap <expr> <A-C-k> '[[' . Centerizer()
 xmap <expr> <S-}> '}' . Centerizer()
