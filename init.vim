@@ -1,6 +1,12 @@
 "
 " plug-ish ish
 "
+let data_dir = has('nvim') ? stdpath('data') . '/site' : '~/.vim'
+if empty(glob(data_dir . '/autoload/plug.vim'))
+  silent execute '!curl -fLo '.data_dir.'/autoload/plug.vim --create-dirs  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+endif
+
 call plug#begin()
 Plug 'nvim-treesitter/nvim-treesitter'
 Plug 'nvim-treesitter/playground'
@@ -487,9 +493,16 @@ function! ToggleTerm()
     endif
 endfunction
 
+" TODO: use below function to update terminal toggle logic above
+" function! s:win_by_bufname(bufname)
+"     let bufmap = map(range(1, winnr('$')), '[bufname(winbufnr(v:val)), v:val]')
+"     let thewindow = filter(bufmap, 'v:val[0] =~ a:bufname')[0][1]
+"     execute thewindow 'wincmd w'
+" endfunction
+
 let g:python_format_on_save = 1
-let g:python_bin = '/Users/h62756/.config/pyenvs/v3.12/bin/'
-let g:python_path = g:python_bin . 'python3.12'
+let g:python_bin = substitute($MYVIMRC, "/init.vim", "", "") . '/.venv/bin/'
+let g:python_path = g:python_bin . 'python3'
 let g:ipython_path = g:python_bin . 'ipython'
 function! ToggleFormat()
     if g:python_format_on_save == 1
@@ -539,8 +552,9 @@ set swapfile
 set guifont=JetBrains\ Mono\ 13
 set fillchars+=vert:\│
 set completeopt=menu,menuone,noselect
-set shell=nu
+set shell=fish
 set splitright
+set conceallevel=0
 
 " #globalvars ish
 let g:indentLine_char = '▏'
@@ -574,32 +588,30 @@ let g:repl_split = 'bottom'
 let g:repl_filetype_commands = {'python': g:ipython_path . "--no-autoindent" , 'rust': 'evcxr'}
 
 " #autcmd ish
+autocmd FileType * set formatoptions-=ro
 autocmd BufRead,BufNewFile *.hcl set filetype=hcl
 autocmd BufRead,BufNewFile *.tf,*.tfvars set filetype=terraform
 autocmd BufRead,BufNewFile *.tfstate,*.tfstate.backup set filetype=json
 autocmd BufRead,BufNewFile .terraformrc,terraform.rc set filetype=hcl
-autocmd Filetype terraform setlocal ts=2 sw=2 expandtab conceallevel=0
-autocmd Filetype hcl setlocal ts=2 sw=2 expandtab conceallevel=0
+autocmd Filetype terraform setlocal ts=2 sw=2 expandtab
+autocmd Filetype hcl setlocal ts=2 sw=2 expandtab
 autocmd BufWritePre *.tfvars lua vim.lsp.buf.format()
 autocmd BufWritePre *.tf lua vim.lsp.buf.format()
-autocmd BufRead,BufNewFile *.csv.txt set filetype=csv conceallevel=0
-autocmd BufRead,BufNewFile *.tsv.txt set filetype=tsv conceallevel=0
-autocmd BufRead,BufNewFile *.toml set filetype=toml conceallevel=0
+autocmd BufRead,BufNewFile *.csv.txt set filetype=csv
+autocmd BufRead,BufNewFile *.tsv.txt set filetype=tsv
+autocmd BufRead,BufNewFile *.toml set filetype=toml
 autocmd FileType csv nmap <C-f> :call ToggleMappings()<CR>
 autocmd FileType tsv nmap <C-f> :call ToggleMappings()<CR>
 autocmd FileType python nmap <C-f> :call PyFormat()<CR>
-autocmd FileType html setlocal shiftwidth=2 tabstop=2 softtabstop=2 conceallevel=0
-autocmd FileType css setlocal shiftwidth=2 tabstop=2 softtabstop=2 conceallevel=0
-autocmd FileType xml setlocal shiftwidth=2 tabstop=2 softtabstop=2 conceallevel=0
-autocmd FileType toml setlocal shiftwidth=2 tabstop=2 softtabstop=2 conceallevel=0
-autocmd FileType python setlocal conceallevel=0
-autocmd FileType htmldjango setlocal shiftwidth=2 tabstop=2 softtabstop=2 conceallevel=0
+autocmd FileType html setlocal shiftwidth=2 tabstop=2 softtabstop=2
+autocmd FileType css setlocal shiftwidth=2 tabstop=2 softtabstop=2
+autocmd FileType xml setlocal shiftwidth=2 tabstop=2 softtabstop=2
+autocmd FileType toml setlocal shiftwidth=2 tabstop=2 softtabstop=2
+autocmd FileType python setlocal
+autocmd FileType htmldjango setlocal shiftwidth=2 tabstop=2 softtabstop=2
 autocmd FileType htmldjango inoremap {% {%  %}<left><left><left>
-autocmd FileType markdown setlocal shiftwidth=2 tabstop=2 softtabstop=2 conceallevel=0
-autocmd FileType journal setlocal shiftwidth=2 tabstop=2 softtabstop=2 conceallevel=0
-autocmd FileType md setlocal conceallevel=0
-autocmd FileType json setlocal conceallevel=0
-autocmd FileType text setlocal conceallevel=0
+autocmd FileType markdown setlocal shiftwidth=2 tabstop=2 softtabstop=2
+autocmd FileType journal setlocal shiftwidth=2 tabstop=2 softtabstop=2
 
 " #colorscheme ish
 " colorscheme zenwritten
@@ -628,16 +640,14 @@ imap <C-s> <Plug>(copilot-suggest)
 " Terminal
 tmap kj <C-\><C-n>
 tmap <Esc><Esc> <Esc><C-\><C-n>
-tmap <space><space>q <C-\><C-n>:q!<CR>
-tmap <space><space>d <Esc><cmd>bd!<CR>
-tmap <space><space>c <Esc><Esc>:clo<CR>
+tmap <C-q> <C-\><C-n>:q!<CR>
+tmap <C-d> <Esc><cmd>bd!<CR>
+tmap <C-c> <Esc><Esc>:clo<CR>
 autocmd BufWinEnter,WinEnter term://* startinsert
 autocmd BufLeave term://* stopinsert
-nmap <expr> <C-t> ":belowright split +term<CR>:resize " . OpenTermSize() . "<CR>:startinsert<CR>"
-xmap <expr> <C-t> ":belowright split +term<CR>:resize " . OpenTermSize() . "<CR>:startinsert<CR>"
 nmap <expr> <space><C-t> ":cd %:p:h<CR><Esc><C-t>"
-nmap <leader><leader>t :call ToggleTerm()<CR>
-tmap <leader><leader>t <Esc><Esc>:call ToggleTerm()<CR>
+nmap <C-t> :call ToggleTerm()<CR>
+tmap <C-t> <Esc><Esc>:call ToggleTerm()<CR>
 
 
 
@@ -687,7 +697,11 @@ xmap <Leader>r  <Plug>ReplSendVisual
 ""
 "Normal remaps
 "
-nmap W <C-w><C-w><C-d>
+nmap <space> <leader>
+nmap <space><space> <leader>
+nmap W <C-w><C-w>
+nmap dW :clo<Cr><C-w><C-w>
+nmap doW <C-w><C-w>:clo<CR>
 nnoremap <leader>c <C-w>c
 nnoremap <leader>s <C-w>s
 nmap <leader>d <C-space>d
@@ -796,6 +810,8 @@ inoremap <expr> <C-space><C-b> GetBlockIdentifier(1)
 inoremap <expr> <C-space><C-i> GetBlockIdentifier()
 
 " Visual remaps
+xmap <space> <leader>
+xmap <space><space> <leader>
 xnoremap < <gv
 xnoremap > >gv
 xnoremap <leader>k g_
