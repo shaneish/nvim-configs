@@ -555,6 +555,7 @@ set completeopt=menu,menuone,noselect
 set shell=fish
 set splitright
 set conceallevel=0
+set signcolumn=yes:1
 
 " #globalvars ish
 let g:indentLine_char = '▏'
@@ -584,7 +585,7 @@ let g:mergetool_prefer_revision = 'local'
 let g:rbql_with_headers = 1
 let g:terraform_fmt_on_save = 1
 let g:terraform_align = 1
-let g:repl_split = 'bottom'
+let g:repl_split = 'right'
 let g:repl_filetype_commands = {'python': g:ipython_path . "--no-autoindent" , 'rust': 'evcxr'}
 
 " #autcmd ish
@@ -607,6 +608,7 @@ autocmd FileType html setlocal shiftwidth=2 tabstop=2 softtabstop=2
 autocmd FileType css setlocal shiftwidth=2 tabstop=2 softtabstop=2
 autocmd FileType xml setlocal shiftwidth=2 tabstop=2 softtabstop=2
 autocmd FileType toml setlocal shiftwidth=2 tabstop=2 softtabstop=2
+autocmd FileType lua setlocal shiftwidth=2 tabstop=2 softtabstop=2 expandtab
 autocmd FileType python setlocal
 autocmd FileType htmldjango setlocal shiftwidth=2 tabstop=2 softtabstop=2
 autocmd FileType htmldjango inoremap {% {%  %}<left><left><left>
@@ -628,6 +630,8 @@ highlight LineNr guifg=#e9f0fd
 highlight RustHints guifg=#44a6c6
 highlight DiffDelete guifg=#ff5555 guibg=none
 highlight ColorColumn guifg=#7e9198
+highlight LineNr guibg=NONE
+highlight SignColumn guibg=NONE
 
 " Copilot
 imap <silent><script><expr> <C-c> copilot#Accept("\<CR>")
@@ -656,7 +660,7 @@ inoremap <S-CR> <Esc>
 nmap \ :NvimTreeFindFileToggle<CR>:set number<CR>:set nowrap<CR>
 nmap <leader><leader>r :so ~/.config/nvim/init.vim<CR>
 nmap <leader><leader><leader>t :call TrimWhitespace()<CR>
-nmap <silent> <leader><leader> :noh<CR>
+nmap <silent> <leader><leader>h :noh<CR>
 nmap <leader><leader>d <cmd>silent! bd!<CR>
 nmap <leader><leader>w <cmd>w!<CR>
 nmap <leader><leader>q <cmd>q!<CR>
@@ -697,6 +701,8 @@ xmap <Leader>r  <Plug>ReplSendVisual
 ""
 "Normal remaps
 "
+nmap <leader>- :resize -5<CR>
+nmap <leader>= :resize +5<CR>
 nmap <space> <leader>
 nmap <space><space> <leader>
 nmap W <C-w><C-w>
@@ -747,7 +753,7 @@ nnoremap <Tab> :bnext<CR>
 nnoremap <leader><Tab> :bprevious<CR>
 nnoremap <C-space>j o<Esc>_C<Esc>
 nnoremap <C-space>k O<Esc>_C<Esc>
-nnoremap <C-m>ls :MarksListBuf<CR>
+nnoremap <C-m>=:MarksListBuf<CR>
 nnoremap <leader>B <cmd>call Toggle_Venn()<CR>
 nmap <expr> J g:venn_enabled ? '<C-v>j:VBox<CR>' : 'J'
 nmap <expr> K g:venn_enabled ? '<C-v>k:VBox<CR>' : 'K'
@@ -817,7 +823,7 @@ xnoremap > >gv
 xnoremap <leader>k g_
 xnoremap <leader>j _
 xnoremap <expr> <C-j> '<C-d>' . Centerizer()
-xnoremap <expr> <C-k> '<C-u>' . Centerize()
+xnoremap <expr> <C-k> '<C-u>' . Centerizer()
 xnoremap <expr> j 'j' . Centerizer()
 xnoremap <expr> k 'k' . Centerizer()
 xnoremap <expr> n 'n' . Centerizer()
