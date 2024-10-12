@@ -72,12 +72,13 @@ Plug 'junegunn/vim-journal'
 Plug 'kyazdani42/nvim-web-devicons'
 Plug 'romgrk/barbar.nvim'
 Plug 'oatish/smartcolumn.nvim'
-Plug 'hardselius/warlock'
 Plug 'akinsho/bufferline.nvim'
 Plug 'mikesmithgh/kitty-scrollback.nvim'
 Plug 'norcalli/nvim-colorizer.lua'
 Plug 'jbyuki/venn.nvim'
 Plug 'pappasam/nvim-repl'
+Plug 'shaneish/candle-grey'
+
 call plug#end()
 
 filetype plugin indent on
@@ -617,20 +618,20 @@ autocmd FileType journal setlocal shiftwidth=2 tabstop=2 softtabstop=2
 
 " #colorscheme ish
 " colorscheme zenwritten
-colorscheme warlock
+colorscheme candle-grey-transparent
 
 " #highlight ish
-highlight link TSError Normal
-highlight WinSeparator gui=NONE guibg=NONE guifg=#444444 cterm=NONE ctermbg=NONE ctermfg=gray
-highlight VertSplit gui=NONE guibg=NONE guifg=#444444 cterm=NONE ctermbg=NONE ctermfg=gray
-highlight Normal guibg=NONE ctermbg=NONE
-highlight Error guibg=NONE ctermbg=NONE
-highlight Comment guifg=#b9d2da
-highlight LineNr guifg=#e9f0fd
-highlight RustHints guifg=#44a6c6
-highlight DiffDelete guifg=#ff5555 guibg=none
-highlight ColorColumn guifg=#7e9198
-highlight LineNr guibg=NONE
+" highlight link TSError Normal
+" highlight WinSeparator gui=NONE guibg=NONE guifg=#444444 cterm=NONE ctermbg=NONE ctermfg=gray
+" highlight VertSplit gui=NONE guibg=NONE guifg=#444444 cterm=NONE ctermbg=NONE ctermfg=gray
+" highlight Normal guibg=NONE ctermbg=NONE
+" highlight Error guibg=NONE ctermbg=NONE
+" highlight Comment guifg=#b9d2da
+" highlight LineNr guifg=#e9f0fd
+" highlight RustHints guifg=#44a6c6
+" highlight DiffDelete guifg=#ff5555 guibg=none
+" highlight ColorColumn guifg=#7e9198
+" highlight LineNr guibg=NONE
 highlight SignColumn guibg=NONE
 
 " Copilot
