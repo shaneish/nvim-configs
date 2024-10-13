@@ -91,7 +91,7 @@ set termguicolors
 " Lua-ish ish
 "
 lua << EOF
-servers = { "terraformls", "pyright", "lua_ls", "vimls" }
+servers = { "terraformls", "ruff", "lua_ls", "vimls" }
 require('treesitter-config')
 require('nvim-cmp-config')
 require('lspconfig-config')
@@ -152,7 +152,7 @@ require('mason').setup({
     }
 })
 require('mason-lspconfig').setup {
-    ensure_installed = { "lua_ls", "zls", "pyright", "tflint", "terraformls" },
+    ensure_installed = { "lua_ls", "zls", "ruff", "tflint", "terraformls" },
 }
 -- require('lsp-zero').preset('recommended').setup()
 require('leap').add_default_mappings()
@@ -665,8 +665,8 @@ nmap <silent> <leader><leader>h :noh<CR>
 nmap <leader><leader>d <cmd>silent! bd!<CR>
 nmap <leader><leader>w <cmd>w!<CR>
 nmap <leader><leader>q <cmd>q!<CR>
-nmap <C-n> :cnext<CR>
-nmap <C-space><C-n> :cprevious<CR>
+nmap <leader><Tab> :cnext<CR>
+nmap <C-space><Tab> :cprevious<CR>
 nmap <C-space>n :cnext<CR>
 nmap <C-space>N :cprevious<CR>
 xmap <leader><leader>d <cmd>silent! bd!<CR>
@@ -751,14 +751,14 @@ nnoremap <expr> k 'k' . Centerizer()
 nnoremap <expr> n 'n' . Centerizer()
 nnoremap <expr> N 'N' . Centerizer()
 nnoremap <Tab> :bnext<CR>
-nnoremap <leader><Tab> :bprevious<CR>
+nnoremap <C-Tab> :bprevious<CR>
 nnoremap <C-space>j o<Esc>_C<Esc>
 nnoremap <C-space>k O<Esc>_C<Esc>
-nnoremap <C-m>=:MarksListBuf<CR>
+nnoremap <leader>ls :MarksListBuf<CR>
 nnoremap <leader>B <cmd>call Toggle_Venn()<CR>
 nmap <expr> J g:venn_enabled ? '<C-v>j:VBox<CR>' : 'J'
 nmap <expr> K g:venn_enabled ? '<C-v>k:VBox<CR>' : 'K'
-nnoremap <C-m>la :MarksListGlobal<CR>
+nnoremap <leader>la :MarksListGlobal<CR>
 nmap <C-f> :set conceallevel=0<CR>
 nmap <C-.> <C-W>l
 nmap <C-,> <C-W>h
@@ -791,7 +791,6 @@ nnoremap <expr> <C-b> CheckLine("C", "o<Esc>_C") . GetBlockIdentifier(1) . '<Esc
 nnoremap <expr> <C-i> CheckLine("C", "o<Esc>_C") . GetBlockIdentifier() . '<Esc>o<Esc>_C' . GetBlockIdentifier() . '<Esc>kA '
 nnoremap <expr> <C-space><C-i> "a" . GetBlockIdentifier() . '<Esc>'
 nnoremap <expr> <C-space><C-b> "a" . GetBlockIdentifier(1) . '<Esc>'
-nnoremap <leader>ls :call BuffJump()<CR>
 
 " Insert remaps
 inoremap  <Esc>
