@@ -82,16 +82,14 @@ Plug 'shaneish/candle-grey'
 call plug#end()
 
 filetype plugin indent on
-syntax on
 filetype plugin on
 let mapleader=" "
-set termguicolors
 
 "
 " Lua-ish ish
 "
 lua << EOF
-servers = { "terraformls", "ruff_lsp", "lua_ls", "vimls" }
+servers = { "terraformls", "pyright", "lua_ls", "vimls" }
 require('treesitter-config')
 require('nvim-cmp-config')
 require('lspconfig-config')
@@ -152,7 +150,7 @@ require('mason').setup({
     }
 })
 require('mason-lspconfig').setup {
-    ensure_installed = { "lua_ls", "zls", "pyright", "ruff_lsp", "tflint", "terraformls" },
+    ensure_installed = { "lua_ls", "zls", "pyright", "pyright", "tflint", "terraformls" },
 }
 -- require('lsp-zero').preset('recommended').setup()
 require('leap').add_default_mappings()
@@ -192,7 +190,7 @@ require('marks').setup({
   -- marks.nvim allows you to configure up to 10 bookmark groups, each with its own
   -- sign/virttext. Bookmarks can be used to group together positions and quickly move
   -- across multiple buffers. default sign is '!@#$%^&*()' (from 0 to 9), and
-  -- default virt_text is "".
+  -- default virt_text is ""_
   bookmark_0 = {
       sign = "⚑",
       virt_text = "hello world",
@@ -503,8 +501,9 @@ endfunction
 
 let g:python_format_on_save = 1
 let g:python_bin = substitute($MYVIMRC, "/init.vim", "", "") . '/.venv/bin/'
-let g:python_path = g:python_bin . 'python3'
-let g:ipython_path = g:python_bin . 'ipython'
+let g:python3_host_prog = g:python_bin . 'python3'
+let g:ipython3_host_prog = g:python_bin . 'ipython'
+
 function! ToggleFormat()
     if g:python_format_on_save == 1
         let g:python_format_on_save = 0
@@ -517,7 +516,7 @@ endfunction
 
 function! PyFormat()
     if g:python_format_on_save == 1
-        execute "!" . g:python_path . " -m ruff %"
+        execute "!" . g:python3_host_prog . " -m ruff %"
         execute "e!"
     endif
 endfunction
@@ -566,7 +565,7 @@ let g:vim_markdown_conceal = 0
 let g:vim_markdown_conceal_code_blocks = 0
 let g:vim_markdown_folding_disabled = 0
 let g:conceallevel = 0
-let g:python3_host_prog = g:python_path
+let g:python3_host_prog = g:python3_host_prog
 let g:pydocstring_enable_mapping = 0
 let g:copilot_no_tab_map = v:true
 let g:signify_sign_add = '│'
@@ -587,7 +586,7 @@ let g:rbql_with_headers = 1
 let g:terraform_fmt_on_save = 1
 let g:terraform_align = 1
 let g:repl_split = 'right'
-let g:repl_filetype_commands = {'python': g:ipython_path . " --no-autoindent" , 'rust': 'evcxr'}
+let g:repl_filetype_commands = {'python': g:ipython3_host_prog . " --no-autoindent" , 'rust': 'evcxr'}
 
 " #autcmd ish
 autocmd FileType * set formatoptions-=ro
@@ -604,7 +603,7 @@ autocmd BufRead,BufNewFile *.tsv.txt set filetype=tsv
 autocmd BufRead,BufNewFile *.toml set filetype=toml
 autocmd FileType csv nmap <C-f> :call ToggleMappings()<CR>
 autocmd FileType tsv nmap <C-f> :call ToggleMappings()<CR>
-autocmd FileType python nmap <C-f> :call PyFormat()<CR>
+autocmd FileType python nmap <leader><C-f> :call PyFormat()<CR>
 autocmd FileType html setlocal shiftwidth=2 tabstop=2 softtabstop=2
 autocmd FileType css setlocal shiftwidth=2 tabstop=2 softtabstop=2
 autocmd FileType xml setlocal shiftwidth=2 tabstop=2 softtabstop=2
@@ -616,8 +615,9 @@ autocmd FileType markdown setlocal shiftwidth=2 tabstop=2 softtabstop=2
 autocmd FileType journal setlocal shiftwidth=2 tabstop=2 softtabstop=2
 
 " #colorscheme ish
-" colorscheme zenwritten
 colorscheme candle-grey-transparent
+syntax on
+set termguicolors
 
 " #highlight ish
 " highlight link TSError Normal
