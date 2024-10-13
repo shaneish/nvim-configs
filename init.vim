@@ -91,7 +91,7 @@ set termguicolors
 " Lua-ish ish
 "
 lua << EOF
-servers = { "terraformls", "ruff", "lua_ls", "vimls" }
+servers = { "terraformls", "pyright", "lua_ls", "vimls" }
 require('treesitter-config')
 require('nvim-cmp-config')
 require('lspconfig-config')
@@ -152,7 +152,7 @@ require('mason').setup({
     }
 })
 require('mason-lspconfig').setup {
-    ensure_installed = { "lua_ls", "zls", "ruff", "tflint", "terraformls" },
+    ensure_installed = { "lua_ls", "zls", "pyright", "tflint", "terraformls" },
 }
 -- require('lsp-zero').preset('recommended').setup()
 require('leap').add_default_mappings()
