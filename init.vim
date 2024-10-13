@@ -610,7 +610,6 @@ autocmd FileType css setlocal shiftwidth=2 tabstop=2 softtabstop=2
 autocmd FileType xml setlocal shiftwidth=2 tabstop=2 softtabstop=2
 autocmd FileType toml setlocal shiftwidth=2 tabstop=2 softtabstop=2
 autocmd FileType lua setlocal shiftwidth=2 tabstop=2 softtabstop=2 expandtab
-autocmd FileType python setlocal
 autocmd FileType htmldjango setlocal shiftwidth=2 tabstop=2 softtabstop=2
 autocmd FileType htmldjango inoremap {% {%  %}<left><left><left>
 autocmd FileType markdown setlocal shiftwidth=2 tabstop=2 softtabstop=2
