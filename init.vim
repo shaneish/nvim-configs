@@ -587,7 +587,7 @@ let g:rbql_with_headers = 1
 let g:terraform_fmt_on_save = 1
 let g:terraform_align = 1
 let g:repl_split = 'right'
-let g:repl_filetype_commands = {'python': g:ipython_path . "--no-autoindent" , 'rust': 'evcxr'}
+let g:repl_filetype_commands = {'python': g:ipython_path . " --no-autoindent" , 'rust': 'evcxr'}
 
 " #autcmd ish
 autocmd FileType * set formatoptions-=ro
@@ -634,6 +634,7 @@ colorscheme candle-grey-transparent
 highlight SignColumn guibg=NONE
 
 " Copilot
+let g:copilot_enabled = v:false
 imap <silent><script><expr> <C-c> copilot#Accept("\<CR>")
 imap <silent><script><expr> <C-l> copilot#Accept("\<CR>")
 imap <C-]> <Plug>(copilot-next)
