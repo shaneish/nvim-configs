@@ -41,7 +41,9 @@ Plug 'chrisbra/Colorizer'
 Plug 'KabbAmine/vCoolor.vim'
 Plug 'dkarter/bullets.vim'
 Plug 'wellle/context.vim'
-Plug 'simrat39/rust-tools.nvim'
+" Plug 'simrat39/rust-tools.nvim'
+" Plug 'vxpm/ferris.nvim'
+Plug 'mrcjkb/rustaceanvim'
 Plug 'hashivim/vim-terraform'
 Plug 'ThePrimeagen/harpoon'
 Plug 'samoshkin/vim-mergetool'
@@ -78,18 +80,19 @@ Plug 'norcalli/nvim-colorizer.lua'
 Plug 'jbyuki/venn.nvim'
 Plug 'pappasam/nvim-repl'
 Plug 'shaneish/candle-grey'
-
 call plug#end()
 
 filetype plugin indent on
 filetype plugin on
 let mapleader=" "
+let maplocalleader="\\"
+set termguicolors
 
 "
 " Lua-ish ish
 "
 lua << EOF
-servers = { "terraformls", "pyright", "lua_ls", "vimls" }
+servers = { "terraformls", "basedpyright", "lua_ls", "vimls" }
 require('treesitter-config')
 require('nvim-cmp-config')
 require('lspconfig-config')
@@ -110,21 +113,21 @@ require("autoclose").setup({
    },
 disabled = false,
 })
-require("rust-tools").setup({
-  tools = {
-      inlay_hints = {
-        highlight = "RustHints",
-      },
-  },
-  server = {
-    on_attach = function(_, bufnr)
-      -- Hover actions
-      vim.keymap.set("n", "<C-space>a", rt.hover_actions.hover_actions, { buffer = bufnr })
-      -- Code action groups
-      vim.keymap.set("n", "<C-space>A", rt.code_action_group.code_action_group, { buffer = bufnr })
-    end,
-  },
-})
+-- require("rust-tools").setup({
+--   tools = {
+--       inlay_hints = {
+--         highlight = "RustHints",
+--       },
+--   },
+--   server = {
+--     on_attach = function(_, bufnr)
+--       -- Hover actions
+--       vim.keymap.set("n", "<C-space>a", rt.hover_actions.hover_actions, { buffer = bufnr })
+--       -- Code action groups
+--       vim.keymap.set("n", "<C-space>A", rt.code_action_group.code_action_group, { buffer = bufnr })
+--     end,
+--   },
+-- })
 require("gomove").setup({
   -- whether or not to map default key bindings, (true/false)
   map_defaults = false,
@@ -150,7 +153,7 @@ require('mason').setup({
     }
 })
 require('mason-lspconfig').setup {
-    ensure_installed = { "lua_ls", "zls", "pyright", "pyright", "tflint", "terraformls" },
+    ensure_installed = { "lua_ls", "zls", "basedpyright", "pyright", "tflint", "terraformls" },
 }
 -- require('lsp-zero').preset('recommended').setup()
 require('leap').add_default_mappings()
@@ -617,7 +620,6 @@ autocmd FileType journal setlocal shiftwidth=2 tabstop=2 softtabstop=2
 " #colorscheme ish
 colorscheme candle-grey-transparent
 syntax on
-set termguicolors
 
 " #highlight ish
 " highlight link TSError Normal
