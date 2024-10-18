@@ -574,6 +574,7 @@ set shell=fish
 set splitright
 set conceallevel=0
 set signcolumn=yes:1
+set guicursor+=i:blinkon1,v:blinkon1
 
 " #globalvars ish
 let g:indentLine_char = '▏'
@@ -661,9 +662,11 @@ imap <C-s> <Plug>(copilot-suggest)
 
 " Terminal
 tmap kj <C-\><C-n>
-tmap <Esc><Esc> <Esc><C-\><C-n>
+tmap <Esc> <C-\><C-n>
 tmap <C-q> <C-\><C-n>:q!<CR>
 tmap <C-d> <Esc><cmd>bd!<CR>
+tmap <leader><leader>d <cmd>clo<CR>
+tmap <leader><leader>c <cmd>silent! bd!<CR>
 tmap <C-c> <Esc><Esc>:clo<CR>
 autocmd BufWinEnter,WinEnter term://* startinsert
 autocmd BufLeave term://* stopinsert
@@ -679,12 +682,14 @@ nmap \ :NvimTreeFindFileToggle<CR>:set number<CR>:set nowrap<CR>
 nmap <leader><leader>r :so ~/.config/nvim/init.vim<CR>
 nmap <leader><leader><leader>t :call TrimWhitespace()<CR>
 nmap <silent> <leader><leader>h :noh<CR>
-nmap <leader><leader>d <cmd>silent! bd!<CR>
+nmap <leader><leader>d <cmd>clo<CR>
+nmap <leader><leader>c <cmd>silent! bd!<CR>
 nmap <leader><leader>w <cmd>w!<CR>
 nmap <leader><leader>q <cmd>q!<CR>
 nmap <C-]> :cnext<CR>
 nmap <C-[> :cprevious<CR>
-xmap <leader><leader>d <cmd>silent! bd!<CR>
+xmap <leader><leader>d <cmd>clo<CR>
+xmap <leader><leader>c <cmd>silent! bd!<CR>
 xmap <leader><leader>w <cmd>w!<CR>
 xmap <leader><leader>q <cmd>q!<CR>
 nmap <space><space>c :clo<CR>
