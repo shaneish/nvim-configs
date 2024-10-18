@@ -80,6 +80,7 @@ Plug 'norcalli/nvim-colorizer.lua'
 Plug 'jbyuki/venn.nvim'
 Plug 'pappasam/nvim-repl'
 Plug 'shaneish/candle-grey'
+Plug 'scalameta/nvim-metals'
 call plug#end()
 
 filetype plugin indent on
@@ -155,6 +156,7 @@ require('mason').setup({
 require('mason-lspconfig').setup {
     ensure_installed = { "lua_ls", "zls", "basedpyright", "pyright", "tflint", "terraformls" },
 }
+-- require("config.lazy")
 -- require('lsp-zero').preset('recommended').setup()
 require('leap').add_default_mappings()
 require('csvview').setup()
@@ -170,25 +172,12 @@ require('rainbow_csv').setup()
 --  + QUERY - :Select [a1, a1 order by a1 desc]
 --  + MANIPULATE COLUMNS - :Update [a1 = a1 + "_" + a2]
 require('marks').setup({
-  -- whether to map keybinds or not. default true
   default_mappings = true,
-  -- which builtin marks to show. default {}
   builtin_marks = { ".", "<", ">", "^" },
-  -- whether movements cycle back to the beginning/end of buffer. default true
   cyclic = true,
-  -- whether the shada file is updated after modifying uppercase marks. default false
   force_write_shada = false,
-  -- how often (in ms) to redraw signs/recompute mark positions.
-  -- higher values will have better performance but may cause visual lag,
-  -- while lower values may cause performance penalties. default 150.
   refresh_interval = 250,
-  -- sign priorities for each type of mark - builtin marks, uppercase marks, lowercase
-  -- marks, and bookmarks.
-  -- can be either a table with all/none of the keys, or a single number, in which case
-  -- the priority applies to all marks.
-  -- default 10.
   sign_priority = { lower=10, upper=15, builtin=8, bookmark=20 },
-  -- disables mark tracking for specific filetypes. default {}
   excluded_filetypes = {},
   -- marks.nvim allows you to configure up to 10 bookmark groups, each with its own
   -- sign/virttext. Bookmarks can be used to group together positions and quickly move
@@ -196,9 +185,7 @@ require('marks').setup({
   -- default virt_text is ""_
   bookmark_0 = {
       sign = "⚑",
-      virt_text = "hello world",
-      -- explicitly prompt for a virtual line annotation when setting a bookmark from this group.
-      -- defaults to false.
+      virt_text = "bookmarks",
       annotate = false,
   },
   mappings = {}
@@ -227,22 +214,50 @@ local on_attach = function(client, bufnr)
   -- Mappings.
   -- See `:help vim.lsp.*` for documentation on any of the below functions
   local bufopts = { noremap=true, silent=true, buffer=bufnr }
-  vim.keymap.set('n', '<space>lD', vim.lsp.buf.declaration, bufopts)
-  vim.keymap.set('n', '<space>ld', vim.lsp.buf.definition, bufopts)
-  vim.keymap.set('n', '<space>lh', vim.lsp.buf.hover, bufopts)
-  vim.keymap.set('n', '<space>li', vim.lsp.buf.implementation, bufopts)
-  vim.keymap.set('n', '<space>lwa', vim.lsp.buf.add_workspace_folder, bufopts)
-  vim.keymap.set('n', '<space>lwr', vim.lsp.buf.remove_workspace_folder, bufopts)
-  vim.keymap.set('n', '<space>lwl', function()
+  vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, bufopts)
+  vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts)
+  vim.keymap.set('n', 'gh', vim.lsp.buf.hover, bufopts)
+  vim.keymap.set('n', 'hi', vim.lsp.buf.implementation, bufopts)
+  vim.keymap.set('n', 'gwa', vim.lsp.buf.add_workspace_folder, bufopts)
+  vim.keymap.set('n', 'gwr', vim.lsp.buf.remove_workspace_folder, bufopts)
+  vim.keymap.set('n', 'gwl', function()
     print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
   end, bufopts)
-  vim.keymap.set('n', '<space>ltd', vim.lsp.buf.type_definition, bufopts)
-  vim.keymap.set('n', '<space>lR', vim.lsp.buf.rename, bufopts)
-  vim.keymap.set('n', '<space>la', vim.lsp.buf.code_action, bufopts)
-  vim.keymap.set('n', '<space>lr', vim.lsp.buf.references, bufopts)
-  vim.keymap.set('n', '<space>lf', function() vim.lsp.buf.format { async = true } end, bufopts)
-
+  vim.keymap.set("n", "gs", vim.lsp.buf.signature_help, bufopts)
+  vim.keymap.set('n', 'gt', vim.lsp.buf.type_definition, bufopts)
+  vim.keymap.set('n', '<C-space>rn', vim.lsp.buf.rename, bufopts)
+  vim.keymap.set('n', '<C-space>ca', vim.lsp.buf.code_action, bufopts)
+  vim.keymap.set('n', 'gr', vim.lsp.buf.references, bufopts)
+  vim.keymap.set('n', '<C-space>f', function() vim.lsp.buf.format { async = true } end, bufopts)
 end
+
+local metals_config = require("metals").bare_config()
+metals_config.on_attach = function(client, bufnr)
+  -- LSP mappings
+  vim.keymap.set("n", "gd", vim.lsp.buf.definition)
+  vim.keymap.set("n", "gD", vim.lsp.buf.declaration)
+  vim.keymap.set("n", "gh", vim.lsp.buf.hover)
+  vim.keymap.set("n", "gi", vim.lsp.buf.implementation)
+  vim.keymap.set("n", "gr", vim.lsp.buf.references)
+  vim.keymap.set("n", "gds", vim.lsp.buf.document_symbol)
+  vim.keymap.set("n", "gws", vim.lsp.buf.workspace_symbol)
+  vim.keymap.set("n", "<C-space>cl", vim.lsp.codelens.run)
+  vim.keymap.set("n", "gs", vim.lsp.buf.signature_help)
+  vim.keymap.set("n", "<C-space>rn", vim.lsp.buf.rename)
+  vim.keymap.set("n", "<C-space>f", vim.lsp.buf.format)
+  vim.keymap.set("n", "<C-space>ca", vim.lsp.buf.code_action)
+  vim.keymap.set("n", "gws", function()
+    require("metals").hover_worksheet()
+  end)
+end
+local nvim_metals_group = vim.api.nvim_create_augroup("nvim-metals", { clear = true })
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = { "scala", "sbt", "java" },
+  callback = function()
+    require("metals").initialize_or_attach(metals_config)
+  end,
+  group = nvim_metals_group,
+})
 EOF
 
 "
@@ -667,10 +682,8 @@ nmap <silent> <leader><leader>h :noh<CR>
 nmap <leader><leader>d <cmd>silent! bd!<CR>
 nmap <leader><leader>w <cmd>w!<CR>
 nmap <leader><leader>q <cmd>q!<CR>
-nmap <leader><Tab> :cnext<CR>
-nmap <C-space><Tab> :cprevious<CR>
-nmap <C-space>n :cnext<CR>
-nmap <C-space>N :cprevious<CR>
+nmap <C-]> :cnext<CR>
+nmap <C-[> :cprevious<CR>
 xmap <leader><leader>d <cmd>silent! bd!<CR>
 xmap <leader><leader>w <cmd>w!<CR>
 xmap <leader><leader>q <cmd>q!<CR>
@@ -691,7 +704,7 @@ nnoremap <C-space>h[ <cmd>lua require("harpoon.ui").nav_prev()<CR>
 nnoremap <C-space>h1 <cmd>lua require("harpoon.ui").nav_file(1)<CR>
 nnoremap <C-space>h2 <cmd>lua require("harpoon.ui").nav_file(2)<CR>
 nnoremap <C-space>h3 <cmd>lua require("harpoon.ui").nav_file(3)<CR>
-nnoremap <C-space>hf <cmd>Telescope harpoon marks<CR>
+nnoremap <C-m>h <cmd>Telescope harpoon marks<CR>
 
 "
 " Python repl mappings
@@ -713,7 +726,6 @@ nmap dW :clo<Cr><C-w><C-w>
 nmap doW <C-w><C-w>:clo<CR>
 nnoremap <leader>c <C-w>c
 nnoremap <leader>s <C-w>s
-nmap <leader>d <C-space>d
 nnoremap <C-space><C-o> o<Esc>_C
 nnoremap <C-space>O O<Esc>_C
 nmap <expr> <A-C-j> ']]' . Centerizer()
@@ -725,8 +737,8 @@ nmap <expr> <A-h> '[M' . Centerizer()
 nmap <expr> } '}' . Centerizer()
 nmap <expr> { '{' . Centerizer()
 nnoremap <leader>e :REPLSendSession<Cr>
-nnoremap <leader>k g_
-nnoremap <leader>j _
+nnoremap <leader>l g_
+nnoremap <leader>h _
 nnoremap <leader>y "+y
 nnoremap <leader>yw BvE"+y
 nnoremap <leader>yy ^vg_"+y
@@ -753,14 +765,14 @@ nnoremap <expr> k 'k' . Centerizer()
 nnoremap <expr> n 'n' . Centerizer()
 nnoremap <expr> N 'N' . Centerizer()
 nnoremap <Tab> :bnext<CR>
-nnoremap <C-Tab> :bprevious<CR>
+nnoremap <S-Tab> :bprevious<CR>
 nnoremap <C-space>j o<Esc>_C<Esc>
 nnoremap <C-space>k O<Esc>_C<Esc>
-nnoremap <leader>ls :MarksListBuf<CR>
+nnoremap <C-m>ls :MarksListBuf<CR>
 nnoremap <leader>B <cmd>call Toggle_Venn()<CR>
 nmap <expr> J g:venn_enabled ? '<C-v>j:VBox<CR>' : 'J'
 nmap <expr> K g:venn_enabled ? '<C-v>k:VBox<CR>' : 'K'
-nnoremap <leader>la :MarksListGlobal<CR>
+nnoremap <C-m>la :MarksListGlobal<CR>
 nmap <C-f> :set conceallevel=0<CR>
 nmap <C-.> <C-W>l
 nmap <C-,> <C-W>h
@@ -789,10 +801,12 @@ nnoremap t<C-t> :call UpdateCodeBlockTypeSuffix()<CR>
 nnoremap t<C-s> :call UpdateCodeBlockSuffix()<CR>
 nnoremap t<C-b> :call UpdateCodeBlockComment<CR>
 nnoremap t<C-d> :call ToggleDatabricksNotebook()<CR>
-nnoremap <expr> <C-b> CheckLine("C", "o<Esc>_C") . GetBlockIdentifier(1) . '<Esc>o<Esc>_C' . GetBlockIdentifier() . '<Esc>ko<Esc>_C'
-nnoremap <expr> <C-i> CheckLine("C", "o<Esc>_C") . GetBlockIdentifier() . '<Esc>o<Esc>_C' . GetBlockIdentifier() . '<Esc>kA '
-nnoremap <expr> <C-space><C-i> "a" . GetBlockIdentifier() . '<Esc>'
-nnoremap <expr> <C-space><C-b> "a" . GetBlockIdentifier(1) . '<Esc>'
+nnoremap <expr> <C-space><C-b> CheckLine("C", "o<Esc>_C") . GetBlockIdentifier(1) . '<Esc>o<Esc>_C' . GetBlockIdentifier() . '<Esc>ko<Esc>_C'
+nnoremap <expr> <C-space><C-i> CheckLine("C", "o<Esc>_C") . GetBlockIdentifier() . '<Esc>o<Esc>_C' . GetBlockIdentifier() . '<Esc>kA '
+nnoremap <expr> <C-i> "o" . GetBlockIdentifier() . '<CR><Esc>'
+nnoremap <expr> <C-b> "a" . GetBlockIdentifier(1) . '<Esc>'
+
+" %%
 
 " Insert remaps
 inoremap  <Esc>
