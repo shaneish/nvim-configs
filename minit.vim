@@ -1,3 +1,4 @@
+
 function! SetWarlockTheme()
     "
     " since this is a vim-only no-plugin config meant to be fast to open (used for

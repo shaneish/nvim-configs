@@ -793,10 +793,10 @@ nmap <expr> <C-space>j g:venn_enabled ? '8J' : '<C-space>j'
 nmap <expr> <C-space>k g:venn_enabled ? '8K' : '<C-space>k'
 nmap <expr> <C-space>l g:venn_enabled ? '8L' : '<C-space>l'
 nmap <expr> <C-space>h g:venn_enabled ? '8H' : '<C-space>h'
-nnoremap <leader>o o<Esc>_
-nnoremap <leader>O O<Esc>_
-nnoremap <leader><leader>o o<Esc>_i
-nnoremap <C-space><C-space><C-o> O<Esc>_i
+nnoremap <leader>o o<Esc>k
+nnoremap <leader>O O<Esc>j
+nnoremap <leader><leader>o o<Esc>0C
+nnoremap <C-space><C-space><C-o> O<Esc>0C
 nnoremap <leader>th :/```<CR>NjVnk:noh<CR>
 nnoremap <leader>tk :/```<CR>N:noh<CR>
 nnoremap <leader>tj :/```<CR>n:noh<CR>
