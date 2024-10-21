@@ -683,7 +683,7 @@ nmap <leader><leader>r :so ~/.config/nvim/init.vim<CR>
 nmap <leader><leader><leader>t :call TrimWhitespace()<CR>
 nmap <silent> <leader><leader>h :noh<CR>
 nmap <leader><leader>d <cmd>clo<CR>
-nmap <leader><leader>c <cmd>silent! bd!<CR>
+nmap <leader><leader>D <cmd>silent! bd!<CR>
 nmap <leader><leader>w <cmd>w!<CR>
 nmap <leader><leader>q <cmd>q!<CR>
 nmap <C-]> :cnext<CR>
