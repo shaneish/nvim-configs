@@ -438,7 +438,7 @@ function! CheckLine(empty, not)
     return a:not
 endfunction
 
-function! BuffJump()
+function BuffJump()
     ls
     let bufnr = input("Enter buffer number: ")
     if bufnr != ""
@@ -804,14 +804,14 @@ nnoremap <expr> } '}' . Centerizer()
 nnoremap <expr> { '{' . Centerizer()
 nnoremap <expr> <C-]> ')' . Centerizer()
 nnoremap <expr> <C-[> '(' . Centerizer()
-nnoremap <expr> J Sections(1, 1, 1)
-nnoremap <expr> K Sections(1, 0, 1)
-nnoremap <expr> <C-j> Sections(0, 1, 1)
-nnoremap <expr> <C-k> Sections(0, 0, 1)
+nnoremap <expr> J Sections(0, 1, 1)
+nnoremap <expr> K Sections(0, 0, 1)
+nnoremap <expr> <C-j> Sections(0, 1, 0)
+nnoremap <expr> <C-k> Sections(0, 0, 0)
 nnoremap <expr> <leader>J Sections(1, 1, 0)
 nnoremap <expr> <leader>K Sections(1, 0, 0)
-nnoremap <expr> <leader>j Sections(0, 1, 0)
-nnoremap <expr> <leader>k Sections(0, 0, 0)
+nnoremap <expr> <leader>j Sections(1, 1, 1)
+nnoremap <expr> <leader>k Sections(1, 0, 1)
 nnoremap <leader>e :REPLSendSession<Cr>
 nnoremap <leader>l $
 nnoremap <leader>h _
@@ -858,8 +858,8 @@ nnoremap G G$
 nnoremap <leader><C-y> gg0vG$"+y
 nmap <expr> L g:venn_enabled ? '<C-v>l:VBox<CR>' : 'L'
 nmap <expr> H g:venn_enabled ? '<C-v>h:VBox<CR>' : 'H'
-nmap <expr> J g:venn_enabled ? '<C-v>j:VBox<CR>' : Sections(0, 1, 0)
-nmap <expr> K g:venn_enabled ? '<C-v>k:VBox<CR>' : Sections(0, 0, 0)
+nmap <expr> J g:venn_enabled ? '<C-v>j:VBox<CR>' : Sections(0, 1, 1)
+nmap <expr> K g:venn_enabled ? '<C-v>k:VBox<CR>' : Sections(0, 0, 1)
 nmap <expr> F g:venn_enabled ? '`<hk<C-v>`>lj:VBox<CR>' : 'F'
 nmap <expr> <C-space>j g:venn_enabled ? '8J' : '<C-space>j'
 nmap <expr> <C-space>k g:venn_enabled ? '8K' : '<C-space>k'
@@ -882,8 +882,6 @@ nnoremap <expr> <C-space><C-b> CheckLine("C", "o<Esc>_C") . GetBlockIdentifier(1
 nnoremap <expr> <C-space><C-i> CheckLine("C", "o<Esc>_C") . GetBlockIdentifier() . '<Esc>o<Esc>_C' . GetBlockIdentifier() . '<Esc>kA '
 nnoremap <expr> <C-i> "o" . GetBlockIdentifier() . '<CR><Esc>'
 nnoremap <expr> <C-b> "a" . GetBlockIdentifier(1) . '<Esc>'
-
-" %%
 
 " Insert remaps
 inoremap  <Esc>l
