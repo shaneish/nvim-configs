@@ -438,7 +438,7 @@ function! CheckLine(empty, not)
     return a:not
 endfunction
 
-function BuffJump()
+function! BuffJump()
     ls
     let bufnr = input("Enter buffer number: ")
     if bufnr != ""
