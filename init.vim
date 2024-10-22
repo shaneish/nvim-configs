@@ -804,14 +804,14 @@ nnoremap <expr> } '}' . Centerizer()
 nnoremap <expr> { '{' . Centerizer()
 nnoremap <expr> <C-]> ')' . Centerizer()
 nnoremap <expr> <C-[> '(' . Centerizer()
-nnoremap <expr> J Sections(0, 1, 0)
-nnoremap <expr> K Sections(0, 0, 0)
+nnoremap <expr> J Sections(1, 1, 1)
+nnoremap <expr> K Sections(1, 0, 1)
 nnoremap <expr> <C-j> Sections(0, 1, 1)
 nnoremap <expr> <C-k> Sections(0, 0, 1)
 nnoremap <expr> <leader>J Sections(1, 1, 0)
 nnoremap <expr> <leader>K Sections(1, 0, 0)
-nnoremap <expr> <leader>j Sections(1, 1, 1)
-nnoremap <expr> <leader>k Sections(1, 0, 1)
+nnoremap <expr> <leader>j Sections(0, 1, 0)
+nnoremap <expr> <leader>k Sections(0, 0, 0)
 nnoremap <leader>e :REPLSendSession<Cr>
 nnoremap <leader>l $
 nnoremap <leader>h _
