@@ -804,8 +804,16 @@ nnoremap <expr> } '}' . Centerizer()
 nnoremap <expr> { '{' . Centerizer()
 nnoremap <expr> <C-]> ')' . Centerizer()
 nnoremap <expr> <C-[> '(' . Centerizer()
+nnoremap <expr> J Sections(0, 1, 0)
+nnoremap <expr> K Sections(0, 0, 0)
+nnoremap <expr> <C-j> Sections(0, 1, 1)
+nnoremap <expr> <C-k> Sections(0, 0, 1)
+nnoremap <expr> <leader>J Sections(1, 1, 0)
+nnoremap <expr> <leader>K Sections(1, 0, 0)
+nnoremap <expr> <leader>j Sections(1, 1, 1)
+nnoremap <expr> <leader>k Sections(1, 0, 1)
 nnoremap <leader>e :REPLSendSession<Cr>
-nnoremap <leader>l g_
+nnoremap <leader>l $
 nnoremap <leader>h _
 nnoremap <leader>y "+y
 nnoremap <leader>yw BvE"+y
@@ -827,14 +835,6 @@ nnoremap <C-space>P "1P
 nnoremap R s
 nnoremap <C-s> <cmd>Pounce<CR>
 nnoremap U J
-nnoremap <expr> J Sections(0, 1, 0)
-nnoremap <expr> K Sections(0, 0, 0)
-nnoremap <expr> <C-j> Sections(0, 1, 1)
-nnoremap <expr> <C-k> Sections(0, 0, 1)
-nnoremap <expr> <leader>J Sections(1, 1, 0)
-nnoremap <expr> <leader>K Sections(1, 0, 0)
-nnoremap <expr> <leader>j Sections(1, 1, 1)
-nnoremap <expr> <leader>k Sections(1, 0, 1)
 " nnoremap <expr> <C-j> '<C-d>' . Centerizer()
 " nnoremap <expr> <C-k> '<C-u>' . Centerizer()
 nnoremap <expr> j 'j' . Centerizer()
@@ -886,7 +886,7 @@ nnoremap <expr> <C-b> "a" . GetBlockIdentifier(1) . '<Esc>'
 " %%
 
 " Insert remaps
-inoremap  <Esc>
+inoremap  <Esc>l
 inoremap <C-l> <Esc>la
 inoremap <C-;> <Esc>lxa
 inoremap <C-h> <Esc>ha
@@ -916,14 +916,6 @@ xnoremap > >gv
 xnoremap <leader>k g_
 xnoremap <leader>j _
 xnoremap U J
-xnoremap <expr> <C-j> Sections(1, 1, 0)
-xnoremap <expr> <C-k> Sections(1, 0, 0)
-xnoremap <expr> J Sections(1, 1, 1)
-xnoremap <expr> K Sections(1, 0, 1)
-xnoremap <expr> <leader>j Sections(1, 1, 1)
-xnoremap <expr> <leader>k Sections(1, 0, 1)
-xnoremap <expr> L Sections(0, 1, 0)
-xnoremap <expr> H Sections(0, 0, 0)
 xnoremap <expr> j 'j' . Centerizer()
 xnoremap <expr> k 'k' . Centerizer()
 xnoremap <expr> n 'n' . Centerizer()
@@ -958,7 +950,23 @@ xnoremap <Esc> <Nop>
 xnoremap <Esc><Esc> <Esc>
 xnoremap <expr> <C-b> '<Esc><Esc>`<O<Esc>_C' . GetBlockIdentifier(1) . '<Esc>`><Esc>o' . GetBlockIdentifier() . '<Esc>`<kA '
 xnoremap <expr> <C-i> '<Esc><Esc>`<O<Esc>_C' . GetBlockIdentifier() . '<Esc>`><Esc>o' . GetBlockIdentifier() . '<Esc>`>jo<Esc>_C'
-xmap <expr> <A-C-j> ']]' . Centerizer()
-xmap <expr> <A-C-k> '[[' . Centerizer()
-xmap <expr> <S-}> '}' . Centerizer()
-xmap <expr> <S-{> '{' . Centerizer()
+xnoremap <leader>l g_l
+xnoremap <leader>h _
+xnoremap <expr> <A-C-j> ']]' . Centerizer()
+xnoremap <expr> <A-C-k> '[[' . Centerizer()
+xnoremap <expr> ) ']m' . Centerizer()
+xnoremap <expr> ( '[m' . Centerizer()
+xnoremap <expr> <C-0> ']M' . Centerizer()
+xnoremap <expr> <C-9> '[M' . Centerizer()
+xnoremap <expr> } '}' . Centerizer()
+xnoremap <expr> { '{' . Centerizer()
+xnoremap <expr> <C-]> ')' . Centerizer()
+xnoremap <expr> <C-[> '(' . Centerizer()
+xnoremap <expr> J Sections(0, 1, 0)
+xnoremap <expr> K Sections(0, 0, 0)
+xnoremap <expr> <C-j> Sections(0, 1, 1)
+xnoremap <expr> <C-k> Sections(0, 0, 1)
+xnoremap <expr> <leader>J Sections(1, 1, 0)
+xnoremap <expr> <leader>K Sections(1, 0, 0)
+xnoremap <expr> <leader>j Sections(1, 1, 1)
+xnoremap <expr> <leader>k Sections(1, 0, 1)
