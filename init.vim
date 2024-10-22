@@ -308,6 +308,7 @@ function! Toggle_Venn()
         let g:venn_enabled = 1
     endif
 endfunction
+
 " comment comment_suffix_separator suffix type_separator (type_annotation)
 let g:jump_pattern = "\(\s\+\|_\|-\|.\|'\|\^\|\$\)\w"
 let g:code_block_comment = substitute(substitute(&commentstring, '%s', '', 'g'), '\s\+', '', 'g')
@@ -539,6 +540,66 @@ function! PyFormat()
     endif
 endfunction
 
+let g:mini_jump_val = '10'
+let g:large_jump_val = '30'
+let g:section_filetypes = ['python']
+function! Sections(big=0, forward=1, context=1)
+    let out = ''
+    if a:context == 1
+        if index(g:section_filetypes, &filetype) >= 0
+            if a:big == 1
+                if a:forward == 1
+                    let out = ']]'
+                else
+                    let out = '[]'
+                endif
+            else
+                if a:forward == 1
+                    let out = ']m'
+                else
+                    let out = '[M'
+                endif
+            endif
+        else
+            if a:big == 1
+                if a:forward == 1
+                    let out = ']m'
+                else
+                    let out = '[M'
+                endif
+            else
+                if a:forward == 1
+                    let out = '}'
+                else
+                    let out = '{'
+                endif
+            endif
+        endif
+    else
+        echo "no context"
+        if a:big == 0
+            echo "not big"
+            if a:forward == 1
+                echo "forward"
+                let out = g:mini_jump_val . 'j'
+            else
+                echo "backwards"
+                let out = g:mini_jump_val . 'k'
+            endif
+        else
+            echo "big"
+            if a:forward == 1
+                echo "forward"
+                let out = g:large_jump_val . 'j'
+            else
+                echo "backwards"
+                let out = g:large_jump_val . 'k'
+            endif
+        endif
+    endif
+    return out . Centerizer()
+endfunction
+
 "
 " #variables ish
 "
@@ -733,14 +794,16 @@ nnoremap <leader>c <C-w>c
 nnoremap <leader>s <C-w>s
 nnoremap <C-space><C-o> o<Esc>_C
 nnoremap <C-space>O O<Esc>_C
-nmap <expr> <A-C-j> ']]' . Centerizer()
-nmap <expr> <A-C-k> '[[' . Centerizer()
-nmap <expr> <A-j> ']m' . Centerizer()
-nmap <expr> <A-k> '[m' . Centerizer()
-nmap <expr> <A-l> ']M' . Centerizer()
-nmap <expr> <A-h> '[M' . Centerizer()
-nmap <expr> } '}' . Centerizer()
-nmap <expr> { '{' . Centerizer()
+nnoremap <expr> <A-C-j> ']]' . Centerizer()
+nnoremap <expr> <A-C-k> '[[' . Centerizer()
+nnoremap <expr> ) ']m' . Centerizer()
+nnoremap <expr> ( '[m' . Centerizer()
+nnoremap <expr> <C-0> ']M' . Centerizer()
+nnoremap <expr> <C-9> '[M' . Centerizer()
+nnoremap <expr> } '}' . Centerizer()
+nnoremap <expr> { '{' . Centerizer()
+nnoremap <expr> <C-]> ')' . Centerizer()
+nnoremap <expr> <C-[> '(' . Centerizer()
 nnoremap <leader>e :REPLSendSession<Cr>
 nnoremap <leader>l g_
 nnoremap <leader>h _
@@ -763,8 +826,17 @@ nnoremap <C-space>p "1p
 nnoremap <C-space>P "1P
 nnoremap R s
 nnoremap <C-s> <cmd>Pounce<CR>
-nnoremap <expr> <C-j> '<C-d>' . Centerizer()
-nnoremap <expr> <C-k> '<C-u>' . Centerizer()
+nnoremap U J
+nnoremap <expr> J Sections(0, 1, 0)
+nnoremap <expr> K Sections(0, 0, 0)
+nnoremap <expr> <C-j> Sections(0, 1, 1)
+nnoremap <expr> <C-k> Sections(0, 0, 1)
+nnoremap <expr> <leader>J Sections(1, 1, 0)
+nnoremap <expr> <leader>K Sections(1, 0, 0)
+nnoremap <expr> <leader>j Sections(1, 1, 1)
+nnoremap <expr> <leader>k Sections(1, 0, 1)
+" nnoremap <expr> <C-j> '<C-d>' . Centerizer()
+" nnoremap <expr> <C-k> '<C-u>' . Centerizer()
 nnoremap <expr> j 'j' . Centerizer()
 nnoremap <expr> k 'k' . Centerizer()
 nnoremap <expr> n 'n' . Centerizer()
@@ -775,8 +847,6 @@ nnoremap <C-space>j o<Esc>_C<Esc>
 nnoremap <C-space>k O<Esc>_C<Esc>
 nnoremap <C-m>ls :MarksListBuf<CR>
 nnoremap <leader>B <cmd>call Toggle_Venn()<CR>
-nmap <expr> J g:venn_enabled ? '<C-v>j:VBox<CR>' : 'J'
-nmap <expr> K g:venn_enabled ? '<C-v>k:VBox<CR>' : 'K'
 nnoremap <C-m>la :MarksListGlobal<CR>
 nmap <C-f> :set conceallevel=0<CR>
 nmap <C-.> <C-W>l
@@ -788,6 +858,8 @@ nnoremap G G$
 nnoremap <leader><C-y> gg0vG$"+y
 nmap <expr> L g:venn_enabled ? '<C-v>l:VBox<CR>' : 'L'
 nmap <expr> H g:venn_enabled ? '<C-v>h:VBox<CR>' : 'H'
+nmap <expr> J g:venn_enabled ? '<C-v>j:VBox<CR>' : Sections(0, 1, 0)
+nmap <expr> K g:venn_enabled ? '<C-v>k:VBox<CR>' : Sections(0, 0, 0)
 nmap <expr> F g:venn_enabled ? '`<hk<C-v>`>lj:VBox<CR>' : 'F'
 nmap <expr> <C-space>j g:venn_enabled ? '8J' : '<C-space>j'
 nmap <expr> <C-space>k g:venn_enabled ? '8K' : '<C-space>k'
@@ -843,8 +915,15 @@ xnoremap < <gv
 xnoremap > >gv
 xnoremap <leader>k g_
 xnoremap <leader>j _
-xnoremap <expr> <C-j> '<C-d>' . Centerizer()
-xnoremap <expr> <C-k> '<C-u>' . Centerizer()
+xnoremap U J
+xnoremap <expr> <C-j> Sections(1, 1, 0)
+xnoremap <expr> <C-k> Sections(1, 0, 0)
+xnoremap <expr> J Sections(1, 1, 1)
+xnoremap <expr> K Sections(1, 0, 1)
+xnoremap <expr> <leader>j Sections(1, 1, 1)
+xnoremap <expr> <leader>k Sections(1, 0, 1)
+xnoremap <expr> L Sections(0, 1, 0)
+xnoremap <expr> H Sections(0, 0, 0)
 xnoremap <expr> j 'j' . Centerizer()
 xnoremap <expr> k 'k' . Centerizer()
 xnoremap <expr> n 'n' . Centerizer()
